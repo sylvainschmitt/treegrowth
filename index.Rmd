@@ -1,0 +1,21 @@
+--- 
+title: "Tree Growth"
+subtitle: "Variation in the growth potential of individual trees at the Paracou research station."
+author: "Sylvain Schmitt"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+csl: /home/sylvain/Documents/Bibliography/csl/mee.csl
+bibliography: /home/sylvain/Documents/Bibliography/library.bib
+link-citations: yes
+colorlinks: yes
+description: "Variation in the growth potential of individual trees at the Paracou research station."
+---
+
+`r if (knitr:::is_html_output()) '# Preface {-}'`
+
+`r if (knitr:::is_html_output()) 'Variation in the growth potential of individual trees at the Paracou research station.'`
+
+`r if (knitr:::is_html_output()) 'Have a nice reading.'`
+
+`r if (knitr:::is_html_output()) '<div align="right">  *Sylvain*'`

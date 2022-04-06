@@ -1,0 +1,7 @@
+eq:gmaxth
+eq:gmaxstan
+data
+growth
+taxonomy
+environment
+conclusion

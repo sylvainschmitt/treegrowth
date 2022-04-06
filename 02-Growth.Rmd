@@ -1,0 +1,67 @@
+```{r setupgrowth, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+library(rstan)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = T)
+```
+
+# Growth
+
+We investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
+The individual growth of individual $i$ in species $s$ between individual recruitment $y_0$ and 2020, 
+corresponds to the difference of DBH between the two years, and is defined with a hierarchical model in a lognormal distribution as follows:
+
+$$DBH_{y=2017,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2017}AGR(DBH_{y,s,i})], \sigma^2_1)$$
+
+where the difference of DBH $DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}$ is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates $AGR$ during the period $y_0-2017$ and of shape $\sigma_1$. 
+The annual growth rate $AGR$ for individual $i$ in species $s$ at year $y$ with a diameter of $DBH_{y,p,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011]:
+
+$$AGR(DBH_{y,s,i}) = Gmax_i.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)$$
+
+where $Gmax_i$ is the maximum growth potential (maximal AGR during individual life) for individual $i$, 
+$Dopt_s$ is the species optimal diameter at which the individual reaches its maximum growth potential, 
+and $Ks_s$ is the species kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011]. 
+To ease model inference, species optimal diameter $Dopt_p$ and kurtosis $Ks_p$ were defined as random population effects centered on a global $Dopt$ and $Ks$ with corresponding variances $\sigma^2_{P,Dopt}$ and $\sigma^2_{P,Ks}$. . 
+We used Bayesian inference with No-U-Turn Sampler [NUTS, @Hoffman2014] using `stan` language [@Carpenter2017].
+
+We thus used the following growth model with a lognormal distribution to estimate individual growth potential:
+
+\begin{equation} 
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \theta_{1,s,i}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
+  \theta_{1,s,i} \sim \mathcal {logN}(log(\theta_{1,s}), \sigma_2) \\ 
+  \theta_{2,s} \sim \mathcal {logN}(log(\theta_2),\sigma_3) \\ 
+  \theta_{3,s} \sim \mathcal {logN}(log(\theta_3),\sigma_4)
+  (\#eq:gmaxth)
+\end{equation} 
+
+In `stan`, we fitted the equivalent model with the following priors:
+
+\begin{equation} 
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \hat{\theta_{1,s,i}}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\hat{\theta_{2,s}}})}{\hat{\theta_{3,s}}}]^2)), \sigma_1) \\ 
+  \hat{\theta_{1,s,i}} = e^{log(\theta_{1,s}) + \sigma_2.\epsilon_{1,i}} \\ 
+  \hat{\theta_{2,s}}  = e^{log(\theta_2) + \sigma_3.\epsilon_{2,s}} \\ 
+  \hat{\theta_{3,s}}  = e^{log(\theta_3) + \sigma_4.\epsilon_{3,s}} \\  
+  \epsilon_{1,i} \sim \mathcal{N}(0,1) \\
+  \epsilon_{2,p} \sim \mathcal{N}(0,1) \\
+  \epsilon_{3,p} \sim \mathcal{N}(0,1) \\
+  ~ \\
+  (\theta_{1,p}, \theta_2, \theta_3) \sim \mathcal{logN}^3(log(1),1) \\ 
+  (\sigma_1, \sigma_2, \sigma_3, \sigma_4) \sim \mathcal{N}^4_T(0,1) \\ 
+  (\#eq:gmaxstan)
+\end{equation} 
+
+```{r fit, eval=F}
+load("save/mdata.Rdata")
+model <- stan_model("model/gmax.stan")
+fit <- sampling(model, chains = 1, data = mdata, save_warmup = F, control = list(adapt_delta = 0.99, max_treedepth = 12))
+save(data, mdata, fit, file = "model/gmax.Rdata"))
+```
