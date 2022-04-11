@@ -29,7 +29,7 @@ transformed parameters {
   }
 }
 model {
-  DBHtoday ~ lognormal(log(DBH), sigma[1]) ;
+  log(DBHtoday) ~ normal(log(DBH), sigma[1]) ;
   epsilon_s2 ~ std_normal() ;
   epsilon_s3 ~ std_normal() ;
   thetas1 ~ lognormal(0, 1) ;
