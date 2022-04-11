@@ -12,36 +12,26 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = T)
 ```
 
-# Growth 1
+# Growth `stan` lognormal
 
 **Using `Stan` with a lognormal likelihood.**
 
-We used the following growth model with a lognormal distribution to estimate individual growth potential:
+We used the following growth model with a lognormal distribution to estimate individual growth potential in `stan`:
 
 \begin{equation} 
   DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
-  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \theta_{1,s,i}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
-  \theta_{1,s,i} \sim \mathcal {logN}(log(\theta_{1,s}), \sigma_2) \\ 
-  \theta_{2,s} \sim \mathcal {logN}(log(\theta_2),\sigma_3) \\ 
-  \theta_{3,s} \sim \mathcal {logN}(log(\theta_3),\sigma_4)
-  (\#eq:gmaxth)
-\end{equation} 
-
-In `stan`, we fitted the equivalent model with the following priors:
-
-\begin{equation} 
-  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
-  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \hat{\theta_{1,s,i}}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\hat{\theta_{2,s}}})}{\hat{\theta_{3,s}}}]^2)), \sigma_1) \\ 
-  \hat{\theta_{1,s,i}} = e^{log(\theta_{1,s}) + \sigma_2.\epsilon_{1,i}} \\ 
-  \hat{\theta_{2,s}}  = e^{log(\theta_2) + \sigma_3.\epsilon_{2,s}} \\ 
-  \hat{\theta_{3,s}}  = e^{log(\theta_3) + \sigma_4.\epsilon_{3,s}} \\  
+  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \theta_{1,s}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
+  \theta_{2,s}  = e^{log(\theta_2) + \sigma_3.\epsilon_{2,s}} \\ 
+  \theta_{3,s}  = e^{log(\theta_3) + \sigma_4.\epsilon_{3,s}} \\  
   \epsilon_{1,i} \sim \mathcal{N}(0,1) \\
   \epsilon_{2,p} \sim \mathcal{N}(0,1) \\
   \epsilon_{3,p} \sim \mathcal{N}(0,1) \\
   ~ \\
   (\theta_{1,p}, \theta_2, \theta_3) \sim \mathcal{logN}^3(log(1),1) \\ 
   (\sigma_1, \sigma_2, \sigma_3, \sigma_4) \sim \mathcal{N}^4_T(0,1) \\ 
-  (\#eq:gmaxstan)
+  ~ \\
+  \theta_{1,s,i} = e^{log(\theta_{1,s}) + \sigma_2.\epsilon_{1,i}} \\ 
+    (\#eq:gmax1)
 \end{equation} 
 
 ```{r samplinga, eval=F}
@@ -52,11 +42,11 @@ fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list
 save(data, mdata, fit, file = "model/gmax.Rdata"))
 ```
 
-```{r fita}
+```{r fita, eval=FALSE}
 load("model/gmax.Rdata")
 ```
 
-```{r timea}
+```{r timea, eval=FALSE}
 get_elapsed_time(fit) %>% 
   as.data.frame() %>% 
   rownames_to_column("chain") %>% 
@@ -65,18 +55,10 @@ get_elapsed_time(fit) %>%
   kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplota}
-mcmc_trace(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]", "lp__", 
-                         "thetai1[1]", "thetas1[1]", "thetas2[1]", "thetas3[1]"), np = nuts_params(fit))
+```{r traceplota, eval=FALSE}
+mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma[1]", "lp__"), np = nuts_params(fit))
 ```
 
-```{r pairsa}
-mcmc_pairs(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]"), np = nuts_params(fit))
+```{r pairsa, eval=FALSE}
+mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma[1]"), np = nuts_params(fit))
 ```
-
-```{r thetaia, fig.height=12, eval=F}
-mcmc_intervals(fit, pars = paste0("thetai1[", 1:2568, "]")) +
-  scale_x_log10() +
-  theme(axis.text.y = element_blank())
-```
-
