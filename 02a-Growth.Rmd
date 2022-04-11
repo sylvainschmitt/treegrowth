@@ -1,4 +1,4 @@
-```{r setupgrowth, include=FALSE, eval=T}
+```{r setupgrowtha, include=FALSE, eval=T}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
@@ -12,26 +12,11 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = T)
 ```
 
-# Growth
+# Growth 1
 
-We investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
-The individual growth of individual $i$ in species $s$ between individual recruitment $y_0$ and 2020, 
-corresponds to the difference of DBH between the two years, and is defined with a hierarchical model in a lognormal distribution as follows:
+**Using `Stan` with a lognormal likelihood.**
 
-$$DBH_{y=2017,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2017}AGR(DBH_{y,s,i})], \sigma^2_1)$$
-
-where the difference of DBH $DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}$ is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates $AGR$ during the period $y_0-2017$ and of shape $\sigma_1$. 
-The annual growth rate $AGR$ for individual $i$ in species $s$ at year $y$ with a diameter of $DBH_{y,p,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011]:
-
-$$AGR(DBH_{y,s,i}) = Gmax_i.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)$$
-
-where $Gmax_i$ is the maximum growth potential (maximal AGR during individual life) for individual $i$, 
-$Dopt_s$ is the species optimal diameter at which the individual reaches its maximum growth potential, 
-and $Ks_s$ is the species kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011]. 
-To ease model inference, species optimal diameter $Dopt_p$ and kurtosis $Ks_p$ were defined as random population effects centered on a global $Dopt$ and $Ks$ with corresponding variances $\sigma^2_{P,Dopt}$ and $\sigma^2_{P,Ks}$. . 
-We used Bayesian inference with No-U-Turn Sampler [NUTS, @Hoffman2014] using `stan` language [@Carpenter2017].
-
-We thus used the following growth model with a lognormal distribution to estimate individual growth potential:
+We used the following growth model with a lognormal distribution to estimate individual growth potential:
 
 \begin{equation} 
   DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
@@ -59,7 +44,7 @@ In `stan`, we fitted the equivalent model with the following priors:
   (\#eq:gmaxstan)
 \end{equation} 
 
-```{r sampling, eval=F}
+```{r samplinga, eval=F}
 load("save/mdata.Rdata")
 model <- stan_model("model/gmax.stan")
 fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list(adapt_delta = 0.99, max_treedepth = 12),
@@ -67,29 +52,29 @@ fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list
 save(data, mdata, fit, file = "model/gmax.Rdata"))
 ```
 
-```{r fit}
+```{r fita}
 load("model/gmax.Rdata")
 ```
 
-```{r time}
+```{r timea}
 get_elapsed_time(fit) %>% 
   as.data.frame() %>% 
   rownames_to_column("chain") %>% 
   mutate(total = warmup + sample) %>% 
   mutate_at(c("warmup", "sample", "total"), lubridate::seconds_to_period) %>% 
-  kable(caption = "Elapsed time to fit 2,568 trees over 37 years and 378 species in the plot 14 of Paracou.")
+  kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplot}
+```{r traceplota}
 mcmc_trace(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]", "lp__", 
                          "thetai1[1]", "thetas1[1]", "thetas2[1]", "thetas3[1]"), np = nuts_params(fit))
 ```
 
-```{r pairs}
+```{r pairsa}
 mcmc_pairs(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]"), np = nuts_params(fit))
 ```
 
-```{r thetai, fig.height=12, eval=F}
+```{r thetaia, fig.height=12, eval=F}
 mcmc_intervals(fit, pars = paste0("thetai1[", 1:2568, "]")) +
   scale_x_log10() +
   theme(axis.text.y = element_blank())
