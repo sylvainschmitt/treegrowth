@@ -66,16 +66,18 @@ get_elapsed_time(fit) %>%
 ```
 
 ```{r traceplotb}
-mcmc_trace(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]", "lp__", 
-                         "thetai1[1]", "thetas1[1]", "thetas2[1]", "thetas3[1]"), np = nuts_params(fit))
+mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
 ```
 
 ```{r pairsb}
-mcmc_pairs(fit, pars = c("theta2", "theta3", "sigma[1]", "sigma[2]", "sigma[3]", "sigma[4]"), np = nuts_params(fit))
+mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
 ```
 
-```{r thetaib, fig.height=12, eval=F}
-mcmc_intervals(fit, pars = paste0("thetai1[", 1:2568, "]")) +
-  scale_x_log10() +
+```{r thetasb}
+mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
+```
+
+```{r thetaib}
+mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
   theme(axis.text.y = element_blank())
 ```

@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-06" />
+<meta name="date" content="2022-04-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>3</b> Taxonomy</a></li>
 <li class="chapter" data-level="4" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>4</b> Environment</a></li>
 <li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
+<li class="chapter" data-level="6" data-path="growth-1.html"><a href="growth-1.html"><i class="fa fa-check"></i><b>6</b> Growth</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -172,8 +173,16 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <span id="cb1-2"><a href="data.html#cb1-2"></a>vroom<span class="op">::</span><span class="kw">vroom_write</span>(Guyafor, <span class="st">&quot;data/guyafor.csv&quot;</span>, <span class="dt">delim =</span> <span class="st">&quot;,&quot;</span>)</span>
 <span id="cb1-3"><a href="data.html#cb1-3"></a>csv2sql<span class="op">::</span><span class="kw">csv_to_sqlite</span>(<span class="dt">csv_name =</span> <span class="st">&quot;data/guyafor.csv&quot;</span>, <span class="dt">db_name =</span> <span class="st">&quot;data/guyafor.sql&quot;</span>, <span class="dt">table_name =</span> <span class="st">&quot;inventory&quot;</span>)</span>
 <span id="cb1-4"><a href="data.html#cb1-4"></a><span class="kw">unlink</span>(<span class="st">&quot;data/guyafor.csv&quot;</span>)</span></code></pre></div>
-<p><img src="save/p6.gif" /><!-- --></p>
 <p><img src="treegrowth_files/figure-html/datafig-1.png" width="768" /></p>
+<pre><code>## List of 8
+##  $ I       : int 187
+##  $ Y       : num 37
+##  $ S       : num 1
+##  $ years   : int [1:37] 1984 1985 1986 1987 1988 1989 1990 1991 1992 1993 ...
+##  $ DBH0    : num [1:187] 12.7 36.9 11.6 11.1 12.3 ...
+##  $ Y0      : num [1:187] 1984 1984 1984 1984 1984 ...
+##  $ DBHtoday: num [1:187] 13.4 57.5 12.3 11.8 12.7 ...
+##  $ species : num [1:187] 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 
 </div>
             </section>
@@ -233,20 +242,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

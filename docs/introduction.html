@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-06" />
+<meta name="date" content="2022-04-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="data.html"/>
+<link rel="next" href="reduced-data.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -137,11 +137,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>1</b> Data</a></li>
-<li class="chapter" data-level="2" data-path="growth.html"><a href="growth.html"><i class="fa fa-check"></i><b>2</b> Growth</a></li>
-<li class="chapter" data-level="3" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>3</b> Taxonomy</a></li>
-<li class="chapter" data-level="4" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>4</b> Environment</a></li>
-<li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
+<li class="chapter" data-level="1" data-path="reduced-data.html"><a href="reduced-data.html"><i class="fa fa-check"></i><b>1</b> Reduced data</a></li>
+<li class="chapter" data-level="2" data-path="growth-stan-lognormal.html"><a href="growth-stan-lognormal.html"><i class="fa fa-check"></i><b>2</b> Growth <code>stan</code> lognormal</a></li>
+<li class="chapter" data-level="3" data-path="growth-2.html"><a href="growth-2.html"><i class="fa fa-check"></i><b>3</b> Growth 2</a></li>
+<li class="chapter" data-level="4" data-path="growth-greta-lognormal.html"><a href="growth-greta-lognormal.html"><i class="fa fa-check"></i><b>4</b> Growth <code>greta</code> lognormal</a></li>
+<li class="chapter" data-level="5" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>5</b> Model choice</a></li>
+<li class="chapter" data-level="6" data-path="full-data.html"><a href="full-data.html"><i class="fa fa-check"></i><b>6</b> Full data</a></li>
+<li class="chapter" data-level="7" data-path="growth-full.html"><a href="growth-full.html"><i class="fa fa-check"></i><b>7</b> Growth Full</a></li>
+<li class="chapter" data-level="8" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>8</b> Taxonomy</a></li>
+<li class="chapter" data-level="9" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>9</b> Environment</a></li>
+<li class="chapter" data-level="10" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>10</b> Conclusion</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -168,8 +173,39 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
-<p>Variation in the growth potential of individual trees at the Paracou research station.</p>
+<p><strong>Variation in the growth potential of individual trees at the Paracou research station.</strong></p>
+<p>We investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.</p>
+<p>The individual growth of individual <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span> between individual recruitment <span class="math inline">\(y_0\)</span> and 2020,
+corresponds to the difference of DBH between the two years, and is defined with a hierarchical model in a lognormal distribution as follows:</p>
+<p><span class="math display">\[DBH_{y=2017,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2017}AGR(DBH_{y,s,i})], \sigma^2_1)\]</span></p>
+<p>where the difference of DBH <span class="math inline">\(DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}\)</span> is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates <span class="math inline">\(AGR\)</span> during the period <span class="math inline">\(y_0-2017\)</span> and of shape <span class="math inline">\(\sigma_1\)</span>.
+The annual growth rate <span class="math inline">\(AGR\)</span> for individual <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,p,i}\)</span> is defined following a Gompertz model <span class="citation">(Gompertz <a href="#ref-Gompertz1825" role="doc-biblioref">1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>:</p>
+<p><span class="math display">\[AGR(DBH_{y,s,i}) = Gmax_i.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)\]</span></p>
+<p>where <span class="math inline">\(Gmax_i\)</span> is the maximum growth potential (maximal AGR during individual life) for individual <span class="math inline">\(i\)</span>,
+<span class="math inline">\(Dopt_s\)</span> is the species optimal diameter at which the individual reaches its maximum growth potential,
+and <span class="math inline">\(Ks_s\)</span> is the species kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>.
+To ease model inference, species optimal diameter <span class="math inline">\(Dopt_p\)</span> and kurtosis <span class="math inline">\(Ks_p\)</span> were defined as random population effects centered on a global <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> with corresponding variances <span class="math inline">\(\sigma^2_{P,Dopt}\)</span> and <span class="math inline">\(\sigma^2_{P,Ks}\)</span>. .
+We used Bayesian inference with No-U-Turn Sampler <span class="citation">(NUTS, Hoffman &amp; Gelman <a href="#ref-Hoffman2014" role="doc-biblioref">2014</a>)</span> using <code>stan</code> language <span class="citation">(Carpenter <em>et al.</em> <a href="#ref-Carpenter2017" role="doc-biblioref">2017</a>)</span>.</p>
+<p><strong>Phylogenetic analyses description.</strong></p>
+<p><strong>NCI description.</strong></p>
+<p><strong>TWI description.</strong></p>
+<p><strong>Ecological analyses description.</strong></p>
 
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Carpenter2017">
+<p>Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M., Guo, J., Li, P. &amp; Riddell, A. (2017). Stan : A Probabilistic Programming Language. <em>Journal of Statistical Software</em>, <strong>76</strong>. Retrieved from <a href="http://www.jstatsoft.org/v76/i01/">http://www.jstatsoft.org/v76/i01/</a></p>
+</div>
+<div id="ref-Gompertz1825">
+<p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
+</div>
+<div id="ref-Herault2011">
+<p>Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). Functional traits shape ontogenetic growth trajectories of rain forest tree species. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.</p>
+</div>
+<div id="ref-Hoffman2014">
+<p>Hoffman, M.D. &amp; Gelman, A. (2014). The no-U-turn sampler: Adaptively setting path lengths in Hamiltonian Monte Carlo. <em>Journal of Machine Learning Research</em>, <strong>15</strong>, 1593–1623. Retrieved from <a href="http://arxiv.org/abs/1111.4246">http://arxiv.org/abs/1111.4246</a></p>
+</div>
 </div>
             </section>
 
@@ -177,7 +213,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="reduced-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

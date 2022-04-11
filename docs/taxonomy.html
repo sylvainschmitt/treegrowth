@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Taxonomy | Tree Growth</title>
+  <title>Chapter 8 Taxonomy | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Taxonomy | Tree Growth" />
+  <meta property="og:title" content="Chapter 8 Taxonomy | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Taxonomy | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 8 Taxonomy | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-06" />
+<meta name="date" content="2022-04-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="growth.html"/>
+<link rel="prev" href="growth-full.html"/>
 <link rel="next" href="environment.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -137,11 +137,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>1</b> Data</a></li>
-<li class="chapter" data-level="2" data-path="growth.html"><a href="growth.html"><i class="fa fa-check"></i><b>2</b> Growth</a></li>
-<li class="chapter" data-level="3" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>3</b> Taxonomy</a></li>
-<li class="chapter" data-level="4" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>4</b> Environment</a></li>
-<li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
+<li class="chapter" data-level="1" data-path="reduced-data.html"><a href="reduced-data.html"><i class="fa fa-check"></i><b>1</b> Reduced data</a></li>
+<li class="chapter" data-level="2" data-path="growth-stan-lognormal.html"><a href="growth-stan-lognormal.html"><i class="fa fa-check"></i><b>2</b> Growth <code>stan</code> lognormal</a></li>
+<li class="chapter" data-level="3" data-path="growth-2.html"><a href="growth-2.html"><i class="fa fa-check"></i><b>3</b> Growth 2</a></li>
+<li class="chapter" data-level="4" data-path="growth-greta-lognormal.html"><a href="growth-greta-lognormal.html"><i class="fa fa-check"></i><b>4</b> Growth <code>greta</code> lognormal</a></li>
+<li class="chapter" data-level="5" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>5</b> Model choice</a></li>
+<li class="chapter" data-level="6" data-path="full-data.html"><a href="full-data.html"><i class="fa fa-check"></i><b>6</b> Full data</a></li>
+<li class="chapter" data-level="7" data-path="growth-full.html"><a href="growth-full.html"><i class="fa fa-check"></i><b>7</b> Growth Full</a></li>
+<li class="chapter" data-level="8" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>8</b> Taxonomy</a></li>
+<li class="chapter" data-level="9" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>9</b> Environment</a></li>
+<li class="chapter" data-level="10" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>10</b> Conclusion</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -167,7 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
 <div id="taxonomy" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> Taxonomy</h1>
+<h1><span class="header-section-number">Chapter 8</span> Taxonomy</h1>
 
 </div>
             </section>
@@ -175,7 +180,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
           </div>
         </div>
       </div>
-<a href="growth.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="growth-full.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="environment.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

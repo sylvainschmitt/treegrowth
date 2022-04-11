@@ -42,11 +42,11 @@ fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list
 save(data, mdata, fit, file = "model/gmax.Rdata"))
 ```
 
-```{r fita, eval=FALSE}
+```{r fita}
 load("model/gmax.Rdata")
 ```
 
-```{r timea, eval=FALSE}
+```{r timea}
 get_elapsed_time(fit) %>% 
   as.data.frame() %>% 
   rownames_to_column("chain") %>% 
@@ -55,10 +55,19 @@ get_elapsed_time(fit) %>%
   kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplota, eval=FALSE}
-mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma[1]", "lp__"), np = nuts_params(fit))
+```{r traceplota}
+mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
 ```
 
-```{r pairsa, eval=FALSE}
-mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma[1]"), np = nuts_params(fit))
+```{r pairsa}
+mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
+```
+
+```{r thetasa}
+mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
+```
+
+```{r thetaia}
+mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
+  theme(axis.text.y = element_blank())
 ```

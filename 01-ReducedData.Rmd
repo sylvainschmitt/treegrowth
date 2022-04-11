@@ -9,7 +9,13 @@ opts_chunk$set(
   cache = T, cache.lazy = F)
 ```
 
-# Data
+# Reduced data
+
+To select the best model we will first work on a reduced dataset.
+We used the full `Guyafor` database that we recoded in `SQL` for faster quesry using `dbplyr`.
+We focused on the variation in diameter of trees across censuses in the P6 (Fig. \@ref(fig:p6gif)).
+We chose to keep individuals with at least 10 censuses and species with at least 10 individuals (Fig. \@ref(fig:datafig)).
+To gain time, we further reduced the dataset to 187 trees over 37 years and 3 species in the plot 14 of Paracou.
 
 ```{r datatypes, eval=F, echo=T}
 load("data/Guyafor_Bota.RData")
@@ -35,10 +41,9 @@ g <- p6 %>%
 anim_save("save/p6.gif", g)
 ```
 
-```{r p6gif, eval=F}
+```{r p6gif, fig.cap="Plot 6 inventories through cenususes."}
 knitr::include_graphics("save/p6.gif")
 ```
-
 
 ```{r dataprep}
 guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
@@ -65,7 +70,7 @@ data <- p6 %>%
   filter(DBHtoday > DBH0)
 ```
 
-```{r datafig}
+```{r datafig, fig.cap="Caption."}
 cowplot::plot_grid(
   data %>% 
     ggplot(aes(N)) +
@@ -91,7 +96,7 @@ cowplot::plot_grid(
 )
 ```
 
-```{r mdata}
+```{r mdata, eval=F}
 data <- data %>% 
   group_by(species) %>% 
   mutate(Nsp = n()) %>% 
@@ -111,6 +116,7 @@ save(data, mdata, file = file.path("save", "mdata.Rdata"))
 ```
 
 ```{r}
+load(file.path("save", "mdata.Rdata")) 
 str(mdata)
 ```
 
