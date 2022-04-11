@@ -29,10 +29,9 @@ transformed parameters {
     }
     DBH += thetai1 .* exp(-0.5* square(log(DBH ./ (100*thetas2[species])) ./ thetas3[species])) ;
   }
-  DBH = DBH - DBH0 ;
 }
 model {
-  DBHtoday - DBH0 ~ lognormal(log(DBH), sigma[1]) ;
+  DBHtoday ~ lognormal(log(DBH), sigma[1]) ;
   epsilon_s2 ~ std_normal() ;
   epsilon_s3 ~ std_normal() ;
   epsilon_i ~ std_normal() ;

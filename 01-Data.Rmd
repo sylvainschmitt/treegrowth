@@ -35,7 +35,7 @@ g <- p6 %>%
 anim_save("save/p6.gif", g)
 ```
 
-```{r p6gif}
+```{r p6gif, eval=F}
 knitr::include_graphics("save/p6.gif")
 ```
 
@@ -49,6 +49,7 @@ p6 <- tbl(guyafor, "inventory") %>%
 DBI::dbDisconnect(guyafor) ; rm(guyafor)
 data <- p6 %>% 
   mutate(species = paste(Genre, Espece)) %>% 
+   filter(!grepl("Indet", species)) %>% 
   mutate(speciesNum = as.numeric(as.factor(species))) %>% 
   mutate(DBH = CircCorr/pi) %>% 
   group_by(idTree) %>% 
@@ -94,7 +95,10 @@ cowplot::plot_grid(
 data <- data %>% 
   group_by(species) %>% 
   mutate(Nsp = n()) %>% 
-  filter(N > 10, Nsp > 10)
+  filter(N > 10, Nsp > 10) %>% 
+  filter(species %in% sample(unique(data$species), 20)) %>% 
+  ungroup() %>% 
+  mutate(speciesNum = as.numeric(as.factor(species)))
 mdata <- list(I = nrow(data),
               Y = 2020 - min(data$Y0) + 1,
               S = max(data$speciesNum),
@@ -105,3 +109,8 @@ mdata <- list(I = nrow(data),
               species = data$speciesNum)
 save(data, mdata, file = file.path("save", "mdata.Rdata")) 
 ```
+
+```{r}
+str(mdata)
+```
+
