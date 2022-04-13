@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-11" />
+<meta name="date" content="2022-04-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -139,12 +139,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
 <li class="chapter" data-level="1" data-path="reduced-data.html"><a href="reduced-data.html"><i class="fa fa-check"></i><b>1</b> Reduced data</a></li>
 <li class="chapter" data-level="2" data-path="growth-stan-lognormal.html"><a href="growth-stan-lognormal.html"><i class="fa fa-check"></i><b>2</b> Growth <code>stan</code> lognormal</a></li>
-<li class="chapter" data-level="3" data-path="growth-2.html"><a href="growth-2.html"><i class="fa fa-check"></i><b>3</b> Growth 2</a></li>
+<li class="chapter" data-level="3" data-path="growth-stan-normal.html"><a href="growth-stan-normal.html"><i class="fa fa-check"></i><b>3</b> Growth <code>stan</code> normal</a></li>
 <li class="chapter" data-level="4" data-path="growth-greta-lognormal.html"><a href="growth-greta-lognormal.html"><i class="fa fa-check"></i><b>4</b> Growth <code>greta</code> lognormal</a></li>
 <li class="chapter" data-level="5" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>5</b> Model choice</a></li>
 <li class="chapter" data-level="6" data-path="full-data.html"><a href="full-data.html"><i class="fa fa-check"></i><b>6</b> Full data</a></li>
 <li class="chapter" data-level="7" data-path="growth-full.html"><a href="growth-full.html"><i class="fa fa-check"></i><b>7</b> Growth Full</a></li>
-<li class="chapter" data-level="8" data-path="taxonomy.html"><a href="taxonomy.html"><i class="fa fa-check"></i><b>8</b> Taxonomy</a></li>
+<li class="chapter" data-level="8" data-path="phylogeny.html"><a href="phylogeny.html"><i class="fa fa-check"></i><b>8</b> Phylogeny</a></li>
 <li class="chapter" data-level="9" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>9</b> Environment</a></li>
 <li class="chapter" data-level="10" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>10</b> Conclusion</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -173,7 +173,96 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="model-choice" class="section level1">
 <h1><span class="header-section-number">Chapter 5</span> Model choice</h1>
-<p>&lt;b</p>
+<p>We fitted three models on reduced data:</p>
+<ul>
+<li><strong>stan lognormal</strong>: a lognormal likelihood that we sampled with the NUTS algorithm using <code>stan</code></li>
+<li><strong>stan normal</strong>: a normal likelihood that we sampled with the NUTS algorithm using <code>stan</code></li>
+<li><strong>greta lognormal</strong>: a lognormal likelihood that we sampled with the NUTS algorithm using <code>greta</code></li>
+</ul>
+<p><code>greta</code> is quicker for sampling (Tab. <a href="model-choice.html#tab:timesreduced">5.1</a>) but its chains behave less well than <code>stan</code> (Fig. <a href="model-choice.html#fig:traceplotsreduced">5.1</a>).
+And growth potentials were underestimated when using <code>greta</code> compared to <code>stan</code> (Fig. <a href="model-choice.html#fig:thetasreduced">5.2</a> and Fig. <a href="model-choice.html#fig:thetaireduced">5.3</a>).
+Consequently, we will use the stan lognormal model for further analyses which is the second fastest and which uses the most appropriate likelihood.</p>
+<table>
+<caption><span id="tab:timesreduced">Table 5.1: </span>Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou across models.</caption>
+<colgroup>
+<col width="17%" />
+<col width="8%" />
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">model</th>
+<th align="left">chain</th>
+<th align="right">warmup</th>
+<th align="right">sample</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">greta lognormal</td>
+<td align="left">chain:1</td>
+<td align="right">8M 0S</td>
+<td align="right">8M 0S</td>
+<td align="right">16M 0S</td>
+</tr>
+<tr class="even">
+<td align="left">greta lognormal</td>
+<td align="left">chain:2</td>
+<td align="right">8M 0S</td>
+<td align="right">8M 0S</td>
+<td align="right">16M 0S</td>
+</tr>
+<tr class="odd">
+<td align="left">stan lognormal</td>
+<td align="left">chain:2</td>
+<td align="right">26M 40.77S</td>
+<td align="right">14M 15.004S</td>
+<td align="right">40M 55.7739999999999S</td>
+</tr>
+<tr class="even">
+<td align="left">stan lognormal</td>
+<td align="left">chain:1</td>
+<td align="right">22M 32.8699999999999S</td>
+<td align="right">23M 50.98S</td>
+<td align="right">46M 23.8499999999999S</td>
+</tr>
+<tr class="odd">
+<td align="left">stan normal</td>
+<td align="left">chain:2</td>
+<td align="right">22M 44.5899999999999S</td>
+<td align="right">25M 59.49S</td>
+<td align="right">48M 44.0799999999999S</td>
+</tr>
+<tr class="even">
+<td align="left">stan normal</td>
+<td align="left">chain:1</td>
+<td align="right">26M 14.22S</td>
+<td align="right">33M 17.0899999999999S</td>
+<td align="right">59M 31.3099999999999S</td>
+</tr>
+</tbody>
+</table>
+<div class="figure"><span id="fig:traceplotsreduced"></span>
+<img src="treegrowth_files/figure-html/traceplotsreduced-1.png" alt="Trace plot across models." width="768" />
+<p class="caption">
+Figure 5.1: Trace plot across models.
+</p>
+</div>
+<div class="figure"><span id="fig:thetasreduced"></span>
+<img src="treegrowth_files/figure-html/thetasreduced-1.png" alt="Posteriors for species growth potentials across models." width="768" />
+<p class="caption">
+Figure 5.2: Posteriors for species growth potentials across models.
+</p>
+</div>
+<div class="figure"><span id="fig:thetaireduced"></span>
+<img src="treegrowth_files/figure-html/thetaireduced-1.png" alt="Posteriors for individual growth potentials across models." width="768" />
+<p class="caption">
+Figure 5.3: Posteriors for individual growth potentials across models.
+</p>
+</div>
 
 </div>
             </section>

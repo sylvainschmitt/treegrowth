@@ -11,7 +11,7 @@ opts_chunk$set(
 
 # Reduced data
 
-To select the best model we will first work on a reduced dataset.
+To select the best model we first worked on a reduced dataset.
 We used the full `Guyafor` database that we recoded in `SQL` for faster quesry using `dbplyr`.
 We focused on the variation in diameter of trees across censuses in the P6 (Fig. \@ref(fig:p6gif)).
 We chose to keep individuals with at least 10 censuses and species with at least 10 individuals (Fig. \@ref(fig:datafig)).

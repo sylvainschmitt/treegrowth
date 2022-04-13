@@ -7,23 +7,43 @@ We investigated effects of phylogeny and ecological processes on individual grow
 The individual growth of individual $i$ in species $s$ between individual recruitment $y_0$ and 2020, 
 corresponds to the difference of DBH between the two years, and is defined with a hierarchical model in a lognormal distribution as follows:
 
-$$DBH_{y=2017,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2017}AGR(DBH_{y,s,i})], \sigma^2_1)$$
+$$DBH_{y=2020,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2020}AGR(DBH_{y,s,i})], \sigma^2)$$
 
-where the difference of DBH $DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}$ is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates $AGR$ during the period $y_0-2017$ and of shape $\sigma_1$. 
+where the difference of DBH $DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}$ is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates $AGR$ during the period $y_0-2017$ and of shape $\sigma$. 
 The annual growth rate $AGR$ for individual $i$ in species $s$ at year $y$ with a diameter of $DBH_{y,p,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011]:
 
-$$AGR(DBH_{y,s,i}) = Gmax_i.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)$$
+$$AGR(DBH_{y,s,i}) = Gmax_s.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)$$
 
-where $Gmax_i$ is the maximum growth potential (maximal AGR during individual life) for individual $i$, 
+where $Gmax_s$ is the maximum growth potential for species $s$, 
 $Dopt_s$ is the species optimal diameter at which the individual reaches its maximum growth potential, 
 and $Ks_s$ is the species kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011]. 
-To ease model inference, species optimal diameter $Dopt_p$ and kurtosis $Ks_p$ were defined as random population effects centered on a global $Dopt$ and $Ks$ with corresponding variances $\sigma^2_{P,Dopt}$ and $\sigma^2_{P,Ks}$. . 
 We used Bayesian inference with No-U-Turn Sampler [NUTS, @Hoffman2014] using `stan` language [@Carpenter2017].
+The maximum growth $Gmax$ for individual $i$ in species $s$ can be computed based on the difference between species predicted diameter and observed diameter in 2020:
 
-**Phylogenetic analyses description.**
+$$Gmax_i = Gmax_s + DBH_{y=2020,s,i} - \hat{DBH_{y=2020,s}}$$
 
-**NCI description.**
+To study the phylogenetic signal of individual growth potential $Gmax_i$, we used Blomberg’s K and variance partitioning across individuals, species, genera, and families.
 
-**TWI description.**
+We used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years,
+an indirect measurement of access to light and forest gap dynamics.
+The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows:
 
-**Ecological analyses description.**
+$$NCI_i=\overline{\sum_{j|\delta_{i,j}<20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}$$
+
+with $DBH_{j,t}$ the diameter of the neighbouring tree $j$ in year $t$ and $\delta_{i,j}$ its distance to the individual tree $i$.
+$NCI_i$ is computed for all neighbours at a distance $\delta_{i,j}$ inferior to the maximum neighbouring distance of 20 meters.
+The power of neighbours $DBH_{j,t}$ effect was set to 2 to represent a surface. 
+The decrease of neighbours' diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters. 
+$NCI_i$ is computed as the mean of yearly $NCI_{i,t}$ over the last 30 years denoted by the overline.
+
+We used the topographic wetness index ($TWI$) as proxies of the distribution of soil water and nutrients in Paracou.
+Waterlogging and topography have been highlighted as crucial for forest dynamics [@Ferry2010],
+species-habitat relationships [@Engelbrecht2007], and phenotypic variation [@Schmitt2020).
+Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging,
+shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010].
+TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015]
+based on a LiDAR campaign of the whole Paracou field station done in 2015.
+
+To investigate effects of topography and neighbourhood indices on individual growth we used variance partitioning with linear models.
+
+**Maybe add a joint analyses of phylogeny and ecological processes with a linear mixed model.** 

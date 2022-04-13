@@ -12,9 +12,8 @@ opts_chunk$set(
 
 # Growth `greta` lognormal
 
-**Using `greta` with a lognormal likelihood.**
-
-We used the following growth model with a lognormal distribution to estimate individual growth potential:
+For the third model we used a lognormal likelihood that we sampled with the HMC  algorithm and variational inference using `greta`. 
+Specifically, we used the following model to estimate individual growth potential:
 
 \begin{equation} 
   log(DBH_{y=today,s,i}  - DBH_{y=y0,s,i}) \sim \\
@@ -28,6 +27,8 @@ We used the following growth model with a lognormal distribution to estimate ind
   (\#eq:gmax3)
 \end{equation} 
 
+The sampling took only 15 minutes (Tab. \@ref(tab:timec)) with chains correctly mixing but encompassing static state (Fig. \@ref(fig:traceplotc)) and relatively no correlations among parameters (Fig. \@ref(fig:pairsc)). 
+We obtained correct and varying species (Fig. \@ref(fig:thetasc)) and individual (Fig. \@ref(fig:thetaic)) growth potentials.
 
 ```{r samplingc, eval=F}
 load("save/mdata.Rdata")
@@ -69,19 +70,19 @@ data.frame("Total" = "< 15 minutes") %>%
   kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplotc}
+```{r traceplotc, fig.cap="Trace plot."}
 mcmc_trace(fit, pars = c("thetai1[1,1]", "thetas1[1,1]", "sigma"), nrow = 3)
 ```
 
-```{r pairsc}
+```{r pairsc, fig.cap="Pairs plot."}
 mcmc_pairs(fit, pars = c("thetai1[1,1]", "thetas1[1,1]", "sigma"))
 ```
 
-```{r thetasc}
+```{r thetasc, fig.cap="Posteriors for species growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, ",1]"))
 ```
 
-```{r thetaic}
+```{r thetaic, fig.cap="Posteriors for individual growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, ",1]")) +
   theme(axis.text.y = element_blank())
 ```

@@ -14,9 +14,8 @@ rstan_options(auto_write = T)
 
 # Growth `stan` lognormal
 
-**Using `Stan` with a lognormal likelihood.**
-
-We used the following growth model with a lognormal distribution to estimate individual growth potential in `stan`:
+For the first model we used a lognormal likelihood that we sampled with the NUTS algorithm using `stan`. 
+Specifically, we used the following model to estimate individual growth potential:
 
 \begin{equation} 
   DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
@@ -33,6 +32,9 @@ We used the following growth model with a lognormal distribution to estimate ind
   \theta_{1,s,i} = e^{log(\theta_{1,s}) + \sigma_2.\epsilon_{1,i}} \\ 
     (\#eq:gmax1)
 \end{equation} 
+
+The sampling took up to 46 minutes (Tab. \@ref(tab:timea)) with chains correctly mixing (Fig. \@ref(fig:traceplota)) and relatively no correlations among parameters (Fig. \@ref(fig:pairsa)). 
+We obtained correct and varying species (Fig. \@ref(fig:thetasa)) and individual (Fig. \@ref(fig:thetaia)) growth potentials.
 
 ```{r samplinga, eval=F}
 load("save/mdata.Rdata")
@@ -55,19 +57,19 @@ get_elapsed_time(fit) %>%
   kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplota}
+```{r traceplota, fig.cap="Trace plot."}
 mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
 ```
 
-```{r pairsa}
+```{r pairsa, fig.cap="Pairs plot."}
 mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
 ```
 
-```{r thetasa}
+```{r thetasa, fig.cap="Posteriors for species growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
 ```
 
-```{r thetaia}
+```{r thetaia, fig.cap="Posteriors for individual growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
   theme(axis.text.y = element_blank())
 ```

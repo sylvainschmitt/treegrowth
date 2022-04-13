@@ -3,6 +3,7 @@ rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
 library(bayesplot)
+library(rstan)
 library(greta)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
@@ -11,4 +12,88 @@ opts_chunk$set(
 ```
 
 # Model choice
-<b
+
+We fitted three models on reduced data:
+
+* **stan lognormal**: a lognormal likelihood that we sampled with the NUTS algorithm using `stan`
+* **stan normal**: a normal likelihood that we sampled with the NUTS algorithm using `stan`
+* **greta lognormal**: a lognormal likelihood that we sampled with the NUTS algorithm using `greta`
+
+`greta` is quicker for sampling (Tab. \@ref(tab:timesreduced)) but its chains behave less well than `stan` (Fig. \@ref(fig:traceplotsreduced)).
+And growth potentials were underestimated when using `greta` compared to `stan` (Fig. \@ref(fig:thetasreduced) and Fig. \@ref(fig:thetaireduced)).
+Consequently, we will use the stan lognormal model for further analyses which is the second fastest and which uses the most appropriate likelihood.
+
+```{r fitsreduced}
+load("model/gmax.Rdata")
+fit1 <- fit
+load("model/gmax2.Rdata")
+fit2 <- fit
+load("model/gmax3.Rdata")
+fit3 <- fit
+rm(fit, time)
+```
+
+```{r timesreduced}
+lapply(list("stan lognormal" = fit1, "stan normal" = fit2), get_elapsed_time) %>% 
+  lapply(as.data.frame) %>% 
+  lapply(rownames_to_column, "chain") %>% 
+  bind_rows(.id = "model") %>% 
+    bind_rows(
+    data.frame(model = "greta lognormal", chain = c("chain:1", "chain:2"), warmup = 60*8, sample=60*8)
+  ) %>% 
+  mutate(total = warmup + sample) %>% 
+  arrange(total) %>% 
+  mutate_at(c("warmup", "sample", "total"), lubridate::seconds_to_period) %>% 
+  kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou across models.")
+```
+
+```{r traceplotsreduced, fig.cap="Trace plot across models."}
+list(
+  "stan lognormal" = mcmc_trace_data(fit1, pars = c("thetai1[1]", "thetas1[1]", "sigma")),
+  "stan normal" = mcmc_trace_data(fit2, pars = c("thetai1[1]", "thetas1[1]", "sigma")),
+  "greta lognormal" = mcmc_trace_data(fit3, pars = c("thetai1[1,1]", "thetas1[1,1]", "sigma")) %>% 
+    mutate(iteration = iteration - 1000) %>% 
+    filter(iteration > 0)
+) %>% bind_rows(.id = "model") %>% 
+  mutate(parameter = recode(parameter, "thetai1[1,1]" = "thetai1[1]", "thetas1[1,1]" = "thetas1[1]")) %>% 
+  ggplot(aes(iteration, value, col = model)) +
+    geom_line(alpha = 0.5) +
+  facet_grid(parameter ~ chain, scales = "free")
+```
+
+```{r thetasreduced, fig.cap="Posteriors for species growth potentials across models."}
+list(
+  "stan lognormal" = mcmc_intervals_data(fit1, pars = paste0("thetas1[", 1:mdata$S, "]")),
+  "stan normal" = mcmc_intervals_data(fit2, pars = paste0("thetas1[", 1:mdata$S, "]")),
+  "greta lognormal" = mcmc_intervals_data(fit3, pars = paste0("thetas1[", 1:mdata$S, ",1]"))
+) %>% bind_rows(.id = "model") %>% 
+  mutate(parameter = gsub(",1", "", parameter)) %>% 
+  ggplot(aes(x = parameter, 
+             xend = parameter,
+             color = model, fill = model)) +
+  geom_jitter(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() +
+  xlab(expression(theta[s])) + ylab("Posterior")
+```
+
+```{r thetaireduced, fig.cap="Posteriors for individual growth potentials across models."}
+list(
+  "stan lognormal" = mcmc_intervals_data(fit1, pars = paste0("thetai1[", 1:mdata$I, "]")),
+  "stan normal" = mcmc_intervals_data(fit2, pars = paste0("thetai1[", 1:mdata$I, "]")),
+  "greta lognormal" = mcmc_intervals_data(fit3, pars = paste0("thetai1[", 1:mdata$I, ",1]"))
+) %>% bind_rows(.id = "model") %>% 
+  mutate(parameter = gsub(",1", "", parameter)) %>% 
+  ggplot(aes(x = parameter, 
+             xend = parameter,
+             color = model, fill = model)) +
+  geom_jitter(aes(y = m), shape = 21, size = 2, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() +
+  xlab(expression(theta[i])) + ylab("Posterior") +
+  theme(axis.text.y = element_blank())
+```

@@ -12,22 +12,10 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = T)
 ```
 
-# Growth 2
+# Growth `stan` normal
 
-**Using `Stan` with a normal likelihood.**
-
-We used the following growth model with a normal distribution to estimate individual growth potential:
-
-\begin{equation} 
-  log(DBH_{y=today,s,i}  - DBH_{y=y0,s,i}) \sim \\
-  \mathcal{N} (log(\sum _{y=y_0} ^{y=today} \theta_{1,s,i}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
-  log(\theta_{1,s,i}) \sim \mathcal {N}(log(\theta_{1,s}), \sigma_2) \\ 
-  log(\theta_{2,s}) \sim \mathcal {N}(log(\theta_2),\sigma_3) \\ 
-  log(\theta_{3,s}) \sim \mathcal {N}(log(\theta_3),\sigma_4)
-  (\#eq:gmax2th)
-\end{equation} 
-
-In `stan`, we fitted the equivalent model with the following priors:
+For the second model we used a normal likelihood that we sampled with the NUTS algorithm using `stan`. 
+Specifically, we used the following model to estimate individual growth potential:
 
 \begin{equation} 
   log(DBH_{y=today,s,i}  - DBH_{y=y0,s,i}) \sim \\
@@ -43,6 +31,9 @@ In `stan`, we fitted the equivalent model with the following priors:
   (log\theta_{1,s}, \sigma_1, \sigma_2, \sigma_3, \sigma_4) \sim \mathcal{N}_T(0,1) \\ 
   (\#eq:gmax2stan)
 \end{equation} 
+
+The sampling took up to 59 minutes (Tab. \@ref(tab:timeb)) with chains correctly mixing (Fig. \@ref(fig:traceplotb)) and relatively no correlations among parameters (Fig. \@ref(fig:pairsb)). 
+We obtained correct and varying species (Fig. \@ref(fig:thetasb)) and individual (Fig. \@ref(fig:thetaib)) growth potentials.
 
 ```{r samplingb, eval=F}
 load("save/mdata.Rdata")
@@ -65,19 +56,19 @@ get_elapsed_time(fit) %>%
   kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
 ```
 
-```{r traceplotb}
+```{r traceplotb, fig.cap="Trace plot."}
 mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
 ```
 
-```{r pairsb}
+```{r pairsb, fig.cap="Pairs plot."}
 mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
 ```
 
-```{r thetasb}
+```{r thetasb, fig.cap="Posteriors for species growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
 ```
 
-```{r thetaib}
+```{r thetaib, fig.cap="Posteriors for individual growth potentials."}
 mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
   theme(axis.text.y = element_blank())
 ```
