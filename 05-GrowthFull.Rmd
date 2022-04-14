@@ -13,3 +13,34 @@ opts_chunk$set(
 # Growth Full
 
 **Work in progress.**
+
+```{r samplingfull, eval=F}
+load("save/mdata_full.Rdata")
+
+# variables & priors
+thetas <- lognormal(0, 1, dim = c(mdata$S, 3), truncation = c(0, 3))
+sigma <- normal(0, 1, truncation = c(0, Inf))
+
+# predictor
+Sigma <- rep(1, mdata$I)
+for(t in 1:mdata$Y) {
+  Sigma[mdata$Y0 == mdata$years[t]] <- mdata$DBH0[mdata$Y0 == mdata$years[t]]
+  Sigma <- Sigma + exp(-0.5* (log(Sigma / (100*thetas[mdata$species,2])) / thetas[mdata$species,3])^2)
+}
+Sigma <- Sigma - mdata$DBH0
+
+# likelihood
+DeltaDBH <- mdata$DBHtoday - mdata$DBH0
+distribution(DeltaDBH) <- lognormal(log(thetas[mdata$species,1]*Sigma), sigma)
+
+# generate quantities
+thetai <- mdata$DBHtoday / Sigma
+
+# model
+m <- model(thetai, thetas, sigma)
+
+# sampling
+fit <- mcmc(m, warmup = 1000, n_samples = 1000, chains = 2)
+
+save(data, mdata, fit, file = "save/gmax_greta_full.Rdata")
+```

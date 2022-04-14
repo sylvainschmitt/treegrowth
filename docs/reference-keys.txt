@@ -28,3 +28,4 @@ blombergs-k
 variance-partitioning
 environment
 conclusion
+fig:datafigfull

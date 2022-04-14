@@ -34,3 +34,77 @@ anim_save("save/paracou.gif", g)
 ```{r paracougif, fig.cap="Plot 6 inventories through cenususes."}
 knitr::include_graphics("save/paracou.gif")
 ```
+
+```{r dataprepfull}
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+paracou <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  filter(Plot %in% 1:15) %>% 
+  collect()
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+data <- paracou %>% 
+  mutate(species = paste(Genre, Espece)) %>% 
+   filter(!grepl("Indet", species)) %>% 
+  mutate(speciesNum = as.numeric(as.factor(species))) %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  mutate(Y0 = first(CensusYear)) %>% 
+  mutate(DBH0 = first(DBH)) %>% 
+  mutate(Ytoday = last(CensusYear)) %>% 
+  mutate(DBHtoday = last(DBH)+10^-6) %>% 
+  group_by(Forest, Plot, SubPlot, TreeFieldNum, idTree, Xfield, Yfield, Xutm, Yutm, Family, Genus, Species,
+           species, speciesNum, Y0, DBH0, Ytoday, DBHtoday) %>% 
+  summarise(N = n()) %>% 
+  filter(Ytoday == 2020) %>% 
+  filter(DBHtoday > DBH0)
+```
+
+```{r datafigfull, fig.cap="Caption."}
+cowplot::plot_grid(
+  data %>% 
+    ggplot(aes(N)) +
+    geom_histogram() +
+    scale_y_log10() +
+    geom_vline(xintercept = 10, col = "red") +
+    xlab("Censuses per individual") +
+    ggtitle(paste(round(nrow(filter(data, N > 10))/nrow(data)*100, 1), "% > 10")),
+  data %>% 
+    group_by(species) %>% 
+    summarise(N = n()) %>% 
+    ggplot(aes(N)) +
+    geom_histogram() +
+    scale_y_log10() +
+    scale_x_log10() +
+    geom_vline(xintercept = 10, col = "red") +
+    xlab("Individuals per species") +
+    ggtitle(paste(round(nrow(filter(summarise(group_by(data, species), N = n()), N > 10))/nrow(summarise(group_by(data, species), N = n()))*100, 1), "% > 10")),
+  data %>% 
+    ggplot(aes(Ytoday - Y0, DBHtoday - DBH0)) +
+    geom_point() +
+    xlab(expression(Delta[Y])) + ylab(expression(Delta[DBH]))
+)
+```
+
+```{r mdatafull, eval=F}
+data <- data %>% 
+  group_by(species) %>% 
+  mutate(Nsp = n()) %>% 
+  filter(N > 10, Nsp > 10) %>% 
+  ungroup() %>% 
+  mutate(speciesNum = as.numeric(as.factor(species)))
+mdata <- list(I = nrow(data),
+              Y = 2020 - min(data$Y0) + 1,
+              S = max(data$speciesNum),
+              years = min(data$Y0):2020,
+              DBH0 = data$DBH0,
+              Y0 = data$Y0,
+              DBHtoday = data$DBHtoday + 10^-6,
+              species = data$speciesNum)
+save(data, mdata, file = file.path("save", "mdata_full.Rdata")) 
+```
+
+```{r}
+load(file.path("save", "mdata_full.Rdata")) 
+str(mdata)
+```
