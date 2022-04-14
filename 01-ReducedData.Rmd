@@ -112,11 +112,10 @@ mdata <- list(I = nrow(data),
               Y0 = data$Y0,
               DBHtoday = data$DBHtoday + 10^-6,
               species = data$speciesNum)
-save(data, mdata, file = file.path("save", "mdata.Rdata")) 
+save(data, mdata, file = file.path("save", "mdata_reduced.Rdata")) 
 ```
 
 ```{r}
-load(file.path("save", "mdata.Rdata")) 
+load(file.path("save", "mdata_reduced.Rdata")) 
 str(mdata)
 ```
-

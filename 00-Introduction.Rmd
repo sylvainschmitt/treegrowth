@@ -7,20 +7,17 @@ We investigated effects of phylogeny and ecological processes on individual grow
 The individual growth of individual $i$ in species $s$ between individual recruitment $y_0$ and 2020, 
 corresponds to the difference of DBH between the two years, and is defined with a hierarchical model in a lognormal distribution as follows:
 
-$$DBH_{y=2020,s,i} - DBH_{y=y0,s,i} \sim logN(log[\sum_{y=y0}^{y=2020}AGR(DBH_{y,s,i})], \sigma^2)$$
+$$DBH_{y=2020,s,i} - DBH_{y=y0,s,i} \sim logN(log[Gmax_s \times \sum_{y=y0}^{y=2020} exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)], \sigma^2)$$
 
 where the difference of DBH $DBH_{y=2017,p,i}-DBH_{y=y_0,p,i}$ is defined with a lognormal distribution located on the logarithm of the sum of annual growth rates $AGR$ during the period $y_0-2017$ and of shape $\sigma$. 
-The annual growth rate $AGR$ for individual $i$ in species $s$ at year $y$ with a diameter of $DBH_{y,p,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011]:
-
-$$AGR(DBH_{y,s,i}) = Gmax_s.exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)$$
-
+The annual growth rate $AGR$ for individual $i$ in species $s$ at year $y$ with a diameter of $DBH_{y,p,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011],
 where $Gmax_s$ is the maximum growth potential for species $s$, 
 $Dopt_s$ is the species optimal diameter at which the individual reaches its maximum growth potential, 
 and $Ks_s$ is the species kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011]. 
 We used Bayesian inference with No-U-Turn Sampler [NUTS, @Hoffman2014] using `stan` language [@Carpenter2017].
 The maximum growth $Gmax$ for individual $i$ in species $s$ can be computed based on the difference between species predicted diameter and observed diameter in 2020:
 
-$$Gmax_i = Gmax_s + DBH_{y=2020,s,i} - \hat{DBH_{y=2020,s}}$$
+$$Gmax_i = \frac{DBH_{y=2020,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)}$$
 
 To study the phylogenetic signal of individual growth potential $Gmax_i$, we used Blomberg’s K and variance partitioning across individuals, species, genera, and families.
 

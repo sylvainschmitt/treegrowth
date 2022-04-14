@@ -1,74 +1,87 @@
-```{r setupgrowthb, include=FALSE, eval=T}
+```{r setupgrowthc, include=FALSE, eval=T}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
 library(bayesplot)
-library(rstan)
+library(greta)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
   cache = T, cache.lazy = F, eval=T)
-options(mc.cores = parallel::detectCores())
-rstan_options(auto_write = T)
 ```
 
-# Growth `stan` normal
+# Growth `greta`
 
-For the second model we used a normal likelihood that we sampled with the NUTS algorithm using `stan`. 
+For the second model we used a lognormal likelihood that we sampled with the HMC  algorithm and variational inference using `greta`. 
 Specifically, we used the following model to estimate individual growth potential:
 
 \begin{equation} 
-  log(DBH_{y=today,s,i}  - DBH_{y=y0,s,i}) \sim \\
-  \mathcal{N} (\hat{log\theta_{1,s,i}} + log(\sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\hat{\theta_{2,s}}})}{\hat{\theta_{3,s}}}]^2)), \sigma_1) \\ 
-  \hat{\theta_{1,s,i}} = log\theta_{1,s} + \sigma_2.\epsilon_{1,i} \\ 
-  \hat{\theta_{2,s}}  = e^{log(\theta_2) + \sigma_3.\epsilon_{2,s}} \\ 
-  \hat{\theta_{3,s}}  = e^{log(\theta_3) + \sigma_4.\epsilon_{3,s}} \\  
-  \epsilon_{1,i} \sim \mathcal{N}(0,1) \\
-  \epsilon_{2,s} \sim \mathcal{N}(0,1) \\
-  \epsilon_{3,s} \sim \mathcal{N}(0,1) \\
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
   ~ \\
-  (\theta_2, \theta_3) \sim \mathcal{logN}(log(1),1) \\ 
-  (log\theta_{1,s}, \sigma_1, \sigma_2, \sigma_3, \sigma_4) \sim \mathcal{N}_T(0,1) \\ 
-  (\#eq:gmax2stan)
+  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
+  \sigma \sim \mathcal{N}_T(0,1) \\ 
+  ~ \\
+  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
+    (\#eq:gmax2)
 \end{equation} 
 
-The sampling took up to 59 minutes (Tab. \@ref(tab:timeb)) with chains correctly mixing (Fig. \@ref(fig:traceplotb)) and relatively no correlations among parameters (Fig. \@ref(fig:pairsb)). 
-We obtained correct and varying species (Fig. \@ref(fig:thetasb)) and individual (Fig. \@ref(fig:thetaib)) growth potentials.
+The sampling took only 15 minutes (Tab. \@ref(tab:timec)) with chains correctly mixing but encompassing static state (Fig. \@ref(fig:traceplotc)) and relatively no correlations among parameters (Fig. \@ref(fig:pairsc)). 
+We obtained correct and varying species (Fig. \@ref(fig:thetasc)) and individual (Fig. \@ref(fig:thetaic)) growth potentials.
 
-```{r samplingb, eval=F}
-load("save/mdata.Rdata")
-model <- stan_model("model/gmax2.stan")
-fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list(adapt_delta = 0.99, max_treedepth = 12),
-                include = F, pars = c("epsilon_s2", "epsilon_s3", "epsilon_i", "DBH"))
-save(data, mdata, fit, file = "model/gmax2.Rdata"))
+```{r samplingc, eval=F}
+load("save/mdata_reduced.Rdata")
+
+# variables & priors
+thetas <- lognormal(0, 1, dim = c(mdata$S, 3), truncation = c(0, 1))
+sigma <- normal(0, 1, truncation = c(0, Inf))
+
+# predictor
+Sigma <- rep(1, mdata$I)
+for(t in 1:mdata$Y) {
+  Sigma[mdata$Y0 == mdata$years[t]] <- mdata$DBH0[mdata$Y0 == mdata$years[t]]
+  Sigma <- Sigma + exp(-0.5* (log(Sigma / (100*thetas[mdata$species,2])) / thetas[mdata$species,3])^2)
+}
+Sigma <- Sigma - mdata$DBH0
+
+# likelihood
+DeltaDBH <- mdata$DBHtoday - mdata$DBH0
+distribution(DeltaDBH) <- lognormal(log(thetas[mdata$species,1]*Sigma), sigma)
+
+# generate quantities
+thetai <- mdata$DBHtoday / Sigma
+
+# model
+m <- model(thetai, thetas, sigma)
+
+# sampling
+fit <- mcmc(m, warmup = 1000, n_samples = 1000, chains = 2)
+
+save(data, mdata, fit, file = "save/gmax_greta_reduced.Rdata")
 ```
 
-```{r fitb}
-load("model/gmax2.Rdata")
+```{r fitc}
+load("save/gmax_greta_reduced.Rdata") 
 ```
 
-```{r timeb}
-get_elapsed_time(fit) %>% 
-  as.data.frame() %>% 
-  rownames_to_column("chain") %>% 
-  mutate(total = warmup + sample) %>% 
-  mutate_at(c("warmup", "sample", "total"), lubridate::seconds_to_period) %>% 
-  kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.")
+```{r timec}
+data.frame("Total" = "< 20 minutes") %>% 
+  kable(caption = "Elapsed time to fit 187 trees over 37 years and 3 species in the plot 14 of Paracou.") 
 ```
 
-```{r traceplotb, fig.cap="Trace plot."}
-mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
+```{r traceplotc, fig.cap="Trace plot."}
+mcmc_trace(fit, pars = c("thetas[1,1]", "thetas[1,2]", "thetas[1,3]", "sigma")) 
 ```
 
-```{r pairsb, fig.cap="Pairs plot."}
-mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
+```{r pairsc, fig.cap="Pairs plot."}
+mcmc_pairs(fit, pars = c("thetas[1,1]", "thetas[1,2]", "thetas[1,3]", "sigma")) 
 ```
 
-```{r thetasb, fig.cap="Posteriors for species growth potentials."}
-mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
+```{r thetasc, fig.cap="Posteriors for species growth potentials."}
+mcmc_intervals(fit, pars = paste0("thetas[", 1:mdata$S, ",1]")) 
 ```
 
-```{r thetaib, fig.cap="Posteriors for individual growth potentials."}
-mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
-  theme(axis.text.y = element_blank())
+```{r thetaic, fig.cap="Posteriors for individual growth potentials."}
+mcmc_intervals(fit, pars = paste0("thetai[", 1:mdata$I, ",1]")) +
+  theme(axis.text.y = element_blank()) 
 ```

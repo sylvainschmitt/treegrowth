@@ -1,3 +1,5 @@
+treegrowth 0.0.0.9004: corrected Gmaxi
+
 treegrowth 0.0.0.9003: model choice
 
 treegrowth 0.0.0.9002: model comparisons

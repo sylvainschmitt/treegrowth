@@ -12,24 +12,19 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = T)
 ```
 
-# Growth `stan` lognormal
+# Growth `stan`
 
 For the first model we used a lognormal likelihood that we sampled with the NUTS algorithm using `stan`. 
 Specifically, we used the following model to estimate individual growth potential:
 
 \begin{equation} 
   DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
-  \mathcal{logN} (log(\sum _{y=y_0} ^{y=today} \theta_{1,s}.exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
-  \theta_{2,s}  = e^{log(\theta_2) + \sigma_3.\epsilon_{2,s}} \\ 
-  \theta_{3,s}  = e^{log(\theta_3) + \sigma_4.\epsilon_{3,s}} \\  
-  \epsilon_{1,i} \sim \mathcal{N}(0,1) \\
-  \epsilon_{2,p} \sim \mathcal{N}(0,1) \\
-  \epsilon_{3,p} \sim \mathcal{N}(0,1) \\
+  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
   ~ \\
-  (\theta_{1,p}, \theta_2, \theta_3) \sim \mathcal{logN}^3(log(1),1) \\ 
-  (\sigma_1, \sigma_2, \sigma_3, \sigma_4) \sim \mathcal{N}^4_T(0,1) \\ 
+  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
+  \sigma \sim \mathcal{N}_T(0,1) \\ 
   ~ \\
-  \theta_{1,s,i} = e^{log(\theta_{1,s}) + \sigma_2.\epsilon_{1,i}} \\ 
+  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
     (\#eq:gmax1)
 \end{equation} 
 
@@ -37,15 +32,15 @@ The sampling took up to 46 minutes (Tab. \@ref(tab:timea)) with chains correctly
 We obtained correct and varying species (Fig. \@ref(fig:thetasa)) and individual (Fig. \@ref(fig:thetaia)) growth potentials.
 
 ```{r samplinga, eval=F}
-load("save/mdata.Rdata")
+load("save/mdata_reduced.Rdata")
 model <- stan_model("model/gmax.stan")
 fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list(adapt_delta = 0.99, max_treedepth = 12),
                 include = F, pars = c("epsilon_s2", "epsilon_s3", "epsilon_i", "DBH"))
-save(data, mdata, fit, file = "model/gmax.Rdata"))
+save(data, mdata, fit, file = "save/gmax_stan_reduced.Rdata"))
 ```
 
 ```{r fita}
-load("model/gmax.Rdata")
+load("save/gmax_stan_reduced.Rdata") 
 ```
 
 ```{r timea}
@@ -58,18 +53,18 @@ get_elapsed_time(fit) %>%
 ```
 
 ```{r traceplota, fig.cap="Trace plot."}
-mcmc_trace(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma", "lp__"), np = nuts_params(fit))
+mcmc_trace(fit, pars = c("thetas[1,1]", "thetas[1,2]", "thetas[1,3]",  "sigma", "lp__"), np = nuts_params(fit))
 ```
 
 ```{r pairsa, fig.cap="Pairs plot."}
-mcmc_pairs(fit, pars = c("thetai1[1]", "thetas1[1]", "sigma"), np = nuts_params(fit))
+mcmc_pairs(fit, pars = c("thetas[1,1]", "thetas[1,2]", "thetas[1,3]",  "sigma"), np = nuts_params(fit))
 ```
 
 ```{r thetasa, fig.cap="Posteriors for species growth potentials."}
-mcmc_intervals(fit, pars = paste0("thetas1[", 1:mdata$S, "]"))
+mcmc_intervals(fit, pars = paste0("thetas[", 1:mdata$S, ",1]"))
 ```
 
 ```{r thetaia, fig.cap="Posteriors for individual growth potentials."}
-mcmc_intervals(fit, pars = paste0("thetai1[", 1:mdata$I, "]")) +
+mcmc_intervals(fit, pars = paste0("thetai[", 1:mdata$I, "]")) +
   theme(axis.text.y = element_blank())
 ```

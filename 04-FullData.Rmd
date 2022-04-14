@@ -2,14 +2,35 @@
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
-library(bayesplot)
-library(greta)
+library(gganimate)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
-  cache = T, cache.lazy = F, eval=T)
+  cache = T, cache.lazy = F)
 ```
 
 # Full data
 
 **Work in progress.**
+
+```{r paracou, eval=F}
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+paracou <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  filter(Plot %in% 1:15) %>% 
+  collect()
+DBI::dbDisconnect(guyafor)
+g <- paracou %>% 
+  ggplot(aes(Xfield, Yfield, size = CircCorr, col = paste(Genre, Espece))) +
+  geom_point(aes(group = idTree), alpha = 0.5) +
+  scale_color_discrete(guide = "none") +
+  coord_equal() + 
+  facet_wrap(~ Plot) +
+  transition_states(CensusYear) + 
+  ggtitle('Census Year : {closest_state}')
+anim_save("save/paracou.gif", g)
+```
+
+```{r paracougif, fig.cap="Plot 6 inventories through cenususes."}
+knitr::include_graphics("save/paracou.gif")
+```

@@ -9,28 +9,26 @@ data {
   vector[I] DBHtoday ; // today DBH
 }
 parameters {
-  vector<lower=0, upper=1>[S] thetas1 ;
-  vector<lower=0, upper=1>[S] thetas2 ;
-  vector<lower=0, upper=1>[S] thetas3 ;
+  matrix<lower=0, upper=1>[S,3] thetas ;
   real<lower=0> sigma ;
 }
 transformed parameters {
-  vector<lower=0>[I] DBH = rep_vector(1, I) ;
+  vector<lower=0>[I] Sigma = rep_vector(1, I) ;
   for(t in 1:Y-1) {
     for(i in 1:I) {
       if(years[t] == Y0[i])
-        DBH[i] = DBH0[i] ;
+        Sigma[i] = DBH0[i] ;
     }
-    DBH += thetas1[species] .* exp(-0.5* square(log(DBH ./ (100*thetas2[species])) ./ thetas3[species])) ;
+    Sigma += exp(-0.5* square(log(Sigma ./ (100*thetas[species,2])) ./ thetas[species,3])) ;
   }
+  Sigma = Sigma - DBH0 ;
 }
 model {
-  DBHtoday ~ lognormal(log(DBH), sigma) ;
-  thetas1 ~ lognormal(0, 1) ;
-  thetas2 ~ lognormal(0, 1) ;
-  thetas3 ~ lognormal(0, 1) ;
+  DBHtoday - DBH0 ~ lognormal(log(thetas[species,1] .* Sigma), sigma) ;
+  for(j in 1:3)
+    thetas[,j] ~ lognormal(0, 1) ;
   sigma ~ normal(0, 1) ;
 }
 generated quantities {
-  vector[I] thetai1 = thetas1[species] + DBHtoday - DBH ; 
+  vector[I] thetai = DBHtoday ./ Sigma ; 
 }
