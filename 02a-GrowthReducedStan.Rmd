@@ -12,7 +12,7 @@ options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = T)
 ```
 
-# Growth `stan`
+# Growth reduced `stan`
 
 For the first model we used a lognormal likelihood that we sampled with the NUTS algorithm using `stan`. 
 Specifically, we used the following model to estimate individual growth potential:

@@ -19,8 +19,6 @@ The maximum growth $Gmax$ for individual $i$ in species $s$ can be computed base
 
 $$Gmax_i = \frac{DBH_{y=2020,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)}$$
 
-To study the phylogenetic signal of individual growth potential $Gmax_i$, we used Blomberg’s K and variance partitioning across individuals, species, genera, and families.
-
 We used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years,
 an indirect measurement of access to light and forest gap dynamics.
 The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows:
@@ -41,6 +39,10 @@ shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010].
 TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015]
 based on a LiDAR campaign of the whole Paracou field station done in 2015.
 
-To investigate effects of topography and neighbourhood indices on individual growth we used variance partitioning with linear models.
 
-**Maybe add a joint analyses of phylogeny and ecological processes with a linear mixed model.** 
+
+To study the effect of phylogeny and environment, 
+we investigated the effects of family, genus, species & topography $TWI$ and neighbourhood $NCI$ indices 
+on individual growth $Gmax$ with the following linear mixed model:
+
+$$log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})$$

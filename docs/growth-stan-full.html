@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Growth Full | Tree Growth</title>
+  <title>Chapter 6 Growth Stan Full | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Growth Full | Tree Growth" />
+  <meta property="og:title" content="Chapter 6 Growth Stan Full | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Growth Full | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 6 Growth Stan Full | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="full-data.html"/>
-<link rel="next" href="growth-full-1.html"/>
+<link rel="next" href="growth-greta-full.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -78,10 +78,9 @@
 <li class="chapter" data-level="3" data-path="growth-reduced-greta.html"><a href="growth-reduced-greta.html"><i class="fa fa-check"></i><b>3</b> Growth reduced <code>greta</code></a></li>
 <li class="chapter" data-level="4" data-path="model-comparisons.html"><a href="model-comparisons.html"><i class="fa fa-check"></i><b>4</b> Model comparisons</a></li>
 <li class="chapter" data-level="5" data-path="full-data.html"><a href="full-data.html"><i class="fa fa-check"></i><b>5</b> Full data</a></li>
-<li class="chapter" data-level="6" data-path="growth-full.html"><a href="growth-full.html"><i class="fa fa-check"></i><b>6</b> Growth Full</a></li>
-<li class="chapter" data-level="7" data-path="growth-full-1.html"><a href="growth-full-1.html"><i class="fa fa-check"></i><b>7</b> Growth Full</a></li>
-<li class="chapter" data-level="8" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>8</b> Conclusion</a></li>
-<li class="chapter" data-level="9" data-path="temporal-ar.html"><a href="temporal-ar.html"><i class="fa fa-check"></i><b>9</b> Temporal AR</a></li>
+<li class="chapter" data-level="6" data-path="growth-stan-full.html"><a href="growth-stan-full.html"><i class="fa fa-check"></i><b>6</b> Growth Stan Full</a></li>
+<li class="chapter" data-level="7" data-path="growth-greta-full.html"><a href="growth-greta-full.html"><i class="fa fa-check"></i><b>7</b> Growth greta Full</a></li>
+<li class="chapter" data-level="8" data-path="michaelis-menten.html"><a href="michaelis-menten.html"><i class="fa fa-check"></i><b>8</b> Michaelis Menten</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -106,9 +105,18 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="growth-full" class="section level1">
-<h1><span class="header-section-number">Chapter 6</span> Growth Full</h1>
-<p><strong>Work in progress.</strong></p>
+<div id="growth-stan-full" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Growth Stan Full</h1>
+<p><span class="math display" id="eq:gmax3">\[\begin{equation} 
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
+  ~ \\
+  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
+  \sigma \sim \mathcal{N}_T(0,1) \\ 
+  ~ \\
+  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
+    \tag{6.1}
+\end{equation}\]</span></p>
 <div class="figure"><span id="fig:traceplotstanfullsp1"></span>
 <img src="treegrowth_files/figure-html/traceplotstanfullsp1-1.png" alt="Trace plot sp1." width="768" />
 <p class="caption">
@@ -277,7 +285,7 @@ Figure 6.6: Species phylogeny. The color indicate the median of the species grow
         </div>
       </div>
 <a href="full-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="growth-full-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="growth-greta-full.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -328,6 +336,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

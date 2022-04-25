@@ -1,0 +1,176 @@
+```{r setupgrowthfulstanl, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+library(rstan)
+library(ggtree)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+```
+
+```{r NCI, eval=F}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(parallel)
+library(doSNOW)
+library(foreach)
+library(tidyverse)
+load("save/gmax_greta_full.Rdata") 
+rm(mdata, fit)
+cl <- makeCluster(30, outfile = "/dev/null")
+registerDoSNOW(cl)
+pb <- txtProgressBar(max = nrow(data), style = 3)
+progress <- function(n) setTxtProgressBar(pb, n)
+opts <- list(progress = progress)
+NC <- foreach(ind=1:nrow(data),
+              .packages = "dplyr",
+              .options.snow = opts) %dopar% {
+                con <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+                NC <- tbl(con, "inventory") %>% 
+                  filter(Plot == local(data$Plot[ind])) %>% 
+                  filter(idTree != local(data$idTree[ind])) %>% 
+                  mutate(dij = sqrt((local(data$Xutm[ind]) - Xutm)^2+(local(data$Yutm[ind]) - Yutm)^2)) %>% 
+                  filter(dij < 20) %>% 
+                  mutate(DBH = CircCorr/pi) %>% 
+                  collect() %>% 
+                  group_by(CensusYear) %>% 
+                  summarise(NCI = sum(DBH*DBH*exp(-0.25*dij))) %>% 
+                  ungroup() %>% 
+                  summarise(idTree = local(data$idTree[ind]),
+                            NCI = mean(NCI))
+                DBI::dbDisconnect(con)
+                return(NC)
+              } 
+close(pb)
+stopCluster(cl)
+NC <- bind_rows(NC)
+write_tsv(NC, file = "save/env_full.tsv")
+```
+
+```{r speciesfulltree, eval=F}
+library(V.PhyloMaker)
+splist <- data %>% 
+  dplyr::select(Family, Genus, Species) %>% 
+  unique() %>% 
+  mutate(species = paste(Genus, Species), genus = Genus, family = Family) %>% 
+  dplyr::select(species, genus, family)
+tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
+# save(tree, splist, file = "save/phylogeny.Rdata")
+# load("save/phylogeny.Rdata") 
+ape::write.tree(tree$scenario.3, "save/phylogeny_full.tree")
+```
+
+# Growth Stan Full
+
+\begin{equation} 
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
+  ~ \\
+  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
+  \sigma \sim \mathcal{N}_T(0,1) \\ 
+  ~ \\
+  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
+    (\#eq:gmax3)
+\end{equation} 
+
+```{r samplingstanfull, eval=F}
+load("save/mdata_full.Rdata")
+model <- stan_model("model/gmax.stan")
+fit <- sampling(model, chains = 2, data = mdata, save_warmup = F, control = list(adapt_delta = 0.99, max_treedepth = 12),
+                include = F, pars = c("epsilon_s2", "epsilon_s3", "epsilon_i", "DBH"))
+save(data, mdata, fit, file = "save/gmax_stan_full.Rdata"))
+```
+
+```{r fitstanfull}
+load("save/gmax_stan_full.Rdata") 
+```
+
+```{r traceplotstanfullsp1, fig.cap="Trace plot sp1."}
+sp <- 1
+mcmc_trace(fit, pars = c(paste0("thetas[", sp, ",1]"), 
+                         paste0("thetas[", sp, ",2]"), 
+                         paste0("thetas[", sp, ",3]"), 
+                         "sigma")) 
+```
+
+```{r traceplotstanfull, fig.cap="Trace plot sp3."}
+sp <- 3
+mcmc_trace(fit, pars = c(paste0("thetas[", sp, ",1]"), 
+                         paste0("thetas[", sp, ",2]"), 
+                         paste0("thetas[", sp, ",3]"), 
+                         "sigma")) 
+```
+
+```{r pairsstanfull, fig.cap="Pairs plot."}
+mcmc_pairs(fit, pars = c("thetas[1,1]", "thetas[1,2]", "thetas[1,3]", "sigma")) 
+```
+
+```{r thetasstanfull, fig.cap="Posteriors for species growth potentials."}
+mcmc_intervals(fit, pars = paste0("thetas[", 1:mdata$S, ",1]")) 
+```
+
+```{r thetaistanfull, fig.cap="Posteriors for individual growth potentials."}
+mcmc_intervals(fit, pars = paste0("thetai[", 1:mdata$I, "]")) +
+  theme(axis.text.y = element_blank()) 
+```
+
+```{r growthstanfulldata, eval=F}
+load("save/gmax_stan_full.Rdata") 
+data$Gmaxi <- mcmc_intervals_data(fit, pars = paste0("thetai[", 1:mdata$I, "]"))$m
+data <- left_join(data, 
+          data.frame(speciesNum = 1:mdata$S, 
+                     Gmaxs = mcmc_intervals_data(fit, pars = paste0("thetai[", 1:mdata$S, "]"))$m))
+data <- data %>% 
+  left_join(read_tsv(file = "save/env_full.tsv"))
+vroom::vroom_write(data, "save/growth_stan_full.tsv")
+```
+
+```{r datastanfull}
+growth <- vroom::vroom("save/growth_full.tsv", show_col_types = F)
+phylo <- ape::read.tree("save/phylogeny_full.tree")
+```
+
+```{r lmmstanfull}
+lme4::lmer(log(Gmaxi) ~ log(NCI) + (1  | Family/Genus/species), growth) %>% 
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r NCIstanfull}
+ggplot(growth, aes(log(NCI), log(Gmaxi), col = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(group = NA)) +
+  scale_color_discrete(guide = "none")
+```
+
+```{r phylofigstanfull, fig.cap="Species phylogeny. The color indicate the median of the species growth potential (Gmaxs)."}
+fortify(phylo) %>% 
+  mutate(species = gsub("_", " ", label)) %>%
+  mutate(label = species) %>% 
+  left_join(growth) %>% 
+  ggtree(aes(color = Gmaxs), layout="circular") + 
+  geom_tiplab2(size = 2) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2)) +
+  viridis::scale_color_viridis(expression(Gmax[s]))
+```
+
+```{r , fig.cap=" Variance partitioning of TWI effect across taxonomic levels. Variance partitioning was obtained using linear mixed models.", eval=F}
+nlme::lme(log(Gmaxi) ~ 1, random=~1|Family/Genus/Species, growth) %>% 
+  ape::varcomp(scale = F, cum = F) %>% 
+  as.vector() %>% 
+  data.frame(level = c("Family", "Genus", "Species", "Individual"), variance = as.vector(.)) %>% 
+  mutate(level = factor(level, levels = c("Family", "Genus", "Species", "Individual"))) %>% 
+  mutate(pct = variance / sum(variance)*100) %>% 
+  mutate(pct_text = paste0(round(pct), "%")) %>% 
+  mutate(pct_text = gsub("^0%", "", pct_text)) %>% 
+  ggplot(aes(x = 1, y = pct, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
+  xlab("Trait") + ylab("Percentage of variance") +
+  scale_x_discrete(labels = scales::parse_format()) +
+  scale_color_discrete("") +
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank())   
+```

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Tree Growth</title>
+  <title>Chapter 3 Growth reduced greta | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Tree Growth" />
+  <meta property="og:title" content="Chapter 3 Growth reduced greta | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 3 Growth reduced greta | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="michaelis-menten.html"/>
-
+<link rel="prev" href="growth-reduced-stan.html"/>
+<link rel="next" href="model-comparisons.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -105,49 +105,55 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="growth-reduced-greta" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Growth reduced <code>greta</code></h1>
+<p>For the second model we used a lognormal likelihood that we sampled with the HMC algorithm and variational inference using <code>greta</code>.
+Specifically, we used the following model to estimate individual growth potential:</p>
+<p><span class="math display" id="eq:gmax2">\[\begin{equation} 
+  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
+  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
+  ~ \\
+  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
+  \sigma \sim \mathcal{N}_T(0,1) \\ 
+  ~ \\
+  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
+    \tag{3.1}
+\end{equation}\]</span></p>
+<p>The sampling took only 15 minutes (Tab. <a href="#tab:timec"><strong>??</strong></a>) with chains correctly mixing but encompassing static state (Fig. <a href="#fig:traceplotc"><strong>??</strong></a>) and relatively no correlations among parameters (Fig. <a href="#fig:pairsc"><strong>??</strong></a>).
+We obtained correct and varying species (Fig. <a href="#fig:thetasc"><strong>??</strong></a>) and individual (Fig. <a href="#fig:thetaic"><strong>??</strong></a>) growth potentials.</p>
+<div class="figure"><span id="fig:traceplotredredgreta"></span>
+<img src="treegrowth_files/figure-html/traceplotredredgreta-1.png" alt="Trace plot." width="768" />
+<p class="caption">
+Figure 3.1: Trace plot.
+</p>
+</div>
+<div class="figure"><span id="fig:pairsredgreta"></span>
+<img src="treegrowth_files/figure-html/pairsredgreta-1.png" alt="Pairs plot." width="768" />
+<p class="caption">
+Figure 3.2: Pairs plot.
+</p>
+</div>
+<div class="figure"><span id="fig:thetasredgreta"></span>
+<img src="treegrowth_files/figure-html/thetasredgreta-1.png" alt="Posteriors for species growth potentials." width="768" />
+<p class="caption">
+Figure 3.3: Posteriors for species growth potentials.
+</p>
+</div>
+<div class="figure"><span id="fig:thetairedgreta"></span>
+<img src="treegrowth_files/figure-html/thetairedgreta-1.png" alt="Posteriors for individual growth potentials." width="768" />
+<p class="caption">
+Figure 3.4: Posteriors for individual growth potentials.
+</p>
+</div>
 
-<div id="refs" class="references">
-<div>
-<p>Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M., Guo, J., Li, P. &amp; Riddell, A. (2017). Stan : A Probabilistic Programming Language. <em>Journal of Statistical Software</em>, <strong>76</strong>. Retrieved from <a href="http://www.jstatsoft.org/v76/i01/">http://www.jstatsoft.org/v76/i01/</a></p>
-</div>
-<div>
-<p>Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). System for Automated Geoscientific Analyses (SAGA) v. 2.1.4. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a></p>
-</div>
-<div>
-<p>Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). Drought sensitivity shapes species distribution patterns in tropical forests. <em>Nature</em>, <strong>447</strong>, 80–82.</p>
-</div>
-<div>
-<p>Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a></p>
-</div>
-<div>
-<p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
-</div>
-<div>
-<p>Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). Functional traits shape ontogenetic growth trajectories of rain forest tree species. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.</p>
-</div>
-<div>
-<p>Hoffman, M.D. &amp; Gelman, A. (2014). The no-U-turn sampler: Adaptively setting path lengths in Hamiltonian Monte Carlo. <em>Journal of Machine Learning Research</em>, <strong>15</strong>, 1593–1623. Retrieved from <a href="http://arxiv.org/abs/1111.4246">http://arxiv.org/abs/1111.4246</a></p>
-</div>
-<div>
-<p>John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). Soil nutrients influence spatial distributions of tropical tree species. <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="http://arxiv.org/abs/2656">http://arxiv.org/abs/2656</a></p>
-</div>
-<div>
-<p>Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488%20https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a></p>
-</div>
-<div>
-<p>Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter? <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a></p>
-</div>
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="michaelis-menten.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="growth-reduced-stan.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="model-comparisons.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

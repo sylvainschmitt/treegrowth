@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-14" />
+<meta name="date" content="2022-04-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,70 +54,6 @@
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
-<style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -138,18 +74,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
 <li class="chapter" data-level="1" data-path="reduced-data.html"><a href="reduced-data.html"><i class="fa fa-check"></i><b>1</b> Reduced data</a></li>
-<li class="chapter" data-level="2" data-path="growth-stan.html"><a href="growth-stan.html"><i class="fa fa-check"></i><b>2</b> Growth <code>stan</code></a></li>
-<li class="chapter" data-level="3" data-path="growth-greta.html"><a href="growth-greta.html"><i class="fa fa-check"></i><b>3</b> Growth <code>greta</code></a></li>
-<li class="chapter" data-level="4" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>4</b> Model choice</a></li>
+<li class="chapter" data-level="2" data-path="growth-reduced-stan.html"><a href="growth-reduced-stan.html"><i class="fa fa-check"></i><b>2</b> Growth reduced <code>stan</code></a></li>
+<li class="chapter" data-level="3" data-path="growth-reduced-greta.html"><a href="growth-reduced-greta.html"><i class="fa fa-check"></i><b>3</b> Growth reduced <code>greta</code></a></li>
+<li class="chapter" data-level="4" data-path="model-comparisons.html"><a href="model-comparisons.html"><i class="fa fa-check"></i><b>4</b> Model comparisons</a></li>
 <li class="chapter" data-level="5" data-path="full-data.html"><a href="full-data.html"><i class="fa fa-check"></i><b>5</b> Full data</a></li>
-<li class="chapter" data-level="6" data-path="growth-full.html"><a href="growth-full.html"><i class="fa fa-check"></i><b>6</b> Growth Full</a></li>
-<li class="chapter" data-level="7" data-path="phylogeny.html"><a href="phylogeny.html"><i class="fa fa-check"></i><b>7</b> Phylogeny</a><ul>
-<li class="chapter" data-level="7.1" data-path="phylogeny.html"><a href="phylogeny.html#phylogeny-1"><i class="fa fa-check"></i><b>7.1</b> Phylogeny</a></li>
-<li class="chapter" data-level="7.2" data-path="phylogeny.html"><a href="phylogeny.html#blombergs-k"><i class="fa fa-check"></i><b>7.2</b> Blomberg’s K</a></li>
-<li class="chapter" data-level="7.3" data-path="phylogeny.html"><a href="phylogeny.html#variance-partitioning"><i class="fa fa-check"></i><b>7.3</b> Variance partitioning</a></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="environment.html"><a href="environment.html"><i class="fa fa-check"></i><b>8</b> Environment</a></li>
-<li class="chapter" data-level="9" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>9</b> Conclusion</a></li>
+<li class="chapter" data-level="6" data-path="growth-stan-full.html"><a href="growth-stan-full.html"><i class="fa fa-check"></i><b>6</b> Growth Stan Full</a></li>
+<li class="chapter" data-level="7" data-path="growth-greta-full.html"><a href="growth-greta-full.html"><i class="fa fa-check"></i><b>7</b> Growth greta Full</a></li>
+<li class="chapter" data-level="8" data-path="michaelis-menten.html"><a href="michaelis-menten.html"><i class="fa fa-check"></i><b>8</b> Michaelis Menten</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -189,7 +120,6 @@ and <span class="math inline">\(Ks_s\)</span> is the species kurtosis defining t
 We used Bayesian inference with No-U-Turn Sampler <span class="citation">(NUTS, Hoffman &amp; Gelman <a href="#ref-Hoffman2014" role="doc-biblioref">2014</a>)</span> using <code>stan</code> language <span class="citation">(Carpenter <em>et al.</em> <a href="#ref-Carpenter2017" role="doc-biblioref">2017</a>)</span>.
 The maximum growth <span class="math inline">\(Gmax\)</span> for individual <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span> can be computed based on the difference between species predicted diameter and observed diameter in 2020:</p>
 <p><span class="math display">\[Gmax_i = \frac{DBH_{y=2020,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12[\frac{log(\frac{DBH_{y,p,i}}{Dopt_s})}{Ks_s}]^2)}\]</span></p>
-<p>To study the phylogenetic signal of individual growth potential <span class="math inline">\(Gmax_i\)</span>, we used Blomberg’s K and variance partitioning across individuals, species, genera, and families.</p>
 <p>We used the mean neighbourhood crowding index <span class="citation">(<span class="math inline">\(NCI\)</span>; Uriarte <em>et al.</em> <a href="#ref-Uriarte2004" role="doc-biblioref">2004</a>)</span> over the last 30 years,
 an indirect measurement of access to light and forest gap dynamics.
 The mean neighbourhood crowding index <span class="math inline">\(NCI_i\)</span> from tree individual <span class="math inline">\(i\)</span> was calculated as follows:</p>
@@ -206,8 +136,10 @@ Topography, through the dissolution of iron oxides, litter- and tree-fall transf
 shapes soil nutrient distribution in tropical forests <span class="citation">(John <em>et al.</em> <a href="#ref-John2007" role="doc-biblioref">2007</a>; Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>)</span>.
 TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS <span class="citation">(Conrad <em>et al.</em> <a href="#ref-Conrad2015" role="doc-biblioref">2015</a>)</span>
 based on a LiDAR campaign of the whole Paracou field station done in 2015.</p>
-<p>To investigate effects of topography and neighbourhood indices on individual growth we used variance partitioning with linear models.</p>
-<p><strong>Maybe add a joint analyses of phylogeny and ecological processes with a linear mixed model.</strong></p>
+<p>To study the effect of phylogeny and environment,
+we investigated the effects of family, genus, species &amp; topography <span class="math inline">\(TWI\)</span> and neighbourhood <span class="math inline">\(NCI\)</span> indices
+on individual growth <span class="math inline">\(Gmax\)</span> with the following linear mixed model:</p>
+<p><span class="math display">\[log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})\]</span></p>
 
 </div>
 <h3>References</h3>

@@ -11,7 +11,7 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Model choice
+# Model comparisons
 
 We fitted two models on reduced data:
 

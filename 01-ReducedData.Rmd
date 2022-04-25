@@ -1,4 +1,4 @@
-```{r data, include=FALSE}
+```{r datareduced, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
@@ -11,50 +11,28 @@ opts_chunk$set(
 
 # Reduced data
 
-To select the best model we first worked on a reduced dataset.
+To define the models we first worked on a reduced dataset.
 We used the full `Guyafor` database that we recoded in `SQL` for faster quesry using `dbplyr`.
-We focused on the variation in diameter of trees across censuses in the P6 (Fig. \@ref(fig:p6gif)).
-We chose to keep individuals with at least 10 censuses and species with at least 10 individuals (Fig. \@ref(fig:datafig)).
-To gain time, we further reduced the dataset to 187 trees over 37 years and 3 species in the plot 14 of Paracou.
+We focused on the variation in diameter of trees across censuses in the plot 6 of individuals >20m from an edge to avoid edge effect in the neighbourhood crowding index.
+We chose to keep individuals with at least 10 censuses and species with at least 10 individuals (Fig. \@ref(fig:datareffig)).
+To gain time, we further reduced the dataset (Tab \@ref(tab:dataredcar)).
 
-```{r datatypes, eval=F, echo=T}
+```{r datatypes, eval=F}
 load("data/Guyafor_Bota.RData")
 vroom::vroom_write(Guyafor, "data/guyafor.csv", delim = ",")
 csv2sql::csv_to_sqlite(csv_name = "data/guyafor.csv", db_name = "data/guyafor.sql", table_name = "inventory")
 unlink("data/guyafor.csv")
 ```
 
-```{r p6, eval=F}
+```{r dataredprep}
 guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
-p6 <- tbl(guyafor, "inventory") %>% 
+trees <- tbl(guyafor, "inventory") %>% 
   filter(Forest == "Paracou") %>% 
   filter(Plot == "6") %>% 
-  collect()
-DBI::dbDisconnect(guyafor)
-g <- p6 %>% 
-  ggplot(aes(Xfield, Yfield, size = CircCorr, col = paste(Genre, Espece))) +
-  geom_point(aes(group = idTree), alpha = 0.5) +
-  scale_color_discrete(guide = "none") +
-  coord_equal() + 
-  transition_states(CensusYear) + 
-  ggtitle('Census Year : {closest_state}')
-anim_save("save/p6.gif", g)
-```
-
-```{r p6gif, fig.cap="Plot 6 inventories through cenususes."}
-knitr::include_graphics("save/p6.gif")
-```
-
-```{r dataprep}
-guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
-p6 <- tbl(guyafor, "inventory") %>% 
-  filter(Forest == "Paracou") %>% 
-  filter(Plot == "6") %>% 
-  collect()
-DBI::dbDisconnect(guyafor) ; rm(guyafor)
-data <- p6 %>% 
+  collect() %>% 
+  filter(Xfield > 20, Xfield < 250-20, Yfield > 20, Yfield < 250-20) %>% 
   mutate(species = paste(Genre, Espece)) %>% 
-   filter(!grepl("Indet", species)) %>% 
+  filter(!grepl("Indet", species)) %>% 
   mutate(speciesNum = as.numeric(as.factor(species))) %>% 
   mutate(DBH = CircCorr/pi) %>% 
   group_by(idTree) %>% 
@@ -62,24 +40,25 @@ data <- p6 %>%
   mutate(Y0 = first(CensusYear)) %>% 
   mutate(DBH0 = first(DBH)) %>% 
   mutate(Ytoday = last(CensusYear)) %>% 
-  mutate(DBHtoday = last(DBH)+10^-6) %>% 
+  mutate(DBHtoday = last(DBH)) %>% 
   group_by(Forest, Plot, SubPlot, TreeFieldNum, idTree, Xfield, Yfield, Xutm, Yutm, Family, Genus, Species,
            species, speciesNum, Y0, DBH0, Ytoday, DBHtoday) %>% 
   summarise(N = n()) %>% 
   filter(Ytoday == 2020) %>% 
   filter(DBHtoday > DBH0)
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
 ```
 
-```{r datafig, fig.cap="Caption."}
+```{r dataredfig, fig.cap="Caption."}
 cowplot::plot_grid(
-  data %>% 
+  trees %>% 
     ggplot(aes(N)) +
     geom_histogram() +
     scale_y_log10() +
     geom_vline(xintercept = 10, col = "red") +
     xlab("Censuses per individual") +
-    ggtitle(paste(round(nrow(filter(data, N > 10))/nrow(data)*100, 1), "% > 10")),
-  data %>% 
+    ggtitle(paste(round(nrow(filter(trees, N > 10))/nrow(trees)*100, 1), "% > 10")),
+  trees %>% 
     group_by(species) %>% 
     summarise(N = n()) %>% 
     ggplot(aes(N)) +
@@ -88,34 +67,33 @@ cowplot::plot_grid(
     scale_x_log10() +
     geom_vline(xintercept = 10, col = "red") +
     xlab("Individuals per species") +
-    ggtitle(paste(round(nrow(filter(summarise(group_by(data, species), N = n()), N > 10))/nrow(summarise(group_by(data, species), N = n()))*100, 1), "% > 10")),
-  data %>% 
+    ggtitle(paste(round(nrow(filter(summarise(group_by(trees, species), N = n()), N > 10))/nrow(summarise(group_by(trees, species), N = n()))*100, 1), "% > 10")),
+  trees %>% 
     ggplot(aes(Ytoday - Y0, DBHtoday - DBH0)) +
     geom_point() +
     xlab(expression(Delta[Y])) + ylab(expression(Delta[DBH]))
 )
 ```
 
-```{r mdata, eval=F}
-data <- data %>% 
+```{r dataredfilt, eval=F}
+trees %>% 
   group_by(species) %>% 
   mutate(Nsp = n()) %>% 
   filter(N > 10, Nsp > 10) %>% 
-  filter(species %in% sample(unique(data$species), 20)) %>% 
-  ungroup() %>% 
-  mutate(speciesNum = as.numeric(as.factor(species)))
-mdata <- list(I = nrow(data),
-              Y = 2020 - min(data$Y0) + 1,
-              S = max(data$speciesNum),
-              years = min(data$Y0):2020,
-              DBH0 = data$DBH0,
-              Y0 = data$Y0,
-              DBHtoday = data$DBHtoday + 10^-6,
-              species = data$speciesNum)
-save(data, mdata, file = file.path("save", "mdata_reduced.Rdata")) 
+  ungroup() %>%  
+  filter(species %in% sample(unique(.$species), 1)) %>% 
+  sample_n(10) %>% 
+  mutate(speciesNum = as.numeric(as.factor(species))) %>% 
+  vroom::vroom_write("save/mdata_reduced.tsv")
 ```
 
-```{r}
-load(file.path("save", "mdata_reduced.Rdata")) 
-str(mdata)
+```{r dataredcar}
+vroom::vroom("save/mdata_reduced.tsv") %>% 
+  summarise(individuals = nrow(.), 
+            species = length(unique(species)),
+            genus = length(unique(Genus)),
+            family = length(unique(Family)),
+            years = max(Ytoday)-min(Y0)+1) %>% 
+  reshape2::melt() %>% 
+  kable(caption = "Reduced data cahracterstics.", col.names = c("", "N")) 
 ```
