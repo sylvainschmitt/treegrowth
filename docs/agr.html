@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="michaelis-menten.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="lognormal.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -82,6 +82,9 @@
 <li class="chapter" data-level="7" data-path="growth-greta-full.html"><a href="growth-greta-full.html"><i class="fa fa-check"></i><b>7</b> Growth greta Full</a></li>
 <li class="chapter" data-level="8" data-path="michaelis-menten.html"><a href="michaelis-menten.html"><i class="fa fa-check"></i><b>8</b> Michaelis Menten</a></li>
 <li class="chapter" data-level="9" data-path="agr.html"><a href="agr.html"><i class="fa fa-check"></i><b>9</b> AGR</a></li>
+<li class="chapter" data-level="10" data-path="lognormal.html"><a href="lognormal.html"><i class="fa fa-check"></i><b>10</b> Lognormal</a></li>
+<li class="chapter" data-level="11" data-path="polynomial.html"><a href="polynomial.html"><i class="fa fa-check"></i><b>11</b> Polynomial</a></li>
+<li class="chapter" data-level="12" data-path="weibul.html"><a href="weibul.html"><i class="fa fa-check"></i><b>12</b> Weibul</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -108,8 +111,8 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="agr" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> AGR</h1>
-<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
-<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_i})}{Ks_i}]^2), \sigma)\]</span></p>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
+<p><span class="math display">\[DBH_{i,s,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_s})}{Ks_s}]^2)\times\Delta t, \sigma)\]</span></p>
 <p><img src="treegrowth_files/figure-html/agrfig-1.png" width="768" /></p>
 <p><img src="treegrowth_files/figure-html/agrdatafig-1.png" width="768" /></p>
 <div class="figure"><span id="fig:traceplotagri1"></span>
@@ -143,7 +146,7 @@ Figure 9.4: Predictions for individual growth.
  
 </th>
 <th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-log(gmax)
+gmax
 </th>
 </tr>
 <tr>
@@ -165,13 +168,13 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.06
+0.98
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.17 – 0.05
+0.85 – 1.12
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.312
+<strong>&lt;0.001</strong>
 </td>
 </tr>
 <tr>
@@ -182,7 +185,7 @@ NCI [log]
 0.03
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.02 – 0.04
+0.02 – 0.05
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -198,7 +201,7 @@ Random Effects
 σ<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.04
+0.06
 </td>
 </tr>
 <tr>
@@ -206,14 +209,14 @@ Random Effects
 τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.03
+0.04
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 τ<sub>00</sub> <sub>Genus:Family</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.00
+0.01
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
@@ -256,7 +259,7 @@ Observations
 Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.001 / 0.453
+0.001 / 0.454
 </td>
 </tr>
 </table>
@@ -270,7 +273,7 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
         </div>
       </div>
 <a href="michaelis-menten.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="lognormal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

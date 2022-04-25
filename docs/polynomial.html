@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 Full data | Tree Growth</title>
+  <title>Chapter 11 Polynomial | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 Full data | Tree Growth" />
+  <meta property="og:title" content="Chapter 11 Polynomial | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 Full data | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 11 Polynomial | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="model-comparisons.html"/>
-<link rel="next" href="growth-stan-full.html"/>
+<link rel="prev" href="lognormal.html"/>
+<link rel="next" href="weibul.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -109,23 +109,37 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="full-data" class="section level1">
-<h1><span class="header-section-number">Chapter 5</span> Full data</h1>
-<div class="figure"><span id="fig:datafigfull"></span>
-<img src="treegrowth_files/figure-html/datafigfull-1.png" alt="Caption." width="768" />
+<div id="polynomial" class="section level1">
+<h1><span class="header-section-number">Chapter 11</span> Polynomial</h1>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)\]</span></p>
+<p><img src="treegrowth_files/figure-html/polyfig-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/polydatafig-1.png" width="768" /></p>
+<div class="figure"><span id="fig:traceplotpolyi1"></span>
+<img src="treegrowth_files/figure-html/traceplotpolyi1-1.png" alt="Trace plot i1." width="768" />
 <p class="caption">
-Figure 5.1: Caption.
+Figure 11.1: Trace plot i1.
 </p>
 </div>
-<pre><code>## List of 8
-##  $ I       : int 20500
-##  $ Y       : num 37
-##  $ S       : num 217
-##  $ years   : int [1:37] 1984 1985 1986 1987 1988 1989 1990 1991 1992 1993 ...
-##  $ DBH0    : num [1:20500] 16.1 12.7 29.9 10 47.7 ...
-##  $ Y0      : num [1:20500] 1984 1984 1984 1984 1984 ...
-##  $ DBHtoday: num [1:20500] 19.9 13.5 32.8 12.3 57.8 ...
-##  $ species : num [1:20500] 33 72 95 101 26 108 99 162 146 61 ...</code></pre>
+<div class="figure"><span id="fig:pairsplotpolyi1"></span>
+<img src="treegrowth_files/figure-html/pairsplotpolyi1-1.png" alt="Pairs plot i1." width="768" />
+<p class="caption">
+Figure 11.2: Pairs plot i1.
+</p>
+</div>
+<div class="figure"><span id="fig:polygmax"></span>
+<img src="treegrowth_files/figure-html/polygmax-1.png" alt="Posteriors for individual growth potential." width="768" />
+<p class="caption">
+Figure 11.3: Posteriors for individual growth potential.
+</p>
+</div>
+<div class="figure"><span id="fig:polypreds"></span>
+<img src="treegrowth_files/figure-html/polypreds-1.png" alt="Predictions for individual growth." width="768" />
+<p class="caption">
+Figure 11.4: Predictions for individual growth.
+</p>
+</div>
+<p><img src="treegrowth_files/figure-html/polyrmsep-1.png" width="768" /></p>
 
 </div>
             </section>
@@ -133,8 +147,8 @@ Figure 5.1: Caption.
           </div>
         </div>
       </div>
-<a href="model-comparisons.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="growth-stan-full.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="lognormal.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="weibul.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

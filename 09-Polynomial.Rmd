@@ -1,0 +1,158 @@
+```{r poly, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+library(greta)
+library(ggtree)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+```
+
+# Polynomial
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)$$
+
+```{r poly2data}
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+trees <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  # filter(Plot %in% 1:12) %>%
+  collect() %>% 
+  filter(Xfield > 20, Xfield < 250-20, Yfield > 20, Yfield < 250-20) %>% 
+  mutate(species = paste(Genre, Espece)) %>% 
+  filter(!grepl("Indet", species)) %>% 
+  mutate(DBH = CircCorr/pi)
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+```
+
+```{r polyfig}
+trees %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 12) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
+  filter(n() > 20) %>% 
+  filter(idTree %in% sample(unique(.$idTree), 20)) %>%
+  ggplot(aes(CensusYear, DBH, col = as.factor(idTree))) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(se = F, alpha = 0.5) +
+  scale_y_sqrt() +
+  scale_color_discrete(guide = "none")
+```
+
+```{r polydata}
+trees <- trees %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 12) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
+  filter(n() > 20) %>% 
+  mutate(Year = CensusYear - first(CensusYear)) %>%
+  mutate(DBHprev = lag(DBH)) %>% 
+   mutate(Deltat = CensusYear - lag(CensusYear)) %>% 
+  filter(!is.na(DBHprev)) %>% 
+  ungroup() %>% 
+  # filter(idTree %in% sample(unique(.$idTree), 10)) %>%
+  mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
+  mutate(sp = as.numeric(as.factor(species)))
+eval <- trees %>% 
+  group_by(idTree) %>% 
+  filter(CensusYear == max(CensusYear))
+mdata <- trees %>% 
+  group_by(idTree) %>% 
+  filter(CensusYear != max(CensusYear))
+```
+
+```{r polydatafig}
+ggplot(mdata, aes(Year, DBH, col = as.factor(ind))) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_smooth(se = F) +
+  scale_color_discrete(guide = "none")
+```
+
+```{r polyfit, eval=F}
+alpha <- normal(0, 10, dim = max(mdata$ind), truncation = c(0, Inf))
+beta <- normal(0, 10, dim = max(mdata$ind))
+gamma <- normal(0, 10, dim = max(mdata$ind))
+sigma <- normal(0, 10, truncation = c(0, 200))
+distribution(mdata$DBH) <- normal(alpha[mdata$ind]*mdata$Year^3 + beta[mdata$ind]*mdata$Year^2 + gamma[mdata$ind]*mdata$Year + 10, sigma)
+m <- model(alpha, beta, gamma, sigma)
+fit <- mcmc(m, warmup = 1000, n_samples = 1000, chains = 2)
+save(mdata, fit, file = "save/poly.Rdata")
+```
+
+```{r polysapling}
+load("save/poly.Rdata") 
+```
+
+```{r traceplotpolyi1, fig.cap="Trace plot i1."}
+ind <- 1
+mcmc_trace(fit, pars = c(paste0("alpha[", ind, ",1]"), 
+                         paste0("beta[", ind, ",1]"),
+                         paste0("gamma[", ind, ",1]"),
+                         "sigma")) 
+```
+
+```{r pairsplotpolyi1, fig.cap="Pairs plot i1."}
+ind <- 1
+mcmc_pairs(fit, pars = c(paste0("alpha[", ind, ",1]"), 
+                         paste0("beta[", ind, ",1]"),
+                         paste0("gamma[", ind, ",1]"),
+                         "sigma")) 
+```
+
+```{r polyrhat, fig.cap="Rhat distribution.", eval=F}
+data.frame(Rhat = coda::gelman.diag(fit)$psrf[,1], par = names(coda::gelman.diag(fit)$psrf[,1])) %>% 
+  ggplot(aes(Rhat)) +
+  geom_histogram()
+```
+
+```{r polygmax, fig.cap="Posteriors for individual growth potential."}
+mcmc_intervals(fit, regex_pars = "alpha")
+```
+
+```{r polypreds, fig.cap="Predictions for individual growth."}
+preds <- as.data.frame(summary(fit)$statistics) %>% 
+  dplyr::select(Mean) %>% 
+  rownames_to_column("parameter") %>% 
+  separate(parameter, c("parameter", "ind")) %>% 
+  reshape2::dcast(ind ~ parameter, value.var = "Mean") %>% 
+  dplyr::select(-sigma) %>% 
+  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = alpha*Year^3+beta*Year^2+gamma*Year+10)
+ggplot(mdata, aes(Year, DBH, col = as.factor(ind))) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  scale_color_discrete(guide = "none")
+```
+
+```{r polyrmsep}
+rmsep <- eval %>% 
+  left_join(as.data.frame(summary(fit)$statistics) %>% 
+              dplyr::select(Mean) %>% 
+              rownames_to_column("parameter") %>% 
+              separate(parameter, c("parameter", "ind"), convert = T) %>% 
+              reshape2::dcast(ind ~ parameter, value.var = "Mean") %>% 
+              dplyr::select(-sigma)) %>% 
+  ungroup() %>% 
+  mutate(DBHpred = alpha*Year^3+beta*Year^2+gamma*Year+10) %>% 
+  mutate(SEP = (DBH - DBHpred)^2) 
+ggplot(rmsep, aes(sqrt(SEP))) +
+  geom_boxplot() +
+  coord_flip() +
+  ggtitle(paste("RMSEP=", round(sqrt(mean(rmsep$SEP)), 2), "cm"))
+```

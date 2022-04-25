@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Growth greta Full | Tree Growth</title>
+  <title>Chapter 12 Weibul | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Growth greta Full | Tree Growth" />
+  <meta property="og:title" content="Chapter 12 Weibul | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Growth greta Full | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 12 Weibul | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="growth-stan-full.html"/>
-<link rel="next" href="michaelis-menten.html"/>
+<link rel="prev" href="polynomial.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -109,55 +109,44 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="growth-greta-full" class="section level1">
-<h1><span class="header-section-number">Chapter 7</span> Growth greta Full</h1>
-<p><span class="math display" id="eq:gmax4">\[\begin{equation} 
-  DBH_{y=today,s,i}  - DBH_{y=y0,s,i} \sim \\
-  \mathcal{logN} (log(\theta_{1,s} \times \sum _{y=y_0} ^{y=today} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)), \sigma_1) \\ 
-  ~ \\
-  (\theta_{1,s}, \theta_{2,s}, \theta_{3,s}) \sim \mathcal{logN}^{3 \times S}(log(1),1) \\ 
-  \sigma \sim \mathcal{N}_T(0,1) \\ 
-  ~ \\
-  \theta_{1,s,i} = \frac{DBH_{y=today,s,i}}{\sum_{y=y0}^{y=2020} exp(-\frac12.[\frac{log(\frac{DBH_{y,s,i}}{100.\theta_{2,s}})}{\theta_{3,s}}]^2)} \\ 
-    \tag{7.1}
-\end{equation}\]</span></p>
-<div class="figure"><span id="fig:traceplotgretafullsp1"></span>
-<img src="treegrowth_files/figure-html/traceplotgretafullsp1-1.png" alt="Trace plot sp1." width="768" />
+<div id="weibul" class="section level1">
+<h1><span class="header-section-number">Chapter 12</span> Weibul</h1>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (\alpha \times (1 − e^{-t_i/\beta}) , \sigma)\]</span></p>
+<p><img src="treegrowth_files/figure-html/weibulfig-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibuldatafig-1.png" width="768" /></p>
+<div class="figure"><span id="fig:traceplotweibuli1"></span>
+<img src="treegrowth_files/figure-html/traceplotweibuli1-1.png" alt="Trace plot i1." width="768" />
 <p class="caption">
-Figure 7.1: Trace plot sp1.
+Figure 12.1: Trace plot i1.
 </p>
 </div>
-<div class="figure"><span id="fig:traceplotgretafullsp3"></span>
-<img src="treegrowth_files/figure-html/traceplotgretafullsp3-1.png" alt="Trace plot sp3." width="768" />
+<div class="figure"><span id="fig:pairsplotweibuli1"></span>
+<img src="treegrowth_files/figure-html/pairsplotweibuli1-1.png" alt="Pairs plot i1." width="768" />
 <p class="caption">
-Figure 7.2: Trace plot sp3.
+Figure 12.2: Pairs plot i1.
 </p>
 </div>
-<div class="figure"><span id="fig:pairgretafull"></span>
-<img src="treegrowth_files/figure-html/pairgretafull-1.png" alt="Pairs plot." width="768" />
+<div class="figure"><span id="fig:weibulgmax"></span>
+<img src="treegrowth_files/figure-html/weibulgmax-1.png" alt="Posteriors for individual growth potential." width="768" />
 <p class="caption">
-Figure 7.3: Pairs plot.
+Figure 12.3: Posteriors for individual growth potential.
 </p>
 </div>
-<div class="figure"><span id="fig:thetasgretafull"></span>
-<img src="treegrowth_files/figure-html/thetasgretafull-1.png" alt="Posteriors for species growth potentials." width="768" />
+<div class="figure"><span id="fig:weibulpreds"></span>
+<img src="treegrowth_files/figure-html/weibulpreds-1.png" alt="Predictions for individual growth." width="768" />
 <p class="caption">
-Figure 7.4: Posteriors for species growth potentials.
+Figure 12.4: Predictions for individual growth.
 </p>
 </div>
-<div class="figure"><span id="fig:thetaigretafull"></span>
-<img src="treegrowth_files/figure-html/thetaigretafull-1.png" alt="Posteriors for individual growth potentials." width="768" />
-<p class="caption">
-Figure 7.5: Posteriors for individual growth potentials.
-</p>
-</div>
+<p><img src="treegrowth_files/figure-html/weibulrmsep-1.png" width="768" /></p>
 <table style="border-collapse:collapse; border:none;">
 <tr>
 <th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
  
 </th>
 <th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-log(Gmaxi)
+log(beta)
 </th>
 </tr>
 <tr>
@@ -179,10 +168,10 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-2.79
+3.99
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-2.46 – 3.12
+3.68 – 4.30
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -193,10 +182,10 @@ p
 NCI [log]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.15
+-0.46
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.18 – -0.12
+-0.50 – -0.43
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -212,7 +201,7 @@ Random Effects
 σ<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.51
+0.28
 </td>
 </tr>
 <tr>
@@ -220,49 +209,49 @@ Random Effects
 τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.85
+0.21
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 τ<sub>00</sub> <sub>Genus:Family</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.40
+0.14
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 τ<sub>00</sub> <sub>Family</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.08
+0.02
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>species</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-217
+140
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>Genus</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-127
+95
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>Family</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-45
+41
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
 Observations
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-20500
+12166
 </td>
 </tr>
 <tr>
@@ -270,17 +259,12 @@ Observations
 Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.001 / 0.725
+0.033 / 0.585
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/NCIgretafull-1.png" width="768" /></p>
-<div class="figure"><span id="fig:phylofiggretafull"></span>
-<img src="treegrowth_files/figure-html/phylofiggretafull-1.png" alt="Species phylogeny. The color indicate the median of the species growth potential (Gmaxs)." width="768" />
-<p class="caption">
-Figure 7.6: Species phylogeny. The color indicate the median of the species growth potential (Gmaxs).
-</p>
-</div>
+<p><img src="treegrowth_files/figure-html/weibulnci-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibulphylo-1.png" width="768" /></p>
 
 </div>
             </section>
@@ -288,8 +272,8 @@ Figure 7.6: Species phylogeny. The color indicate the median of the species grow
           </div>
         </div>
       </div>
-<a href="growth-stan-full.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="michaelis-menten.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="polynomial.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

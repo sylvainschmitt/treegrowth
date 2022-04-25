@@ -121,30 +121,26 @@ mcmc_intervals(fit, regex_pars = "beta")
 ```
 
 ```{r mmpreds, fig.cap="Predictions for individual growth."}
-preds <- as.data.frame(summary(fit)$statistics) %>% 
+pars <- as.data.frame(summary(fit)$statistics) %>% 
   dplyr::select(Mean) %>% 
   rownames_to_column("parameter") %>% 
-  separate(parameter, c("parameter", "ind")) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter, value.var = "Mean") %>% 
-  dplyr::select(-sigma) %>% 
+  dplyr::select(-sigma) 
+preds <- pars %>% 
   mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
   unnest(Year) %>% 
   mutate(DBH = 10+alpha*Year/(beta+Year))
-ggplot(mdata, aes(Year, DBH, col = as.factor(ind))) +
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
   geom_point() +
   geom_point(data = eval, col = "red", size = 2) +
   geom_line(data = preds) +
-  scale_color_discrete(guide = "none")
+  viridis::scale_color_viridis()
 ```
 
 ```{r mmrmsep}
 rmsep <- eval %>% 
-  left_join(as.data.frame(summary(fit)$statistics) %>% 
-              dplyr::select(Mean) %>% 
-              rownames_to_column("parameter") %>% 
-              separate(parameter, c("parameter", "ind"), convert = T) %>% 
-              reshape2::dcast(ind ~ parameter, value.var = "Mean") %>% 
-              dplyr::select(-sigma)) %>% 
+  left_join(pars) %>% 
   ungroup() %>% 
   mutate(DBHpred = 10+alpha*Year/(beta+Year)) %>% 
   mutate(SEP = (DBH - DBHpred)^2) 
@@ -154,6 +150,17 @@ ggplot(rmsep, aes(sqrt(SEP))) +
   ggtitle(paste("RMSEP=", round(sqrt(mean(rmsep$SEP)), 2), "cm"))
 ```
 
+```{r speciesmmtree, eval=F}
+library(V.PhyloMaker)
+splist <- growth %>% 
+  dplyr::select(Family, Genus, species) %>% 
+  unique() %>% 
+  mutate(genus = Genus, family = Family) %>% 
+  dplyr::select(species, genus, family)
+tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
+ape::write.tree(tree$scenario.3, "save/phylogeny_mm.tree")
+```
+
 ```{r mmgrowthdata}
 growth <- as.data.frame(summary(fit)$statistics) %>% 
   dplyr::select(Mean) %>% 
@@ -161,38 +168,20 @@ growth <- as.data.frame(summary(fit)$statistics) %>%
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter, value.var = "Mean") %>% 
   left_join(dplyr::select(mdata, ind, idTree, Family, Genus, species)) %>% 
-  left_join(read_tsv(file = "save/env_full.tsv"))
-phylo <- ape::read.tree("save/phylogeny_full.tree")
-```
-
-```{r mmalphalmmm}
-lme4::lmer(log(alpha) ~ log(NCI) + (1  | Family/Genus/species), growth) %>% 
-  sjPlot::tab_model(show.icc = F)
-```
-
-```{r mmalphanci}
-ggplot(growth, aes(log(NCI), log(alpha), col = species)) +
-  geom_point() +
-  geom_smooth(method = "lm", aes(group = NA)) +
-  scale_color_discrete(guide = "none")
-```
-
-```{r mmalphaphylo}
-fortify(phylo) %>% 
-  mutate(species = gsub("_", " ", label)) %>%
-  mutate(label = species) %>% 
-  left_join(group_by(growth, species) %>% summarise(alpha = mean(alpha))) %>% 
-  ggtree(aes(color = log(alpha)), layout="circular") + 
-  geom_tiplab2(size = 2) +
-  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
-  scale_alpha_manual("taxon", values = c(0.2, 1)) +
-  scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(beta))
+  left_join(vroom::vroom(file = "save/env_full.tsv"))
+phylo <- ape::read.tree("save/phylogeny_mm.tree")
 ```
 
 ```{r }
-lme4::lmer(log(beta) ~ log(NCI) + (1  | Family/Genus/species), growth) %>% 
+lme4::lmer(log(beta) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
   sjPlot::tab_model(show.icc = F)
+```
+
+```{r }
+m <- lme4::lmer(log(beta) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), 
+                na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, beta)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
+r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
+partR2::forestplot(r2, type = "R2", text_size = 10)
 ```
 
 ```{r }
@@ -203,14 +192,126 @@ ggplot(growth, aes(log(NCI), log(beta), col = species)) +
 ```
 
 ```{r }
+ggplot(growth, aes(log(twi+1), log(beta), col = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(group = NA)) +
+  scale_color_discrete(guide = "none")
+```
+
+```{r }
+lme4::lmer(log(alpha) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r }
+m <- lme4::lmer(log(alpha) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), 
+                na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, alpha)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
+r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
+partR2::forestplot(r2, type = "R2", text_size = 10)
+```
+
+```{r }
+ggplot(growth, aes(log(NCI), log(alpha), col = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(group = NA)) +
+  scale_color_discrete(guide = "none")
+```
+
+```{r }
+ggplot(growth, aes(log(twi+1), log(alpha), col = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(group = NA)) +
+  scale_color_discrete(guide = "none")
+```
+
+
+
+
+```{r }
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 
   left_join(group_by(growth, species) %>% summarise(beta = mean(beta))) %>% 
-  ggtree(aes(color = beta), layout="circular") + 
+  ggtree(aes(color = log(beta)), layout="circular") + 
   geom_tiplab2(size = 2) +
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(beta))
+  viridis::scale_color_viridis(expression(log(beta)))
+```
+
+```{r}
+library(phylosignal)
+library(adephylo)
+library(ape)
+library(phylobase)
+p4d <- phylo4d(phylo,
+               data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
+                 left_join(group_by(growth, species) %>% summarise(alpha  = mean(alpha, na.rm = T), beta = mean(beta, na.rm = T))) %>% 
+                 dplyr::select(-species))
+```
+
+```{r}
+phyloSignal(p4d = p4d, method = "all") %>% 
+  lapply(as.data.frame) %>% 
+  lapply(rownames_to_column, "parameter") %>% 
+  bind_rows(.id = "type") %>% 
+  reshape2::melt(c("type", "parameter")) %>% 
+  reshape2::dcast(parameter + variable ~ type) %>% 
+  kable(caption = "Phylogenetic signal with different methods.")
+```
+
+```{r correlog, eval=F}
+alpha.crlg <- phyloCorrelogram(p4d, trait = "alpha", ci.bs	= 100)
+beta.crlg <- phyloCorrelogram(p4d, trait = "beta", ci.bs	= 100)
+save(alpha.crlg, beta.crlg, file = "save/correlogs")
+```
+
+```{r}
+load("save/correlogs")
+plot(alpha.crlg, main="alpha phylogenetic correlogram")
+```
+
+```{r}
+load("save/correlogs")
+plot(beta.crlg, main="beta phylogenetic correlogram")
+```
+
+```{r lipamm}
+beta.lipa <- lipaMoran(p4d)
+```
+
+
+```{r }
+fortify(phylo) %>% 
+  mutate(species = gsub("_", " ", label)) %>%
+  mutate(label = species) %>% 
+  left_join(beta.lipa$p.value %>% 
+              as.data.frame() %>% 
+              rownames_to_column("species") %>% 
+              mutate(species = gsub("_", " ", species)) %>% 
+              dplyr::rename(alpha_pvalue = alpha, beta_pvalues = beta)) %>% 
+  ggtree(aes(color = alpha_pvalue < 0.5), layout="circular") + 
+  geom_tiplab2(size = 2) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2)) +
+  scale_color_manual("alpha p<0.05", values =  c("grey", "red", "grey"))
+```
+
+```{r }
+fortify(phylo) %>% 
+  mutate(species = gsub("_", " ", label)) %>%
+  mutate(label = species) %>% 
+  left_join(beta.lipa$p.value %>% 
+              as.data.frame() %>% 
+              rownames_to_column("species") %>% 
+              mutate(species = gsub("_", " ", species)) %>% 
+              dplyr::rename(alpha_pvalue = alpha, beta_pvalues = beta)) %>% 
+  ggtree(aes(color = beta_pvalues < 0.5), layout="circular") + 
+  geom_tiplab2(size = 2) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2)) +
+  scale_color_manual("beta p<0.05", values =  c("grey", "red", "grey"))
 ```

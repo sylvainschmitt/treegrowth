@@ -46,6 +46,19 @@ NC <- foreach(ind=1:nrow(data),
 close(pb)
 stopCluster(cl)
 NC <- bind_rows(NC)
+
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+trees <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  dplyr::select(idTree, Xutm, Yutm) %>% 
+  collect() %>% 
+  unique()
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+XY <- NC %>% 
+  left_join(trees) %>% 
+  sf::st_as_sf(coords = c("Xutm", "Yutm"),
+             crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+NC$twi <- raster::extract(raster::raster("data/TWI_1m.tif"), XY)
 write_tsv(NC, file = "save/env_full.tsv")
 ```
 
