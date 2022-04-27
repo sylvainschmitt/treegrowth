@@ -1,3 +1,4 @@
+tab:datafulltab
 model-choice
 data
 michaelis-menten-1
@@ -9,5 +10,10 @@ weibul
 amani
 gompertz-sum
 gompertz-sum-2
+gompertz-sum-3
+gompertz-sum-4
 comparisons
+model-full
+data-1
+model
 analyses

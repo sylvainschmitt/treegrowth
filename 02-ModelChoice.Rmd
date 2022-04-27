@@ -5,8 +5,7 @@ library(tidyverse)
 library(bayesplot)
 library(rstan)
 library(loo)
-library(greta)
-library(ggtree)
+library(cmdstanr)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -621,6 +620,84 @@ left_join(mdata, pars) %>%
   scale_color_discrete(guide = "none")
 ```
 
+## Gompertz sum 3
+
+*Using cmdstanr.*
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+```{r gompertzsum3fit, eval=F}
+load("save/mdata.Rdata")
+gompertzsum3 <- cmdstan_model("model/gompertzsum3.stan")
+fit <- gompertzsum3$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_gompertzsum3 <- rstan::read_stan_csv(fit$output_files())
+save(fit_gompertzsum3, file = "save/gompertzsum3.Rdata") 
+```
+
+```{r gompertzsum3sampling}
+load("save/gompertzsum3.Rdata")  
+```
+
+```{r gompertzsum3trace}
+mcmc_trace(as.array(fit_gompertzsum3, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```
+
+## Gompertz sum 4
+
+*Using cmdstanr and reduce_sum for parralelisation.*
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+```{r gompertzsum4fit, eval=F}
+load("save/mdata.Rdata")
+gompertzsum4 <- cmdstan_model("model/gompertzsum4.stan", cpp_options = list(stan_threads = TRUE))
+fit <- gompertzsum4$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1,
+    grainsize = 1),
+  chains = 2, 
+  parallel_chains = 2,
+  threads_per_chain = 4,
+  refresh = 500,
+  save_warmup = F
+)
+fit_gompertzsum4 <- rstan::read_stan_csv(fit$output_files())
+save(fit_gompertzsum4, file = "save/gompertzsum4.Rdata") 
+```
+
+```{r gompertzsum4sampling}
+load("save/gompertzsum4.Rdata")  
+```
+
 ## Comparisons
 
 ```{r fits}
@@ -631,7 +708,9 @@ fits <- list(
   "Lognormal" = fit_log,
   "Polynomial" = fit_poly,
   "Gompertz sum" = fit_gompertzsum,
-  "Gompertz sum 2" = fit_gompertzsum2
+  "Gompertz sum 2" = fit_gompertzsum2,
+  "Gompertz sum 3" = fit_gompertzsum3,
+  "Gompertz sum 4" = fit_gompertzsum4
 )
 ```
 
