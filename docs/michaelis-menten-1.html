@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Michaelis Menten | Tree Growth</title>
+  <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Michaelis Menten | Tree Growth" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Michaelis Menten | Tree Growth" />
+  
+  <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+<meta name="author" content="Sylvain Schmitt" />
+
+
+<meta name="date" content="2022-04-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="analyses.html"/>
+<link rel="next" href="agr.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script async defer src="https://hypothes.is/embed.js"></script>
+
+
+
+<link rel="stylesheet" href="html/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Tree Growth</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>1</b> Model choice</a><ul>
+<li class="chapter" data-level="1.1" data-path="model-choice.html"><a href="model-choice.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
+<li class="chapter" data-level="1.2" data-path="model-choice.html"><a href="model-choice.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>2</b> Analyses</a></li>
+<li class="chapter" data-level="3" data-path="michaelis-menten-1.html"><a href="michaelis-menten-1.html"><i class="fa fa-check"></i><b>3</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="4" data-path="agr.html"><a href="agr.html"><i class="fa fa-check"></i><b>4</b> AGR</a></li>
+<li class="chapter" data-level="5" data-path="lognormal.html"><a href="lognormal.html"><i class="fa fa-check"></i><b>5</b> Lognormal</a></li>
+<li class="chapter" data-level="6" data-path="polynomial.html"><a href="polynomial.html"><i class="fa fa-check"></i><b>6</b> Polynomial</a></li>
+<li class="chapter" data-level="7" data-path="weibul.html"><a href="weibul.html"><i class="fa fa-check"></i><b>7</b> Weibul</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tree Growth</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class = rmdreview>
+This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
+</div>
+<div id="michaelis-menten-1" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Michaelis Menten</h1>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (10 + \frac{\alpha_i \times t}{\beta_i+t}, \sigma)\]</span></p>
+<p><img src="treegrowth_files/figure-html/mmfig-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mmmdatafig-1.png" width="768" /></p>
+<div class="figure"><span id="fig:traceplotmmi1"></span>
+<img src="treegrowth_files/figure-html/traceplotmmi1-1.png" alt="Trace plot i1." width="768" />
+<p class="caption">
+Figure 3.1: Trace plot i1.
+</p>
+</div>
+<div class="figure"><span id="fig:pairsplotmmi1"></span>
+<img src="treegrowth_files/figure-html/pairsplotmmi1-1.png" alt="Pairs plot i1." width="768" />
+<p class="caption">
+Figure 3.2: Pairs plot i1.
+</p>
+</div>
+<div class="figure"><span id="fig:mmalpha"></span>
+<img src="treegrowth_files/figure-html/mmalpha-1.png" alt="Posteriors for individual plateau." width="768" />
+<p class="caption">
+Figure 3.3: Posteriors for individual plateau.
+</p>
+</div>
+<div class="figure"><span id="fig:mmbeta"></span>
+<img src="treegrowth_files/figure-html/mmbeta-1.png" alt="Posteriors for individual slope." width="768" />
+<p class="caption">
+Figure 3.4: Posteriors for individual slope.
+</p>
+</div>
+<div class="figure"><span id="fig:mmpreds"></span>
+<img src="treegrowth_files/figure-html/mmpreds-1.png" alt="Predictions for individual growth." width="768" />
+<p class="caption">
+Figure 3.5: Predictions for individual growth.
+</p>
+</div>
+<p><img src="treegrowth_files/figure-html/mmrmsep-1.png" width="768" /></p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+log(beta)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+9.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+8.53 – 9.55
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+NCI [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.85
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.91 – -0.80
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+twi + 1 [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.08 – 0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.379
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.70
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.39
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Genus:Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.27
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.07
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>species</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+140
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Genus</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+95
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+41
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+12655
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.050 / 0.534
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+log(alpha)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+10.78
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+10.29 – 11.27
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+NCI [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.13
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.18 – -1.08
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+twi + 1 [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.13
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.18 – -0.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.61
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.49
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Genus:Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.39
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.09
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>species</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+140
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Genus</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+95
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+41
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+12655
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.074 / 0.641
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-8-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+<table>
+<caption><span id="tab:unnamed-chunk-11">Table 3.1: </span>Phylogenetic signal with different methods.</caption>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="left">variable</th>
+<th align="right">pvalue</th>
+<th align="right">stat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">alpha</td>
+<td align="left">Cmean</td>
+<td align="right">0.001</td>
+<td align="right">0.3100911</td>
+</tr>
+<tr class="even">
+<td align="left">alpha</td>
+<td align="left">I</td>
+<td align="right">0.010</td>
+<td align="right">0.0619581</td>
+</tr>
+<tr class="odd">
+<td align="left">alpha</td>
+<td align="left">K</td>
+<td align="right">0.373</td>
+<td align="right">0.0179936</td>
+</tr>
+<tr class="even">
+<td align="left">alpha</td>
+<td align="left">K.star</td>
+<td align="right">0.378</td>
+<td align="right">0.0190088</td>
+</tr>
+<tr class="odd">
+<td align="left">alpha</td>
+<td align="left">Lambda</td>
+<td align="right">0.001</td>
+<td align="right">0.3466555</td>
+</tr>
+<tr class="even">
+<td align="left">beta</td>
+<td align="left">Cmean</td>
+<td align="right">0.001</td>
+<td align="right">0.2680505</td>
+</tr>
+<tr class="odd">
+<td align="left">beta</td>
+<td align="left">I</td>
+<td align="right">0.008</td>
+<td align="right">0.0523717</td>
+</tr>
+<tr class="even">
+<td align="left">beta</td>
+<td align="left">K</td>
+<td align="right">0.389</td>
+<td align="right">0.0078813</td>
+</tr>
+<tr class="odd">
+<td align="left">beta</td>
+<td align="left">K.star</td>
+<td align="right">0.362</td>
+<td align="right">0.0083156</td>
+</tr>
+<tr class="even">
+<td align="left">beta</td>
+<td align="left">Lambda</td>
+<td align="right">0.001</td>
+<td align="right">0.4088145</td>
+</tr>
+</tbody>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-12-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="agr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

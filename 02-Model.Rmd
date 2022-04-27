@@ -1,0 +1,669 @@
+```{r model, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+library(rstan)
+library(loo)
+library(greta)
+library(ggtree)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = T)
+```
+
+# Model choice
+
+In this chapter we looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
+
+## Data
+
+```{r data}
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+trees <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  collect() %>% 
+  filter(Xfield > 20, Xfield < 250-20, Yfield > 20, Yfield < 250-20) %>% 
+  mutate(species = paste(Genre, Espece)) %>% 
+  filter(!grepl("Indet", species)) %>% 
+  mutate(DBH = CircCorr/pi)
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+```
+
+```{r datafig}
+trees %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 12) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
+  filter(n() > 20) %>% 
+  filter(idTree %in% sample(unique(.$idTree), 20)) %>%
+  ggplot(aes(CensusYear, DBH, col = as.factor(idTree))) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(se = F, alpha = 0.5) +
+  scale_y_sqrt() +
+  scale_color_discrete(guide = "none")
+```
+
+```{r mdata, eval=F}
+trees <- trees %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 12) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
+  filter(n() > 20) %>% 
+  mutate(Year = CensusYear - first(CensusYear)) %>%
+  mutate(DBHprev = lag(DBH)) %>% 
+  mutate(Deltat = CensusYear - lag(CensusYear)) %>% 
+  mutate(DBHprev = ifelse(is.na(DBHprev), 10, DBHprev)) %>% 
+  mutate(Deltat = ifelse(is.na(Deltat), 1, DBHprev)) %>% 
+  ungroup() %>% 
+  filter(idTree %in% sample(unique(.$idTree), 20)) %>%
+  mutate(ind = as.numeric(as.factor(as.character(idTree))))
+eval <- trees %>% 
+  group_by(idTree) %>% 
+  filter(CensusYear == max(CensusYear))
+mdata <- trees %>% 
+  group_by(idTree) %>% 
+  filter(CensusYear != max(CensusYear))
+save(trees, eval, mdata, file = "save/mdata.Rdata")
+```
+
+```{r mmmdatafig}
+load("save/mdata.Rdata")
+ggplot(mdata, aes(Year, DBH, col = as.factor(ind))) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_smooth(se = F) +
+  scale_color_discrete(guide = "none")
+```
+
+## Michaelis Menten 1
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (10 + \frac{\alpha_i \times t}{\beta_i+t}, \sigma)$$
+
+```{r mm1stanfit, eval=F}
+load("save/mdata.Rdata")
+mm1 <- stan_model("model/mm1.stan")
+fit_mm1 <- sampling(mm1, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_mm1, file = "save/mm1.Rdata") 
+```
+
+```{r mm1sampling}
+load("save/mm1.Rdata")  
+```
+
+```{r mm1rhat}
+mcmc_rhat(rhat(fit_mm1)) 
+```
+
+```{r mm1trace}
+mcmc_trace(fit_mm1, pars = c("alpha[1]", "beta[1]", "sigma")) 
+```
+
+```{r mm1pairs}
+mcmc_pairs(fit_mm1, pars = c("alpha[1]", "beta[1]", "sigma")) 
+```
+
+```{r mm1alpha}
+mcmc_intervals(fit_mm1, regex_pars = "alpha") 
+```
+
+```{r mm1beta}
+mcmc_intervals(fit_mm1, regex_pars = "beta") 
+```
+
+```{r mm1preds}
+pars <- as.data.frame(fit_mm1, pars = c("alpha", "beta")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = 10 + (alpha * Year) / (beta + Year))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Michaelis Menten 2
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (10 + \frac{1}{\frac{1}{\alpha_i} + \frac{1}{\gamma_i \times t}}, \sigma)$$
+
+```{r mm2stanfit, eval=F}
+load("save/mdata.Rdata")
+mm2 <- stan_model("model/mm2.stan")
+fit_mm2 <- sampling(mm2, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_mm2, file = "save/mm2.Rdata") 
+```
+
+```{r mm2sampling}
+load("save/mm2.Rdata")  
+```
+
+```{r mm2rhat}
+mcmc_rhat(rhat(fit_mm2)) 
+```
+
+```{r mm2trace}
+mcmc_trace(fit_mm2, pars = c("alpha[1]", "gamma[1]", "sigma")) 
+```
+
+```{r mm2pairs}
+mcmc_pairs(fit_mm2, pars = c("alpha[1]", "gamma[1]", "sigma")) 
+```
+
+```{r mm2alpha}
+mcmc_intervals(fit_mm2, regex_pars = "alpha") 
+```
+
+```{r mm2gamma}
+mcmc_intervals(fit_mm2, regex_pars = "gamma") 
+```
+
+```{r mm2preds}
+pars <- as.data.frame(fit_mm2, pars = c("alpha", "gamma")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = 10 + 1 / (1 / alpha + 1 / (gamma * Year)))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gamma), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Gompertz
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,s,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_i})}{Ks_i}]^2)\times\Delta t, \sigma)$$
+
+```{r gompertzstanfit, eval=F}
+load("save/mdata.Rdata")
+gompertz <- stan_model("model/gompertz.stan")
+fit_gompertz <- sampling(gompertz, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  dbhprev = mdata$DBHprev,
+                  dt = mdata$Deltat,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  dbhprevp = eval$DBHprev,
+                  dtp = eval$Deltat),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_gompertz, file = "save/gompertz.Rdata") 
+```
+
+```{r gompertzsampling}
+load("save/gompertz.Rdata")  
+```
+
+```{r gompertzrhat}
+mcmc_rhat(rhat(fit_gompertz)) 
+```
+
+```{r gompertztrace}
+mcmc_trace(fit_gompertz, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")) 
+```
+
+```{r gompertzpairs}
+mcmc_pairs(fit_gompertz, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")) 
+```
+
+```{r gompertzgmax}
+mcmc_intervals(fit_gompertz, regex_pars = "gmax") 
+```
+
+```{r gompertzpreds}
+pars <- as.data.frame(fit_gompertz, pars = c("gmax", "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+left_join(trees, pars) %>% 
+  mutate(DBHpred = DBHprev + gmax * exp(-0.5* (log(DBHprev / (100*dopt)) / ks)^2) * Deltat) %>% 
+  ggplot(aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(aes(y = DBHpred)) +
+  viridis::scale_color_viridis() 
+```
+
+## Lognormal
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (10 +\beta \times log(t), \sigma)$$
+
+```{r logfit, eval=F}
+load("save/mdata.Rdata")
+log <- stan_model("model/lognormal.stan")
+fit_log <- sampling(log, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_log, file = "save/log.Rdata") 
+```
+
+```{r logsampling}
+load("save/log.Rdata")  
+```
+
+```{r logrhat}
+mcmc_rhat(rhat(fit_log)) 
+```
+
+```{r logtrace}
+mcmc_trace(fit_log, pars = c("beta[1]", "sigma")) 
+```
+
+```{r logpairs}
+mcmc_pairs(fit_log, pars = c("beta[1]", "sigma")) 
+```
+
+```{r loggmax}
+mcmc_intervals(fit_log, regex_pars = "beta") 
+```
+
+```{r logpreds}
+pars <- as.data.frame(fit_log, pars = c("beta")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = 10 + beta * log(Year+1))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Polynomial
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)$$
+
+```{r polyfit, eval=F}
+load("save/mdata.Rdata")
+poly <- stan_model("model/poly3.stan")
+fit_poly <- sampling(poly, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_poly, file = "save/poly.Rdata") 
+```
+
+```{r polysampling}
+load("save/poly.Rdata")  
+```
+
+```{r polyrhat}
+mcmc_rhat(rhat(fit_poly)) 
+```
+
+```{r polytrace}
+mcmc_trace(fit_poly, pars = c("alpha[1]",  "beta[1]", "gamma[1]", "sigma")) 
+```
+
+```{r polypairs}
+mcmc_pairs(fit_poly, pars = c("alpha[1]",  "beta[1]", "gamma[1]", "sigma")) 
+```
+
+```{r polyalpha}
+mcmc_intervals(fit_poly, regex_pars = "gamma") 
+```
+
+```{r polypreds}
+pars <- as.data.frame(fit_poly, pars = c('alpha', "beta", "gamma")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = alpha * Year^3 + beta * Year^2 + gamma * Year + 10)
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gamma), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Weibul
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (10 + \alpha \times (1 − e^{-t_i/\beta}) , \sigma)$$
+
+```{r weibulfit, eval=F}
+load("save/mdata.Rdata")
+weibul <- stan_model("model/weibul.stan")
+fit_weibul <- sampling(weibul, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_weibul, file = "save/weibul.Rdata") 
+```
+
+## Amani
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$DBH_{i,t} \sim \mathcal N (\alpha \times (1 − e^{-\lambda \times (\frac{t_i}{\theta})^\beta}) , \sigma)$$
+```{r amanifit, eval=F}
+load("save/mdata.Rdata")
+amani <- stan_model("model/amani.stan")
+fit_amani <- sampling(amani, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year),
+                save_warmup = F, include = F, pars = "mu")
+save(fit_amani, file = "save/amani.stan") 
+```
+
+## Gompertz sum
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+```{r gompertzsumfit, eval=F}
+load("save/mdata.Rdata")
+gompertzsum <- stan_model("model/gompertzsum.stan")
+fit_gompertzsum <- sampling(gompertzsum, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(mdata$Year)+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year+1),
+                save_warmup = F, include = F, pars = c("mu", "SEP"))
+save(fit_gompertzsum, file = "save/gompertzsum.Rdata") 
+```
+
+```{r gompertzsumsampling}
+load("save/gompertzsum.Rdata")  
+```
+
+```{r gompertzsumrhat}
+mcmc_rhat(rhat(fit_gompertzsum)) 
+```
+
+```{r gompertzsumtrace}
+mcmc_trace(as.array(fit_gompertzsum, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```
+
+```{r gompertzsumpairs}
+mcmc_pairs(as.array(fit_gompertzsum, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma"))) 
+```
+
+```{r gompertzsumalpha}
+mcmc_intervals(as.array(fit_gompertzsum, pars = "gmax"))
+```
+
+```{r gompertzsumpreds}
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_gompertzsum, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(0:max(trees$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Gompertz sum 2
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+```{r gompertzsum2fit, eval=F}
+load("save/mdata.Rdata")
+gompertzsum2 <- stan_model("model/gompertzsum2.stan")
+fit_gompertzsum <- sampling(gompertzsum2, chains = 2, 
+                data = list(
+                  N = nrow(mdata),
+                  I = max(mdata$ind),
+                  Y = max(max(mdata$Year), max(eval$Year))+1,
+                  year = mdata$Year+1,
+                  ind = mdata$ind,
+                  dbh = mdata$DBH,
+                  Np = nrow(eval),
+                  dbhp = eval$DBH,
+                  indp = eval$ind,
+                  yearp = eval$Year+1),
+                save_warmup = F, include = F, pars = c("mu", "mup", "DBH"))
+save(fit_gompertzsum2, file = "save/gompertzsum2.Rdata") 
+```
+
+```{r gompertzsum2sampling}
+load("save/gompertzsum2.Rdata")  
+```
+
+```{r gompertzsum2rhat}
+mcmc_rhat(rhat(fit_gompertzsum2)) 
+```
+
+```{r gompertzsum2trace}
+mcmc_trace(as.array(fit_gompertzsum2, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```
+
+```{r gompertzsum2pairs}
+mcmc_pairs(fit_gompertzsum2, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")) 
+```
+
+```{r gompertzsum2alpha}
+mcmc_intervals(as.array(fit_gompertzsum2, pars = "gmax"))
+```
+
+```{r gompertzsum2preds}
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_gompertzsum2, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(0:max(trees$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+```{r gompertzsum2res}
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_gompertzsum2, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+left_join(mdata, pars) %>% 
+  rowwise() %>% 
+  mutate(DBHpred = dbhtoday(Year+1, gmax, dopt, ks)) %>% 
+  mutate(Error = DBH - DBHpred) %>% 
+  ggplot(aes(Year, Error, col = as.character(ind))) +
+  geom_smooth(se = F, alpha = 0.1) +
+  geom_point() +
+  scale_color_discrete(guide = "none")
+```
+
+## Comparisons
+
+```{r fits}
+fits <- list(
+  "Michaelis Menten 1" = fit_mm1,
+  "Michaelis Menten 2" = fit_mm2,
+  "Gompertz" = fit_gompertz,
+  "Lognormal" = fit_log,
+  "Polynomial" = fit_poly,
+  "Gompertz sum" = fit_gompertzsum,
+  "Gompertz sum 2" = fit_gompertzsum2
+)
+```
+
+
+```{r rmsep}
+lapply(fits[-6], mcmc_intervals_data, "RMSEP") %>% 
+  bind_rows(.id = "Model") %>% 
+  ggplot(aes(x = Model, xend = Model)) +
+  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() + ylab("RMSEP") + xlab("") + scale_y_log10()
+```
+
+```{r loo}
+lapply(fits, loo) %>% 
+  loo_compare() %>%
+  kable()
+```
+
+```{r time}
+lapply(fits, get_elapsed_time) %>% 
+  lapply(as.data.frame) %>% 
+  bind_rows(.id = "Model") %>% 
+  rowwise() %>% 
+  mutate(Time = sum(warmup + sample)) %>% 
+  group_by(Model) %>% 
+  summarise(Time = max(Time)) %>% 
+  ggplot(aes(Model, Time)) +
+  geom_point() +
+  coord_flip() +
+  scale_y_log10() +
+  ylab("Time (seconds)")
+```
