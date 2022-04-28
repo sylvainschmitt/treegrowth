@@ -17,3 +17,7 @@ model-full
 data-1
 model
 analyses
+tab:datahalftab
+model-half
+data-2
+model-1

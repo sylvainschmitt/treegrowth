@@ -1,3 +1,5 @@
+treegrowth 0.0.0.9009: pre half fit for intermediate results
+
 treegrowth 0.0.0.9008: pre full fit
 
 treegrowth 0.0.0.9007: new models
