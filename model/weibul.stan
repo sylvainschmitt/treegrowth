@@ -15,8 +15,7 @@ parameters {
   real<lower=0> sigma ;
 }
 transformed parameters {
-  vector[N] mu = year .\ beta[ind] ;
-  vector[N] mu = 10 + alpha[ind] .* (1 - exp(-year .\ beta[ind]) ) ;
+  vector[N] mu = 10 + alpha[ind] .* (1 - exp(-year ./ beta[ind]) ) ;
 }
 model {
   dbh ~ normal(mu, sigma) ;
@@ -25,7 +24,7 @@ model {
   sigma ~ normal(0, 1) ;
 }
 generated quantities {
-  real RMSEP = sqrt(mean(square(dbhp - ( 10 + alpha[indp] .* (1 - exp(-yearp .\ beta[indp])))))) ;
+  real RMSEP = sqrt(mean(square(dbhp - ( 10 + alpha[indp] .* (1 - exp(-yearp ./ beta[indp])))))) ;
   vector[N] log_lik ;
   for(n in 1:N)
     log_lik[n] = normal_cdf(dbh[n], mu[n], sigma) ;

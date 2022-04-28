@@ -1,4 +1,4 @@
-```{r modelfull, include=FALSE, eval=T}
+```{r modelhalf, include=FALSE, eval=T}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
@@ -10,19 +10,19 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Model full
+# Model half
 
-In this chapter we sample the selected model with full data
+In this chapter we sample the selected model with half data
 
 ## Data
 
-```{r datafulllim, echo=T}
+```{r datahalflim, echo=T}
 dist_edge <- 20
 n_census <- 10
 n_ind_species <- 10
 ```
 
-```{r datafull}
+```{r datahalf, eval=F}
 guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
 trees <- tbl(guyafor, "inventory") %>% 
   filter(Forest == "Paracou") %>% 
@@ -36,11 +36,18 @@ trees <- tbl(guyafor, "inventory") %>%
   filter(n() > n_census) %>% 
   group_by(species) %>% 
   filter(length(unique(idTree)) > n_ind_species)
-DBI::dbDisconnect(guyafor) ; rm(guyafor, dist_edge, n_census, n_in)
+DBI::dbDisconnect(guyafor) ; rm(guyafor, dist_edge, n_census, n_ind_species)
+dplyr::select(trees, species, idTree) %>% 
+  unique() %>% 
+  group_by(species) %>% 
+  sample_n(20, replace = T) %>% 
+  unique() %>% 
+  left_join(trees) %>% 
+  vroom::vroom_write("save/trees_half.tsv")
 ```
 
-```{r datafullfig}
-trees %>% 
+```{r datahalffig}
+vroom::vroom("save/trees_half.tsv") %>% 
   filter(idTree %in% sample(unique(.$idTree), 20)) %>%
   ggplot(aes(CensusYear, DBH, col = as.factor(idTree))) +
   geom_point(alpha = 0.1) +
@@ -50,9 +57,9 @@ trees %>%
   xlab("Census year") + ylab("Diameter at breast height (BDH, cm)")
 ```
 
-```{r datafulltab}
+```{r datahalftab}
 options(knitr.kable.NA = '')
-res <- trees %>% 
+vroom::vroom("save/trees_half.tsv") %>% 
   group_by(Family, Genus, species, idTree) %>% 
   summarise(census = n(), year_start = min(CensusYear), year_end = max(CensusYear),
             dbh_start = min(DBH), dbh_end = max(DBH)) %>% 
@@ -76,8 +83,8 @@ res <- trees %>%
             max_dbh0 = max(dbh_start),
             min_dbhmax = min(dbh_end),
             med_dbhmax = median(dbh_end),
-            max_dbhmax = max(dbh_end))
-reshape2::melt(res) %>% 
+            max_dbhmax = max(dbh_end)) %>% 
+  reshape2::melt() %>% 
   separate(variable, c("measure", "variable")) %>% 
   reshape2::dcast(variable ~ measure) %>% 
   dplyr::select(variable, n, med, min, max) %>% 
@@ -86,35 +93,32 @@ reshape2::melt(res) %>%
   arrange(variable) %>% 
   kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
         caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")
-rm(res)
 ```
 
 
-```{r mdatafull, eval=F}
-mdata <- trees %>% 
+```{r mdatahalf, eval=F}
+vroom::vroom("save/trees_half.tsv") %>% 
   group_by(idTree) %>% 
   mutate(Year = CensusYear - min(CensusYear)) %>%
   ungroup() %>% 
   mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
-  mutate(sp = as.numeric(as.factor(species)))
-vroom::vroom_write(mdata, "save/mdatafull.tsv")
+  mutate(sp = as.numeric(as.factor(species))) %>% 
+  vroom::vroom_write("save/mdatahalf.tsv")
 ```
 
-```{r mdatafullfig}
-mdata <- vroom::vroom("save/mdatafull.tsv")
-subdata <- dplyr::select(mdata, sp, ind) %>% 
+```{r mdatahalffig}
+dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>% 
   unique() %>% 
   filter(sp %in% sample(unique(.$sp), 9)) %>% 
   group_by(sp) %>% 
-  sample_n(10) %>% 
-  left_join(mdata)
-ggplot(subdata, aes(Year, DBH, group = as.factor(ind))) +
+  sample_n(10, replace = T) %>%
+  unique() %>% 
+  left_join(vroom::vroom("save/mdatahalf.tsv")) %>% 
+  ggplot(aes(Year, DBH, group = as.factor(ind))) +
   geom_point(col = "grey") +
   geom_smooth(se = F) +
-  geom_point(data = filter(subdata, Year == 0), col = "red", size = 2) +
   xlim(0,NA) +
   facet_wrap(~ species)
-rm(subdata)
 ```
 
 ## Model
@@ -123,8 +127,8 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$ in spec
 
 $$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1 | DBH_{1,i} = DBH_{recruitment}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)$$
 
-```{r growthfit, eval=F}
-mdata <- vroom::vroom("save/mdatafull.tsv")
+```{r growthhalffit, eval=F}
+mdata <- vroom::vroom("save/mdatahalf.tsv")
 growth <- cmdstan_model("model/growth.stan")
 fit <- growth$sample(
   data = list(
@@ -140,10 +144,12 @@ fit <- growth$sample(
   ),
   chains = 4, 
   parallel_chains = 4,
-  refresh = 50,
-  save_warmup = F
+  refresh = 10,
+  save_warmup = F,
+  max_treedepth = 12
+
 )
-fit$save_output_files(dir = "save/growth")
-fit_full <- rstan::read_stan_csv(fit$output_files())
-save(fit_full, file = "save/growth.Rdata") 
+fit$save_output_files(dir = "save/growthhalf")
+fit_half <- rstan::read_stan_csv(fit$output_files())
+save(fit_half, file = "save/growthhalf.Rdata") 
 ```

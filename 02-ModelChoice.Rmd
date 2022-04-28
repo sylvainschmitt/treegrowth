@@ -2,16 +2,14 @@
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
-library(bayesplot)
-library(rstan)
-library(loo)
 library(cmdstanr)
+library(rstan)
+library(bayesplot)
+library(loo)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
   cache = T, cache.lazy = F, eval=T)
-options(mc.cores = parallel::detectCores())
-rstan_options(auto_write = T)
 ```
 
 # Model choice
@@ -51,7 +49,7 @@ trees %>%
 ```
 
 ```{r mdata, eval=F}
-trees <- trees %>% 
+trees %>% 
   group_by(Plot) %>% 
   mutate(StartYear = min(CensusYear)) %>% 
   group_by(idTree) %>% 
@@ -67,36 +65,39 @@ trees <- trees %>%
   mutate(Deltat = ifelse(is.na(Deltat), 1, DBHprev)) %>% 
   ungroup() %>% 
   filter(idTree %in% sample(unique(.$idTree), 20)) %>%
-  mutate(ind = as.numeric(as.factor(as.character(idTree))))
-eval <- trees %>% 
+  mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
+  vroom::vroom_write("save/trees_reduced.tsv")
+vroom::vroom("save/trees_reduced.tsv") %>% 
   group_by(idTree) %>% 
-  filter(CensusYear == max(CensusYear))
-mdata <- trees %>% 
+  filter(CensusYear == max(CensusYear)) %>% 
+  vroom::vroom_write("save/eval_reduced.tsv")
+vroom::vroom("save/trees_reduced.tsv") %>% 
   group_by(idTree) %>% 
-  filter(CensusYear != max(CensusYear))
-save(trees, eval, mdata, file = "save/mdata.Rdata")
+  filter(CensusYear != max(CensusYear)) %>% 
+  vroom::vroom_write("save/mdata_reduced.tsv")
 ```
 
 ```{r mmmdatafig}
-load("save/mdata.Rdata")
-ggplot(mdata, aes(Year, DBH, col = as.factor(ind))) +
+ggplot(vroom::vroom("save/mdata_reduced.tsv"),
+       aes(Year, DBH, col = as.factor(ind))) +
   geom_point() +
-  geom_point(data = eval, col = "red", size = 2) +
+  geom_point(data = vroom::vroom("save/eval_reduced.tsv"), col = "red", size = 2) +
   geom_smooth(se = F) +
   scale_color_discrete(guide = "none")
 ```
 
-## Michaelis Menten 1
+## Michaelis Menten
 
 Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (10 + \frac{\alpha_i \times t}{\beta_i+t}, \sigma)$$
 
-```{r mm1stanfit, eval=F}
-load("save/mdata.Rdata")
-mm1 <- stan_model("model/mm1.stan")
-fit_mm1 <- sampling(mm1, chains = 2, 
-                data = list(
+```{r mmstanfit, eval=F}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+mm <- cmdstan_model("model/mm.stan")
+fit <- mm$sample(
+                  data = list(
                   N = nrow(mdata),
                   I = max(mdata$ind),
                   Y = max(mdata$Year)+1,
@@ -107,113 +108,49 @@ fit_mm1 <- sampling(mm1, chains = 2,
                   dbhp = eval$DBH,
                   indp = eval$ind,
                   yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
-save(fit_mm1, file = "save/mm1.Rdata") 
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_mm <- rstan::read_stan_csv(fit$output_files())
+save(fit_mm, file = "save/mm.Rdata")
 ```
 
-```{r mm1sampling}
-load("save/mm1.Rdata")  
+```{r mmsampling}
+load("save/mm.Rdata")  
 ```
 
-```{r mm1rhat}
-mcmc_rhat(rhat(fit_mm1)) 
+```{r mmrhat}
+mcmc_rhat(rhat(fit_mm)) 
 ```
 
-```{r mm1trace}
-mcmc_trace(fit_mm1, pars = c("alpha[1]", "beta[1]", "sigma")) 
+```{r mmtrace}
+mcmc_trace(fit_mm, pars = c("alpha[1]", "beta[1]", "sigma")) 
 ```
 
-```{r mm1pairs}
-mcmc_pairs(fit_mm1, pars = c("alpha[1]", "beta[1]", "sigma")) 
+```{r mmpairs}
+mcmc_pairs(fit_mm, pars = c("alpha[1]", "beta[1]", "sigma")) 
 ```
 
-```{r mm1alpha}
-mcmc_intervals(fit_mm1, regex_pars = "alpha") 
+```{r mmbeta}
+mcmc_intervals(fit_mm, regex_pars = "beta") 
 ```
 
-```{r mm1beta}
-mcmc_intervals(fit_mm1, regex_pars = "beta") 
-```
-
-```{r mm1preds}
-pars <- as.data.frame(fit_mm1, pars = c("alpha", "beta")) %>% 
+```{r mmpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+pars <- as.data.frame(fit_mm, pars = c("alpha", "beta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
 preds <- pars %>% 
-  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  mutate(Year = list(seq(0, max(mdata$Year), length.out = 100))) %>% 
   unnest(Year) %>% 
   mutate(DBH = 10 + (alpha * Year) / (beta + Year))
 ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
-  geom_point() +
-  geom_point(data = eval, col = "red", size = 2) +
-  geom_line(data = preds) +
-  viridis::scale_color_viridis() 
-```
-
-## Michaelis Menten 2
-
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
-
-$$DBH_{i,t} \sim \mathcal N (10 + \frac{1}{\frac{1}{\alpha_i} + \frac{1}{\gamma_i \times t}}, \sigma)$$
-
-```{r mm2stanfit, eval=F}
-load("save/mdata.Rdata")
-mm2 <- stan_model("model/mm2.stan")
-fit_mm2 <- sampling(mm2, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
-save(fit_mm2, file = "save/mm2.Rdata") 
-```
-
-```{r mm2sampling}
-load("save/mm2.Rdata")  
-```
-
-```{r mm2rhat}
-mcmc_rhat(rhat(fit_mm2)) 
-```
-
-```{r mm2trace}
-mcmc_trace(fit_mm2, pars = c("alpha[1]", "gamma[1]", "sigma")) 
-```
-
-```{r mm2pairs}
-mcmc_pairs(fit_mm2, pars = c("alpha[1]", "gamma[1]", "sigma")) 
-```
-
-```{r mm2alpha}
-mcmc_intervals(fit_mm2, regex_pars = "alpha") 
-```
-
-```{r mm2gamma}
-mcmc_intervals(fit_mm2, regex_pars = "gamma") 
-```
-
-```{r mm2preds}
-pars <- as.data.frame(fit_mm2, pars = c("alpha", "gamma")) %>% 
-  reshape2::melt(variable.name = "parameter") %>% 
-  group_by(parameter) %>% 
-  summarise(value = median(value)) %>% 
-  separate(parameter, c("parameter", "ind"), convert = T) %>% 
-  reshape2::dcast(ind ~ parameter)
-preds <- pars %>% 
-  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
-  unnest(Year) %>% 
-  mutate(DBH = 10 + 1 / (1 / alpha + 1 / (gamma * Year)))
-ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gamma), group = ind)) +
   geom_point() +
   geom_point(data = eval, col = "red", size = 2) +
   geom_line(data = preds) +
@@ -227,23 +164,29 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 $$DBH_{i,s,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_i})}{Ks_i}]^2)\times\Delta t, \sigma)$$
 
 ```{r gompertzstanfit, eval=F}
-load("save/mdata.Rdata")
-gompertz <- stan_model("model/gompertz.stan")
-fit_gompertz <- sampling(gompertz, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  dbhprev = mdata$DBHprev,
-                  dt = mdata$Deltat,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  dbhprevp = eval$DBHprev,
-                  dtp = eval$Deltat),
-                save_warmup = F, include = F, pars = "mu")
-save(fit_gompertz, file = "save/gompertz.Rdata") 
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+gompertz <- cmdstan_model("model/gompertz.stan")
+fit <- gompertz$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    dbhprev = mdata$DBHprev,
+    dt = mdata$Deltat,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    dbhprevp = eval$DBHprev,
+    dtp = eval$Deltat),
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_gompertz <- rstan::read_stan_csv(fit$output_files())
+save(fit_gompertz, file = "save/gompertz.Rdata")
 ```
 
 ```{r gompertzsampling}
@@ -267,13 +210,15 @@ mcmc_intervals(fit_gompertz, regex_pars = "gmax")
 ```
 
 ```{r gompertzpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
 pars <- as.data.frame(fit_gompertz, pars = c("gmax", "dopt", "ks")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
-left_join(trees, pars) %>% 
+left_join(mdata, pars) %>% 
   mutate(DBHpred = DBHprev + gmax * exp(-0.5* (log(DBHprev / (100*dopt)) / ks)^2) * Deltat) %>% 
   ggplot(aes(Year, DBH, col = log(gmax), group = ind)) +
   geom_point() +
@@ -289,22 +234,28 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 $$DBH_{i,t} \sim \mathcal N (10 +\beta \times log(t), \sigma)$$
 
 ```{r logfit, eval=F}
-load("save/mdata.Rdata")
-log <- stan_model("model/lognormal.stan")
-fit_log <- sampling(log, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
-save(fit_log, file = "save/log.Rdata") 
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+log <- cmdstan_model("model/lognormal.stan")
+fit <- log$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(mdata$Year)+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year),
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_log <- rstan::read_stan_csv(fit$output_files())
+save(fit_log, file = "save/log.Rdata")
 ```
 
 ```{r logsampling}
@@ -328,6 +279,8 @@ mcmc_intervals(fit_log, regex_pars = "beta")
 ```
 
 ```{r logpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
 pars <- as.data.frame(fit_log, pars = c("beta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -335,10 +288,11 @@ pars <- as.data.frame(fit_log, pars = c("beta")) %>%
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
 preds <- pars %>% 
-  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  mutate(Year = list(seq(0, max(mdata$Year), length.out = 100))) %>% 
   unnest(Year) %>% 
   mutate(DBH = 10 + beta * log(Year+1))
-ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
+ggplot(left_join(mdata, pars),
+       aes(Year, DBH, col = log(beta), group = ind)) +
   geom_point() +
   geom_point(data = eval, col = "red", size = 2) +
   geom_line(data = preds) +
@@ -352,21 +306,27 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 $$DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)$$
 
 ```{r polyfit, eval=F}
-load("save/mdata.Rdata")
-poly <- stan_model("model/poly3.stan")
-fit_poly <- sampling(poly, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+poly <- cmdstan_model("model/poly3.stan")
+fit <- poly$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(mdata$Year)+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year),
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_poly <- rstan::read_stan_csv(fit$output_files())
 save(fit_poly, file = "save/poly.Rdata") 
 ```
 
@@ -391,6 +351,8 @@ mcmc_intervals(fit_poly, regex_pars = "gamma")
 ```
 
 ```{r polypreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
 pars <- as.data.frame(fit_poly, pars = c('alpha', "beta", "gamma")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -398,10 +360,11 @@ pars <- as.data.frame(fit_poly, pars = c('alpha', "beta", "gamma")) %>%
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
 preds <- pars %>% 
-  mutate(Year = list(seq(0, max(trees$Year), length.out = 100))) %>% 
+  mutate(Year = list(seq(0, max(eval$Year), length.out = 100))) %>% 
   unnest(Year) %>% 
   mutate(DBH = alpha * Year^3 + beta * Year^2 + gamma * Year + 10)
-ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gamma), group = ind)) +
+ggplot(left_join(mdata, pars), 
+       aes(Year, DBH, col = log(gamma), group = ind)) +
   geom_point() +
   geom_point(data = eval, col = "red", size = 2) +
   geom_line(data = preds) +
@@ -415,22 +378,69 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 $$DBH_{i,t} \sim \mathcal N (10 + \alpha \times (1 − e^{-t_i/\beta}) , \sigma)$$
 
 ```{r weibulfit, eval=F}
-load("save/mdata.Rdata")
-weibul <- stan_model("model/weibul.stan")
-fit_weibul <- sampling(weibul, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+weibul <- cmdstan_model("model/weibul.stan")
+fit <- weibul$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(mdata$Year)+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year),
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_weibul <- rstan::read_stan_csv(fit$output_files())
 save(fit_weibul, file = "save/weibul.Rdata") 
+```
+
+```{r weibulsampling}
+load("save/weibul.Rdata")  
+```
+
+```{r weibulrhat}
+mcmc_rhat(rhat(fit_weibul)) 
+```
+
+```{r weibultrace}
+mcmc_trace(as.array(fit_weibul, pars = c("alpha[1]", "beta[1]", "sigma")))
+```
+
+```{r weibulpairs}
+mcmc_pairs(as.array(fit_weibul, pars = c("alpha[1]", "beta[1]", "sigma"))) 
+```
+
+```{r weibulbeta}
+mcmc_intervals(as.array(fit_weibul, pars = "beta"))
+```
+
+```{r weibulpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+pars <- as.data.frame(fit_weibul, pars = c('alpha', "beta")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(eval$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = 10 + alpha * (1 - exp(-(Year+1)/beta) ))
+ggplot(left_join(mdata, pars), 
+       aes(Year, DBH, col = log(beta), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
 ```
 
 ## Amani
@@ -439,46 +449,99 @@ Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (\alpha \times (1 − e^{-\lambda \times (\frac{t_i}{\theta})^\beta}) , \sigma)$$
 ```{r amanifit, eval=F}
-load("save/mdata.Rdata")
-amani <- stan_model("model/amani.stan")
-fit_amani <- sampling(amani, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year),
-                save_warmup = F, include = F, pars = "mu")
-save(fit_amani, file = "save/amani.stan") 
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+amani <- cmdstan_model("model/amani.stan")
+fit <- amani$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(mdata$Year)+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year),
+  chains = 2, 
+  parallel_chains = 2,
+  refresh = 200,
+  save_warmup = F
+)
+fit_amani <- rstan::read_stan_csv(fit$output_files())
+save(fit_amani, file = "save/amani.Rdata") 
+```
+
+```{r amanisampling}
+load("save/amani.Rdata")  
+```
+
+```{r amanirhat}
+mcmc_rhat(rhat(fit_amani)) 
+```
+
+```{r amanitrace}
+mcmc_trace(as.array(fit_amani, pars = c("alpha[1]", "beta[1]", "lambda[1]", "theta[1]", "sigma")))
+```
+
+```{r amanipairs}
+mcmc_pairs(as.array(fit_amani, pars = c("alpha[1]", "beta[1]", "lambda[1]", "theta[1]", "sigma"))) 
+```
+
+```{r amanibeta}
+mcmc_intervals(as.array(fit_amani, pars = "theta"))
+```
+
+```{r  amanpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+pars <- as.data.frame(fit_amani, pars = c('alpha', "beta", "lambda", "theta")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(seq(0, max(eval$Year), length.out = 100))) %>% 
+  unnest(Year) %>% 
+  mutate(DBH = 10 + alpha * (1 - exp(-lambda*((Year+1)/ theta)^beta )))
+ggplot(left_join(mdata, pars), 
+       aes(Year, DBH, col = log(beta), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
 ```
 
 ## Gompertz sum
 
 Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
-$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
 
 ```{r gompertzsumfit, eval=F}
-load("save/mdata.Rdata")
-gompertzsum <- stan_model("model/gompertzsum.stan")
-fit_gompertzsum <- sampling(gompertzsum, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(mdata$Year)+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year+1),
-                save_warmup = F, include = F, pars = c("mu", "SEP"))
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
+gompertzsum <- cmdstan_model("model/gompertzsum.stan")
+fit <- gompertzsum$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_gompertzsum <- rstan::read_stan_csv(fit$output_files())
 save(fit_gompertzsum, file = "save/gompertzsum.Rdata") 
 ```
 
@@ -503,6 +566,8 @@ mcmc_intervals(as.array(fit_gompertzsum, pars = "gmax"))
 ```
 
 ```{r gompertzsumpreds}
+mdata <- vroom::vroom("save/mdata_reduced.tsv")
+eval <- vroom::vroom("save/eval_reduced.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -516,7 +581,7 @@ pars <- as.data.frame(fit_gompertzsum, pars = c('gmax', "dopt", "ks")) %>%
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
 preds <- pars %>% 
-  mutate(Year = list(0:max(trees$Year))) %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
   unnest(Year) %>% 
   rowwise() %>% 
   mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
@@ -527,90 +592,20 @@ ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
   viridis::scale_color_viridis() 
 ```
 
-## Gompertz sum 2
-
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
-
-$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
-
-```{r gompertzsum2fit, eval=F}
-load("save/mdata.Rdata")
-gompertzsum2 <- stan_model("model/gompertzsum2.stan")
-fit_gompertzsum <- sampling(gompertzsum2, chains = 2, 
-                data = list(
-                  N = nrow(mdata),
-                  I = max(mdata$ind),
-                  Y = max(max(mdata$Year), max(eval$Year))+1,
-                  year = mdata$Year+1,
-                  ind = mdata$ind,
-                  dbh = mdata$DBH,
-                  Np = nrow(eval),
-                  dbhp = eval$DBH,
-                  indp = eval$ind,
-                  yearp = eval$Year+1),
-                save_warmup = F, include = F, pars = c("mu", "mup", "DBH"))
-save(fit_gompertzsum2, file = "save/gompertzsum2.Rdata") 
-```
-
-```{r gompertzsum2sampling}
-load("save/gompertzsum2.Rdata")  
-```
-
-```{r gompertzsum2rhat}
-mcmc_rhat(rhat(fit_gompertzsum2)) 
-```
-
-```{r gompertzsum2trace}
-mcmc_trace(as.array(fit_gompertzsum2, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
-```
-
-```{r gompertzsum2pairs}
-mcmc_pairs(fit_gompertzsum2, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")) 
-```
-
-```{r gompertzsum2alpha}
-mcmc_intervals(as.array(fit_gompertzsum2, pars = "gmax"))
-```
-
-```{r gompertzsum2preds}
+```{r gompertzsumres}
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
     dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
   return(dbh)  
 }
-pars <- as.data.frame(fit_gompertzsum2, pars = c('gmax', "dopt", "ks")) %>% 
+pars <- as.data.frame(fit_gompertzsum, pars = c('gmax', "dopt", "ks")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
-preds <- pars %>% 
-  mutate(Year = list(0:max(trees$Year))) %>% 
-  unnest(Year) %>% 
-  rowwise() %>% 
-  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
-ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
-  geom_point() +
-  geom_point(data = eval, col = "red", size = 2) +
-  geom_line(data = preds) +
-  viridis::scale_color_viridis() 
-```
-
-```{r gompertzsum2res}
-dbhtoday <- function(t, gmax, dopt, ks){
-  dbh <- 10
-  for(i in 1:t)
-    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
-  return(dbh)  
-}
-pars <- as.data.frame(fit_gompertzsum2, pars = c('gmax', "dopt", "ks")) %>% 
-  reshape2::melt(variable.name = "parameter") %>% 
-  group_by(parameter) %>% 
-  summarise(value = median(value)) %>% 
-  separate(parameter, c("parameter", "ind"), convert = T) %>% 
-  reshape2::dcast(ind ~ parameter)
-left_join(mdata, pars) %>% 
+left_join(vroom::vroom("save/mdata_reduced.tsv"), pars) %>% 
   rowwise() %>% 
   mutate(DBHpred = dbhtoday(Year+1, gmax, dopt, ks)) %>% 
   mutate(Error = DBH - DBHpred) %>% 
@@ -620,103 +615,23 @@ left_join(mdata, pars) %>%
   scale_color_discrete(guide = "none")
 ```
 
-## Gompertz sum 3
-
-*Using cmdstanr.*
-
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
-
-$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
-
-```{r gompertzsum3fit, eval=F}
-load("save/mdata.Rdata")
-gompertzsum3 <- cmdstan_model("model/gompertzsum3.stan")
-fit <- gompertzsum3$sample(
-  data = list(
-    N = nrow(mdata),
-    I = max(mdata$ind),
-    Y = max(max(mdata$Year), max(eval$Year))+1,
-    year = mdata$Year+1,
-    ind = mdata$ind,
-    dbh = mdata$DBH,
-    Np = nrow(eval),
-    dbhp = eval$DBH,
-    indp = eval$ind,
-    yearp = eval$Year+1),
-  chains = 2, 
-  parallel_chains = 4,
-  refresh = 200,
-  save_warmup = F
-)
-fit_gompertzsum3 <- rstan::read_stan_csv(fit$output_files())
-save(fit_gompertzsum3, file = "save/gompertzsum3.Rdata") 
-```
-
-```{r gompertzsum3sampling}
-load("save/gompertzsum3.Rdata")  
-```
-
-```{r gompertzsum3trace}
-mcmc_trace(as.array(fit_gompertzsum3, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
-```
-
-## Gompertz sum 4
-
-*Using cmdstanr and reduce_sum for parralelisation.*
-
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
-
-$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=0} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
-
-```{r gompertzsum4fit, eval=F}
-load("save/mdata.Rdata")
-gompertzsum4 <- cmdstan_model("model/gompertzsum4.stan", cpp_options = list(stan_threads = TRUE))
-fit <- gompertzsum4$sample(
-  data = list(
-    N = nrow(mdata),
-    I = max(mdata$ind),
-    Y = max(max(mdata$Year), max(eval$Year))+1,
-    year = mdata$Year+1,
-    ind = mdata$ind,
-    dbh = mdata$DBH,
-    Np = nrow(eval),
-    dbhp = eval$DBH,
-    indp = eval$ind,
-    yearp = eval$Year+1,
-    grainsize = 1),
-  chains = 2, 
-  parallel_chains = 2,
-  threads_per_chain = 4,
-  refresh = 500,
-  save_warmup = F
-)
-fit_gompertzsum4 <- rstan::read_stan_csv(fit$output_files())
-save(fit_gompertzsum4, file = "save/gompertzsum4.Rdata") 
-```
-
-```{r gompertzsum4sampling}
-load("save/gompertzsum4.Rdata")  
-```
-
 ## Comparisons
 
 ```{r fits}
 fits <- list(
-  "Michaelis Menten 1" = fit_mm1,
-  "Michaelis Menten 2" = fit_mm2,
+  "Michaelis Menten" = fit_mm,
   "Gompertz" = fit_gompertz,
   "Lognormal" = fit_log,
   "Polynomial" = fit_poly,
-  "Gompertz sum" = fit_gompertzsum,
-  "Gompertz sum 2" = fit_gompertzsum2,
-  "Gompertz sum 3" = fit_gompertzsum3,
-  "Gompertz sum 4" = fit_gompertzsum4
+  "Weibul" = fit_weibul,
+  "Amani" = fit_amani,
+  "Gompertz sum" = fit_gompertzsum
 )
 ```
 
 
 ```{r rmsep}
-lapply(fits[-6], mcmc_intervals_data, "RMSEP") %>% 
+lapply(fits, mcmc_intervals_data, "RMSEP") %>% 
   bind_rows(.id = "Model") %>% 
   ggplot(aes(x = Model, xend = Model)) +
   geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +

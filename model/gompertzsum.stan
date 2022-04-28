@@ -1,24 +1,14 @@
-functions {
-  real dbhtoday(int years, real gmax, real dopt, real ks) {
-    real agr = 0 ;
-    real dbh = 10 ;
-    for(t in 1:years) {
-      agr = gmax*exp(-0.5* square(log(dbh / (100*dopt)) / ks)) ;
-      dbh += agr ;
-    }
-    return dbh ;
-  }
-}
 data {
   int<lower=1> N ; // # of observations
   int<lower=1> I ; // # of individuals
-  int<lower=1> year[N] ; // years
+  int<lower=1> Y ; // max # of years
+  array[N] int<lower=1> year ; // years
   vector[N] dbh ; // diameter
-  int<lower=1, upper=I> ind[N] ; // individuals
+  array[N] int<lower=1, upper=I> ind ; // individuals
   int<lower=1> Np ; // # of observations for prediction
   vector[Np] dbhp ; // diameter diameter for prediction
-  int<lower=1, upper=I> indp[Np] ; // individuals for prediction
-  int<lower=1> yearp[Np] ; // years for prediction
+  array[Np] int<lower=1, upper=I> indp ; // individuals for prediction
+  array[Np] int<lower=1> yearp ; // years for prediction
 }
 parameters {
   vector<lower=0.001, upper=3>[I] gmax ;
@@ -27,9 +17,13 @@ parameters {
   real<lower=0> sigma ;
 }
 transformed parameters {
+  matrix<lower=10>[I,Y] DBH ;
   vector[N] mu ;
+  DBH[,1] = rep_vector(10, I) ;
+  for(t in 2:Y)
+    DBH[,t] = DBH[,t-1] + gmax .* exp(-0.5 * square(log(DBH[,t-1] ./ (100*dopt)) ./ ks)) ;
   for(n in 1:N)
-    mu[n] = dbhtoday(year[n], gmax[ind[n]], dopt[ind[n]], ks[ind[n]]) ;
+    mu[n] = DBH[ind[n],year[n]] ;
 }
 model {
   dbh ~ normal(mu, sigma) ;
@@ -39,12 +33,12 @@ model {
   sigma ~ normal(0, 1) ;
 }
 generated quantities {
-  vector[N] SEP ;
+  vector[Np] mup ;
   real RMSEP ;
   vector[N] log_lik ;
-  for(n in 1:Np)
-    SEP[n] = square(dbhp[n] - dbhtoday(yearp[n], gmax[indp[n]], dopt[indp[n]], ks[indp[n]])) ;
-  RMSEP = sqrt(mean(SEP)) ;
   for(n in 1:N)
-    log_lik[n] = normal_cdf(dbh[n], mu[n], sigma) ;
+    log_lik[n] = normal_cdf(dbh[n] | mu[n], sigma) ;
+  for(n in 1:Np)
+    mup[n] = DBH[indp[n],yearp[n]] ;
+  RMSEP = sqrt(mean(square(dbhp - mup)));
 }

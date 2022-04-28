@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-04-27" />
+<meta name="date" content="2022-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,70 @@
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -75,18 +139,24 @@
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
 <li class="chapter" data-level="1" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>1</b> Model choice</a><ul>
 <li class="chapter" data-level="1.1" data-path="model-choice.html"><a href="model-choice.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
-<li class="chapter" data-level="1.2" data-path="model-choice.html"><a href="model-choice.html#michaelis-menten-1"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten 1</a></li>
-<li class="chapter" data-level="1.3" data-path="model-choice.html"><a href="model-choice.html#michaelis-menten-2"><i class="fa fa-check"></i><b>1.3</b> Michaelis Menten 2</a></li>
-<li class="chapter" data-level="1.4" data-path="model-choice.html"><a href="model-choice.html#gompertz"><i class="fa fa-check"></i><b>1.4</b> Gompertz</a></li>
-<li class="chapter" data-level="1.5" data-path="model-choice.html"><a href="model-choice.html#lognormal"><i class="fa fa-check"></i><b>1.5</b> Lognormal</a></li>
-<li class="chapter" data-level="1.6" data-path="model-choice.html"><a href="model-choice.html#polynomial"><i class="fa fa-check"></i><b>1.6</b> Polynomial</a></li>
-<li class="chapter" data-level="1.7" data-path="model-choice.html"><a href="model-choice.html#weibul"><i class="fa fa-check"></i><b>1.7</b> Weibul</a></li>
-<li class="chapter" data-level="1.8" data-path="model-choice.html"><a href="model-choice.html#amani"><i class="fa fa-check"></i><b>1.8</b> Amani</a></li>
-<li class="chapter" data-level="1.9" data-path="model-choice.html"><a href="model-choice.html#gompertz-sum"><i class="fa fa-check"></i><b>1.9</b> Gompertz sum</a></li>
-<li class="chapter" data-level="1.10" data-path="model-choice.html"><a href="model-choice.html#gompertz-sum-2"><i class="fa fa-check"></i><b>1.10</b> Gompertz sum 2</a></li>
-<li class="chapter" data-level="1.11" data-path="model-choice.html"><a href="model-choice.html#comparisons"><i class="fa fa-check"></i><b>1.11</b> Comparisons</a></li>
+<li class="chapter" data-level="1.2" data-path="model-choice.html"><a href="model-choice.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="1.3" data-path="model-choice.html"><a href="model-choice.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
+<li class="chapter" data-level="1.4" data-path="model-choice.html"><a href="model-choice.html#lognormal"><i class="fa fa-check"></i><b>1.4</b> Lognormal</a></li>
+<li class="chapter" data-level="1.5" data-path="model-choice.html"><a href="model-choice.html#polynomial"><i class="fa fa-check"></i><b>1.5</b> Polynomial</a></li>
+<li class="chapter" data-level="1.6" data-path="model-choice.html"><a href="model-choice.html#weibul"><i class="fa fa-check"></i><b>1.6</b> Weibul</a></li>
+<li class="chapter" data-level="1.7" data-path="model-choice.html"><a href="model-choice.html#amani"><i class="fa fa-check"></i><b>1.7</b> Amani</a></li>
+<li class="chapter" data-level="1.8" data-path="model-choice.html"><a href="model-choice.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
+<li class="chapter" data-level="1.9" data-path="model-choice.html"><a href="model-choice.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>2</b> Analyses</a></li>
+<li class="chapter" data-level="2" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>2</b> Model half</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-half.html"><a href="model-half.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>2.2</b> Model</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>3</b> Model full</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-full.html"><a href="model-full.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
+<li class="chapter" data-level="3.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>4</b> Analyses</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -125,7 +195,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <p>Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). Drought sensitivity shapes species distribution patterns in tropical forests. <em>Nature</em>, <strong>447</strong>, 80–82.</p>
 </div>
 <div>
-<p>Ferry, B., Morneau, F., Bontemps, J.D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116.</p>
+<p>Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a></p>
 </div>
 <div>
 <p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
