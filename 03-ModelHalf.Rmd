@@ -46,17 +46,6 @@ dplyr::select(trees, species, idTree) %>%
   vroom::vroom_write("save/trees_half.tsv")
 ```
 
-```{r datahalffig}
-vroom::vroom("save/trees_half.tsv") %>% 
-  filter(idTree %in% sample(unique(.$idTree), 20)) %>%
-  ggplot(aes(CensusYear, DBH, col = as.factor(idTree))) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(se = F, alpha = 0.5) +
-  scale_y_sqrt() +
-  scale_color_discrete(guide = "none") +
-  xlab("Census year") + ylab("Diameter at breast height (BDH, cm)")
-```
-
 ```{r datahalftab}
 options(knitr.kable.NA = '')
 vroom::vroom("save/trees_half.tsv") %>% 
@@ -68,7 +57,7 @@ vroom::vroom("save/trees_half.tsv") %>%
             n_genera = length(unique(Genus)),
             n_species = length(unique(species)),
             n_individuals = length(unique(idTree)),
-            n_observations = nrow(trees),
+            n_observations = nrow(vroom::vroom("save/trees_half.tsv")),
             min_census = min(census),
             med_census = median(census),
             max_census = max(census),
@@ -116,9 +105,10 @@ dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>%
   left_join(vroom::vroom("save/mdatahalf.tsv")) %>% 
   ggplot(aes(Year, DBH, group = as.factor(ind))) +
   geom_point(col = "grey") +
-  geom_smooth(se = F) +
+  geom_smooth(se = F, aes(col = as.factor(ind))) +
   xlim(0,NA) +
-  facet_wrap(~ species)
+  facet_wrap(~ species, scales = "free") +
+  scale_color_discrete(guide = "none")
 ```
 
 ## Model
@@ -140,38 +130,37 @@ fit <- growth$sample(
     dbh = filter(mdata, Year > 0)$DBH,
     dbh0 = filter(mdata, Year == 0)$DBH,
     ind = filter(mdata, Year > 0)$ind,
-    sp = filter(mdata, Year > 0)$sp
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp
   ),
   chains = 4, 
   parallel_chains = 4,
   refresh = 10,
   save_warmup = F,
   max_treedepth = 12
-
 )
 fit$save_output_files(dir = "save/growthhalf")
 fit_half <- rstan::read_stan_csv(fit$output_files())
 save(fit_half, file = "save/growthhalf.Rdata") 
 ```
 
-```{r growthhalfsampling}
+```{r growthhalfsampling, eval=F}
 mdata <- vroom::vroom("save/mdatahalf.tsv")
 load("save/growthhalf.Rdata")  
 # fit_half <- rstan::read_stan_csv(list.files("save/growthhalf/", full.names = T))
 ```
 
-```{r growthhalfrhat}
+```{r growthhalfrhat, eval=F}
 # mcmc_rhat(rhat(fit_half)) 
 ```
 
-```{r growthhalftrace}
+```{r growthhalftrace, eval=F}
 mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
 ```
 
-```{r growthhalfpairs}
+```{r growthhalfpairs, eval=F}
 mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma"))) 
 ```
 
-```{r growthhalfalpha}
+```{r growthhalfalpha, eval=F}
 mcmc_intervals(as.array(fit_half, pars = "gmax"))
 ```

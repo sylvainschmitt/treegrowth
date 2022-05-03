@@ -197,7 +197,6 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="model-half.html#cb1-1"></a>dist_edge &lt;-<span class="st"> </span><span class="dv">20</span></span>
 <span id="cb1-2"><a href="model-half.html#cb1-2"></a>n_census &lt;-<span class="st"> </span><span class="dv">10</span></span>
 <span id="cb1-3"><a href="model-half.html#cb1-3"></a>n_ind_species &lt;-<span class="st"> </span><span class="dv">10</span></span></code></pre></div>
-<p><img src="treegrowth_files/figure-html/datahalffig-1.png" width="768" /></p>
 <table>
 <caption><span id="tab:datahalftab">Table 3.1: </span>Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).</caption>
 <thead>
@@ -240,7 +239,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </tr>
 <tr class="odd">
 <td align="left">observations</td>
-<td align="right">31</td>
+<td align="right">92 917</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
@@ -288,9 +287,6 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <h2><span class="header-section-number">3.2</span> Model</h2>
 <p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1 | DBH_{1,i} = DBH_{recruitment}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)\]</span></p>
-<p><img src="treegrowth_files/figure-html/growthhalftrace-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/growthhalfpairs-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/growthhalfalpha-1.png" width="768" /></p>
 
 </div>
 </div>
