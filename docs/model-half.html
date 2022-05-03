@@ -24,15 +24,15 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-02" />
+<meta name="date" content="2022-05-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="model-full.html"/>
-<link rel="next" href="model-full-1.html"/>
+<link rel="prev" href="model-species.html"/>
+<link rel="next" href="model-full.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -148,17 +148,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.8" data-path="model-choice.html"><a href="model-choice.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
 <li class="chapter" data-level="1.9" data-path="model-choice.html"><a href="model-choice.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>2</b> Model full</a><ul>
-<li class="chapter" data-level="2.1" data-path="model-full.html"><a href="model-full.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
-<li class="chapter" data-level="2.2" data-path="model-full.html"><a href="model-full.html#model"><i class="fa fa-check"></i><b>2.2</b> Model</a></li>
+<li class="chapter" data-level="2" data-path="model-species.html"><a href="model-species.html"><i class="fa fa-check"></i><b>2</b> Model Species</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-species.html"><a href="model-species.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="model-species.html"><a href="model-species.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
+<li class="chapter" data-level="2.3" data-path="model-species.html"><a href="model-species.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
+<li class="chapter" data-level="2.4" data-path="model-species.html"><a href="model-species.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
+<li class="chapter" data-level="2.5" data-path="model-species.html"><a href="model-species.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
+<li class="chapter" data-level="2.6" data-path="model-species.html"><a href="model-species.html#comparisons-1"><i class="fa fa-check"></i><b>2.6</b> Comparisons</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>3</b> Model half</a><ul>
 <li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
-<li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model-1"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="model-full-1.html"><a href="model-full-1.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
-<li class="chapter" data-level="4.1" data-path="model-full-1.html"><a href="model-full-1.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
-<li class="chapter" data-level="4.2" data-path="model-full-1.html"><a href="model-full-1.html#model-2"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
+<li class="chapter" data-level="4" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
+<li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -280,7 +284,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </table>
 <p><img src="treegrowth_files/figure-html/mdatahalffig-1.png" width="768" /></p>
 </div>
-<div id="model-1" class="section level2">
+<div id="model" class="section level2">
 <h2><span class="header-section-number">3.2</span> Model</h2>
 <p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1 | DBH_{1,i} = DBH_{recruitment}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)\]</span></p>
@@ -295,8 +299,8 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
           </div>
         </div>
       </div>
-<a href="model-full.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-full-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-species.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="model-full.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
