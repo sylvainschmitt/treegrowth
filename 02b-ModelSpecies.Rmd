@@ -1,0 +1,504 @@
+```{r modelsp, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(cmdstanr)
+library(rstan)
+library(bayesplot)
+library(loo)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+```
+
+# Model Species
+
+In this chapter we looked for the best model to integrate species base on quality of fit, cross-validation (LOO), prediction (RMSEP), and elapsed time.
+
+## Data
+
+```{r datasp, eval=F}
+guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
+trees <- tbl(guyafor, "inventory") %>% 
+  filter(Forest == "Paracou") %>% 
+  collect() %>% 
+  filter(Xfield > 20, Xfield < 250-20, Yfield > 20, Yfield < 250-20) %>% 
+  mutate(species = paste(Genre, Espece)) %>% 
+  filter(!grepl("Indet", species)) %>% 
+  mutate(DBH = CircCorr/pi)
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+```
+
+```{r mdatasp, eval=F}
+trees %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 12) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
+  filter(n() > 10) %>% 
+  mutate(Year = CensusYear - first(CensusYear)) %>%
+  mutate(DBHprev = lag(DBH)) %>% 
+  mutate(Deltat = CensusYear - lag(CensusYear)) %>% 
+  mutate(DBHprev = ifelse(is.na(DBHprev), 10, DBHprev)) %>% 
+  mutate(Deltat = ifelse(is.na(Deltat), 1, DBHprev)) %>% 
+  ungroup() %>% 
+  group_by(species) %>% 
+  filter(length(unique(idTree)) > 10) %>% 
+  ungroup() %>% 
+  filter(species %in% sample(unique(species), 9)) %>% 
+  group_by(species) %>% 
+  filter(idTree %in% sample(unique(idTree), 10)) %>%
+  ungroup() %>% 
+  mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
+  mutate(sp = as.numeric(as.factor(as.character(species)))) %>% 
+  vroom::vroom_write("save/trees_species.tsv")
+vroom::vroom("save/trees_species.tsv") %>% 
+  group_by(idTree) %>% 
+  sample_n(1) %>% 
+  vroom::vroom_write("save/eval_species.tsv")
+vroom::vroom("save/trees_species.tsv") %>% 
+  anti_join(vroom::vroom("save/eval_species.tsv")) %>% 
+  vroom::vroom_write("save/mdata_species.tsv")
+```
+
+```{r mmmdataspfig}
+ggplot(vroom::vroom("save/mdata_species.tsv"),
+       aes(Year, DBH, col = as.factor(ind))) +
+  geom_point() +
+  geom_smooth(se = F) +
+  geom_point(data = vroom::vroom("save/eval_species.tsv"), col = "red", size = 2) +
+  scale_color_discrete(guide = "none") +
+  facet_wrap(~ species)
+```
+
+## Individual fixed
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+
+$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+```{r indfixfit, eval=F}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+indfix <- cmdstan_model("model/indfix.stan")
+fit <- indfix$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    sp = mdata$sp,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    spp = eval$sp,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_indfix <- rstan::read_stan_csv(fit$output_files())
+save(fit_indfix, file = "save/indfix.Rdata") 
+```
+
+```{r indfixmsampling}
+load("save/indfix.Rdata")  
+```
+
+```{r indfixrhat}
+mcmc_rhat(rhat(fit_indfix)) 
+```
+
+```{r indfixtrace}
+mcmc_trace(as.array(fit_indfix, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```
+
+```{r indfixpairs}
+mcmc_pairs(as.array(fit_indfix, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma"))) 
+```
+
+```{r indfixalpha}
+mcmc_intervals(as.array(fit_indfix, pars = "gmax"))
+```
+
+```{r indfixpreds}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_indfix, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Individual random
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$ in species $s$:
+
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) $$
+
+```{r indrandfit, eval=F}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+indrand <- cmdstan_model("model/indrand.stan")
+fit <- indrand$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    sp = mdata$sp,
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_indrand <- rstan::read_stan_csv(fit$output_files())
+save(fit_indrand, file = "save/indrand.Rdata") 
+```
+
+```{r indrandmsampling}
+load("save/indrand.Rdata")  
+```
+
+```{r indrandrhat}
+mcmc_rhat(rhat(fit_indrand)) 
+```
+
+```{r indrandtrace}
+mcmc_trace(as.array(fit_indrand, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK")))
+```
+
+```{r indrandpairs}
+mcmc_pairs(as.array(fit_indrand, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK"))) 
+```
+
+```{r indrandalpha}
+mcmc_intervals(as.array(fit_indrand, pars = "gmax"))
+```
+
+```{r indrandpreds}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_indrand, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Species fixed
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$ in species $s$:
+
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)$$
+
+```{r spfixfit, eval=F}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+spfix <- cmdstan_model("model/spfix.stan")
+fit <- spfix$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    sp = mdata$sp,
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_spfix <- rstan::read_stan_csv(fit$output_files())
+save(fit_spfix, file = "save/spfix.Rdata") 
+```
+
+```{r spfixmsampling}
+load("save/spfix.Rdata")  
+```
+
+```{r spfixrhat}
+mcmc_rhat(rhat(fit_spfix)) 
+```
+
+```{r spfixtrace}
+mcmc_trace(as.array(fit_spfix, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK")))
+```
+
+```{r spfixpairs}
+mcmc_pairs(as.array(fit_spfix, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK"))) 
+```
+
+```{r spfixalpha}
+mcmc_intervals(as.array(fit_spfix, pars = "gmax"))
+```
+
+```{r spfixpreds}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+parsi <- as.data.frame(fit_spfix, pars = c("gmax")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+parss <- as.data.frame(fit_spfix, pars = c("dopt_s", "ks_s")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "X1",  "sp"), convert = T) %>% 
+  reshape2::dcast(sp ~ parameter)
+preds <- select(mdata, ind, sp) %>% 
+  unique() %>% 
+  left_join(parsi) %>% 
+  left_join(parss) %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Species random
+
+Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$ in species $s$:
+
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt,\sigma_K), Ks \sim \mathcal N(Ks_s,\sigma_D) $$
+
+```{r sprandfit, eval=F}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+sprand <- cmdstan_model("model/sprand.stan")
+fit <- sprand$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    sp = mdata$sp,
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp,
+    dbh = mdata$DBH,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2, 
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_sprand <- rstan::read_stan_csv(fit$output_files())
+save(fit_sprand, file = "save/sprand.Rdata") 
+```
+
+```{r sprandmsampling}
+load("save/sprand.Rdata")  
+```
+
+```{r sprandrhat}
+mcmc_rhat(rhat(fit_sprand)) 
+```
+
+```{r sprandtrace}
+mcmc_trace(as.array(fit_sprand, pars = c("gmax[1]", "sigma", "dopt", "ks", "sigmaD", "sigmaK")))
+```
+
+```{r sprandpairs}
+mcmc_pairs(as.array(fit_sprand, pars = c("gmax[1]", "sigma", "dopt", "ks", "sigmaD", "sigmaK"))) 
+```
+
+```{r sprandalpha}
+mcmc_intervals(as.array(fit_sprand, pars = "gmax"))
+```
+
+```{r sprandpreds}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / (100*dopt)) / ks)^2)
+  return(dbh)  
+}
+parsi <- as.data.frame(fit_sprand, pars = c("gmax")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+parss <- as.data.frame(fit_sprand, pars = c("dopt_s", "ks_s")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "X1",  "sp"), convert = T) %>% 
+  reshape2::dcast(sp ~ parameter)
+preds <- select(mdata, ind, sp) %>% 
+  unique() %>% 
+  left_join(parsi) %>% 
+  left_join(parss) %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
+## Comparisons
+
+```{r fitssp}
+fits <- list(
+  "Individual fixed" = fit_indfix,
+  "Individual random" = fit_indrand,
+  "Species fixed" = fit_spfix,
+  "Species random" = fit_sprand
+)
+```
+
+```{r rmsepsp}
+lapply(fits, mcmc_intervals_data, "RMSEP") %>% 
+  bind_rows(.id = "Model") %>% 
+  ggplot(aes(x = Model, xend = Model)) +
+  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() + ylab("RMSEP") + xlab("") + scale_y_log10()
+```
+
+```{r loosp}
+lapply(fits, loo) %>% 
+  loo_compare() %>%
+  kable()
+```
+
+```{r timesp}
+lapply(fits, get_elapsed_time) %>% 
+  lapply(as.data.frame) %>% 
+  bind_rows(.id = "Model") %>% 
+  rowwise() %>% 
+  mutate(Time = sum(warmup + sample)) %>% 
+  group_by(Model) %>% 
+  summarise(Time = max(Time)) %>% 
+  ggplot(aes(Model, Time)) +
+  geom_point() +
+  coord_flip() +
+  scale_y_log10() +
+  ylab("Time (seconds)")
+```
+
+```{r gmaxsp}
+lapply(fits, mcmc_intervals_data, paste0('gmax[', 1:5, ']')) %>% 
+  bind_rows(.id = "model") %>% 
+  separate(parameter, c("parameter", "individual")) %>% 
+  ggplot(aes(x = individual, xend = individual, col = model)) +
+  geom_jitter(aes(y = m)) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() + ylab(expression(G[max]))
+```
+
+```{r lmmsp}
+lapply(fits, as.data.frame, pars = 'gmax') %>% 
+  bind_rows(.id = "model") %>% 
+  reshape2::melt("model", variable.name = "parameter") %>% 
+  group_by(model, parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(model + ind ~ parameter) %>% 
+  left_join(dplyr::select(vroom::vroom("save/mdata_species.tsv"),
+                          ind, idTree, Family, Genus, species)) %>% 
+  unique() %>% 
+  group_by(model) %>% 
+  do(var = nlme::lme(log(gmax) ~ 1, random=~1|Family/Genus/species, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Family", "Genus", "Species", "Individual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  group_by(model) %>% 
+  mutate(pct = variance / sum(variance)*100) %>% 
+  mutate(level = factor(level, levels = c("Family", "Genus", "Species", "Individual"))) %>% 
+  mutate(pct_text = paste0(round(pct), "%")) %>% 
+  mutate(pct_text = gsub("^0%", "", pct_text)) %>% 
+  ggplot(aes(x = model, y = pct, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
+  scale_fill_discrete(expression(sigma^2)) +
+  xlab("Model") + ylab("Percentage of variance") 
+```
+

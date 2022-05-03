@@ -153,3 +153,25 @@ fit$save_output_files(dir = "save/growthhalf")
 fit_half <- rstan::read_stan_csv(fit$output_files())
 save(fit_half, file = "save/growthhalf.Rdata") 
 ```
+
+```{r growthhalfsampling}
+mdata <- vroom::vroom("save/mdatahalf.tsv")
+load("save/growthhalf.Rdata")  
+# fit_half <- rstan::read_stan_csv(list.files("save/growthhalf/", full.names = T))
+```
+
+```{r growthhalfrhat}
+# mcmc_rhat(rhat(fit_half)) 
+```
+
+```{r growthhalftrace}
+mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```
+
+```{r growthhalfpairs}
+mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma"))) 
+```
+
+```{r growthhalfalpha}
+mcmc_intervals(as.array(fit_half, pars = "gmax"))
+```

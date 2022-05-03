@@ -5,6 +5,10 @@ library(tidyverse)
 library(bayesplot)
 library(greta)
 library(ggtree)
+library(phylosignal)
+library(adephylo)
+library(ape)
+library(phylobase)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -76,73 +80,68 @@ tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.
 ape::write.tree(tree$scenario.3, "save/phylogeny_mm.tree")
 ```
 
-```{r dataan, eval=F }
-load("save/mdata.Rdata")
-load("save/gompertzsum2.Rdata")  
-pars <- as.data.frame(fit_gompertzsum2, pars = c('gmax', "dopt", "ks")) %>% 
+```{r parsan, eval=F}
+mdata <- vroom::vroom("save/mdatahalf.tsv")
+load("save/growthhalf.Rdata")  
+pars <- as.data.frame(fit_half, pars = c('gmax', "dopt", "ks")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
+rm(fit_half)
 growth <- pars %>% 
   left_join(dplyr::select(mdata, ind, idTree, Family, Genus, species)) %>% 
   left_join(vroom::vroom(file = "save/env_full.tsv")) %>% 
   unique()
-phylo <- ape::read.tree("save/phylogeny_mm.tree")
+vroom::vroom_write(growth, file = "save/growthhalf.tsv")
 ```
 
-```{r , eval=F}
+```{r dataan}
+growth <- vroom::vroom("save/growthhalf.tsv")
+phylo <- ape::read.tree("save/phylogeny_full.tree")
+p4d <- phylo4d(phylo,
+               data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
+                 left_join(group_by(growth, species) %>% summarise(gmax  = mean(log(gmax), na.rm = T), 
+                                                                   dopt = mean(log(dopt), na.rm = T),
+                                                                   ks = mean(log(ks), na.rm = T))) %>% 
+                 dplyr::select(-species))
+p4d <- subset(p4d, tips.exclude=c("Siparuna_cuspidata"))
+```
+
+```{r }
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
   sjPlot::tab_model(show.icc = F)
 ```
 
-```{r , eval=F}
+```{r }
 m <- lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), 
                 na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, gmax)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
 r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
 partR2::forestplot(r2, type = "R2", text_size = 10)
 ```
 
-```{r , eval=F}
+```{r }
 ggplot(growth, aes(log(NCI), log(gmax), col = species)) +
   geom_point() +
   geom_smooth(method = "lm", aes(group = NA)) +
   scale_color_discrete(guide = "none")
 ```
 
-```{r , eval=F}
-ggplot(growth, aes(log(twi+1), log(gmax), col = species)) +
-  geom_point() +
-  geom_smooth(method = "lm", aes(group = NA)) +
-  scale_color_discrete(guide = "none")
-```
-
-```{r , eval=F}
+```{r }
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 
-  left_join(group_by(growth, species) %>% summarise(gamma = mean(gamma))) %>% 
-  ggtree(aes(color = log(gamma)), layout="circular") + 
+  left_join(group_by(growth, species) %>% summarise(gmax = mean(gmax))) %>% 
+  ggtree(aes(color = log(gmax)), layout="circular") + 
   geom_tiplab2(size = 2) +
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(log(gamma)))
+  viridis::scale_color_viridis(expression(log(gmax)))
 ```
 
-```{r , eval=F}
-library(phylosignal)
-library(adephylo)
-library(ape)
-library(phylobase)
-p4d <- phylo4d(phylo,
-               data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
-                 left_join(group_by(growth, species) %>% summarise(alpha  = mean(alpha, na.rm = T), gamma = mean(gamma, na.rm = T))) %>% 
-                 dplyr::select(-species))
-```
-
-```{r , eval=F}
+```{r }
 phyloSignal(p4d = p4d, method = "all") %>% 
   lapply(as.data.frame) %>% 
   lapply(rownames_to_column, "parameter") %>% 
@@ -153,23 +152,20 @@ phyloSignal(p4d = p4d, method = "all") %>%
 ```
 
 ```{r correlog, eval=F}
-gamma.crlg <- phyloCorrelogram(p4d, trait = "gamma", ci.bs	= 100)
-save(gamma.crlg, file = "save/correlogs")
-load("save/correlogs")
-plot(gamma.crlg, main="gamma phylogenetic correlogram")
+crlg <- phyloCorrelogram(p4d, trait = "gmax", ci.bs	= 100)
+plot(crlg, main="phylogenetic correlogram")
 ```
 
-```{r lipa, eval=F}
-lipa <- lipaMoran(p4d)
+```{r lipa}
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 
-  left_join(lipa$p.value %>% 
+  left_join(lipaMoran(p4d)$p.value %>% 
               as.data.frame() %>% 
               rownames_to_column("species") %>% 
               mutate(species = gsub("_", " ", species)) %>% 
-              dplyr::rename(alpha_pvalue = alpha, gamma_pvalues = gamma)) %>% 
-  ggtree(aes(color = gamma_pvalues < 0.5), layout="circular") + 
+              dplyr::rename(pval = gmax)) %>% 
+  ggtree(aes(color = pval < 0.5), layout="circular") + 
   geom_tiplab2(size = 2) +
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +

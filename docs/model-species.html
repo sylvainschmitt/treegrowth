@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Model Species | Tree Growth</title>
+  <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Model Species | Tree Growth" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Model Species | Tree Growth" />
+  
+  <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+<meta name="author" content="Sylvain Schmitt" />
+
+
+<meta name="date" content="2022-05-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-choice.html"/>
+<link rel="next" href="model-half.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script async defer src="https://hypothes.is/embed.js"></script>
+
+
+
+<link rel="stylesheet" href="html/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Tree Growth</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="model-choice.html"><a href="model-choice.html"><i class="fa fa-check"></i><b>1</b> Model choice</a><ul>
+<li class="chapter" data-level="1.1" data-path="model-choice.html"><a href="model-choice.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
+<li class="chapter" data-level="1.2" data-path="model-choice.html"><a href="model-choice.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="1.3" data-path="model-choice.html"><a href="model-choice.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
+<li class="chapter" data-level="1.4" data-path="model-choice.html"><a href="model-choice.html#lognormal"><i class="fa fa-check"></i><b>1.4</b> Lognormal</a></li>
+<li class="chapter" data-level="1.5" data-path="model-choice.html"><a href="model-choice.html#polynomial"><i class="fa fa-check"></i><b>1.5</b> Polynomial</a></li>
+<li class="chapter" data-level="1.6" data-path="model-choice.html"><a href="model-choice.html#weibul"><i class="fa fa-check"></i><b>1.6</b> Weibul</a></li>
+<li class="chapter" data-level="1.7" data-path="model-choice.html"><a href="model-choice.html#amani"><i class="fa fa-check"></i><b>1.7</b> Amani</a></li>
+<li class="chapter" data-level="1.8" data-path="model-choice.html"><a href="model-choice.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
+<li class="chapter" data-level="1.9" data-path="model-choice.html"><a href="model-choice.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="model-species.html"><a href="model-species.html"><i class="fa fa-check"></i><b>2</b> Model Species</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-species.html"><a href="model-species.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="model-species.html"><a href="model-species.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
+<li class="chapter" data-level="2.3" data-path="model-species.html"><a href="model-species.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
+<li class="chapter" data-level="2.4" data-path="model-species.html"><a href="model-species.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
+<li class="chapter" data-level="2.5" data-path="model-species.html"><a href="model-species.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
+<li class="chapter" data-level="2.6" data-path="model-species.html"><a href="model-species.html#comparisons-1"><i class="fa fa-check"></i><b>2.6</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>3</b> Model half</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
+<li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
+<li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tree Growth</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class = rmdreview>
+This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
+</div>
+<div id="model-species" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Model Species</h1>
+<p>In this chapter we looked for the best model to integrate species base on quality of fit, cross-validation (LOO), prediction (RMSEP), and elapsed time.</p>
+<div id="data-1" class="section level2">
+<h2><span class="header-section-number">2.1</span> Data</h2>
+<p><img src="treegrowth_files/figure-html/mmmdataspfig-1.png" width="768" /></p>
+</div>
+<div id="individual-fixed" class="section level2">
+<h2><span class="header-section-number">2.2</span> Individual fixed</h2>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)\]</span></p>
+<p><img src="treegrowth_files/figure-html/indfixrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indfixtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indfixpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indfixalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indfixpreds-1.png" width="768" /></p>
+</div>
+<div id="individual-random" class="section level2">
+<h2><span class="header-section-number">2.3</span> Individual random</h2>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
+<p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
+<p><img src="treegrowth_files/figure-html/indrandrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indrandtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indrandpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indrandalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/indrandpreds-1.png" width="768" /></p>
+</div>
+<div id="species-fixed" class="section level2">
+<h2><span class="header-section-number">2.4</span> Species fixed</h2>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
+<p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)\]</span></p>
+<p><img src="treegrowth_files/figure-html/spfixrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/spfixtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/spfixpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/spfixalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/spfixpreds-1.png" width="768" /></p>
+</div>
+<div id="species-random" class="section level2">
+<h2><span class="header-section-number">2.5</span> Species random</h2>
+<p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
+<p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt,\sigma_K), Ks \sim \mathcal N(Ks_s,\sigma_D) \]</span></p>
+<p><img src="treegrowth_files/figure-html/sprandrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/sprandtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/sprandpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/sprandalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/sprandpreds-1.png" width="768" /></p>
+</div>
+<div id="comparisons-1" class="section level2">
+<h2><span class="header-section-number">2.6</span> Comparisons</h2>
+<p><img src="treegrowth_files/figure-html/rmsepsp-1.png" width="768" /></p>
+<table>
+<colgroup>
+<col width="17%" />
+<col width="11%" />
+<col width="9%" />
+<col width="10%" />
+<col width="11%" />
+<col width="9%" />
+<col width="9%" />
+<col width="8%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">elpd_diff</th>
+<th align="right">se_diff</th>
+<th align="right">elpd_loo</th>
+<th align="right">se_elpd_loo</th>
+<th align="right">p_loo</th>
+<th align="right">se_p_loo</th>
+<th align="right">looic</th>
+<th align="right">se_looic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Individual random</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">-511.3851</td>
+<td align="right">66.12526</td>
+<td align="right">141.06429</td>
+<td align="right">19.340438</td>
+<td align="right">1022.770</td>
+<td align="right">132.25052</td>
+</tr>
+<tr class="even">
+<td align="left">Individual fixed</td>
+<td align="right">-8.138396</td>
+<td align="right">8.967316</td>
+<td align="right">-519.5235</td>
+<td align="right">63.32304</td>
+<td align="right">144.10479</td>
+<td align="right">17.511319</td>
+<td align="right">1039.047</td>
+<td align="right">126.64607</td>
+</tr>
+<tr class="odd">
+<td align="left">Species random</td>
+<td align="right">-601.917286</td>
+<td align="right">50.741055</td>
+<td align="right">-1113.3024</td>
+<td align="right">38.22549</td>
+<td align="right">91.71500</td>
+<td align="right">8.904312</td>
+<td align="right">2226.605</td>
+<td align="right">76.45097</td>
+</tr>
+<tr class="even">
+<td align="left">Species fixed</td>
+<td align="right">-619.934641</td>
+<td align="right">51.696773</td>
+<td align="right">-1131.3198</td>
+<td align="right">37.95275</td>
+<td align="right">89.35234</td>
+<td align="right">8.624910</td>
+<td align="right">2262.640</td>
+<td align="right">75.90549</td>
+</tr>
+</tbody>
+</table>
+<p><img src="treegrowth_files/figure-html/timesp-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gmaxsp-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/lmm-1.png" width="768" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-choice.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="model-half.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
