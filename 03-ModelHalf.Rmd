@@ -31,6 +31,13 @@ trees <- tbl(guyafor, "inventory") %>%
   mutate(species = paste(Genre, Espece)) %>% 
   collect() %>% 
   filter(!grepl("Indet", species)) %>% 
+  filter(BotaSource == "Bota") %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  mutate(FirstDead = first(CensusYear[CodeAlive == 0])) %>% 
+  mutate(FirstDead = ifelse(is.na(FirstDead), max(CensusYear)+1, FirstDead)) %>% 
+  filter(CensusYear < FirstDead) %>% 
+  ungroup() %>% 
   mutate(DBH = CircCorr/pi) %>% 
   group_by(idTree) %>% 
   filter(n() > n_census) %>% 
@@ -81,7 +88,7 @@ vroom::vroom("save/trees_half.tsv") %>%
                                                 "census", "year0", "yearmax", "dbh0", "dbhmax"))) %>% 
   arrange(variable) %>% 
   kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
-        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")
+        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).") 
 ```
 
 
@@ -108,7 +115,7 @@ dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>%
   geom_smooth(se = F, aes(col = as.factor(ind))) +
   xlim(0,NA) +
   facet_wrap(~ species, scales = "free") +
-  scale_color_discrete(guide = "none")
+  scale_color_discrete(guide = "none") 
 ```
 
 ## Model
