@@ -39,6 +39,13 @@ trees <- tbl(guyafor, "inventory") %>%
   filter(CensusYear < FirstDead) %>% 
   ungroup() %>% 
   mutate(DBH = CircCorr/pi) %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 15) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
   group_by(idTree) %>% 
   filter(n() > n_census) %>% 
   group_by(species) %>% 
@@ -150,24 +157,25 @@ fit_half <- rstan::read_stan_csv(fit$output_files())
 save(fit_half, file = "save/growthhalf.Rdata") 
 ```
 
-```{r growthhalfsampling, eval=F}
+```{r growthhalfsampling}
 mdata <- vroom::vroom("save/mdatahalf.tsv")
 load("save/growthhalf.Rdata")  
 # fit_half <- rstan::read_stan_csv(list.files("save/growthhalf/", full.names = T))
 ```
 
 ```{r growthhalfrhat, eval=F}
-# mcmc_rhat(rhat(fit_half)) 
+# convergence <- rhat(fit_half)
+# mcmc_rhat(rhat(fit_half))
 ```
 
-```{r growthhalftrace, eval=F}
-mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma")))
+```{r growthhalftrace}
+mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
 ```
 
-```{r growthhalfpairs, eval=F}
-mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma"))) 
+```{r growthhalfpairs}
+mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK"))) 
 ```
 
-```{r growthhalfalpha, eval=F}
-mcmc_intervals(as.array(fit_half, pars = "gmax"))
+```{r growthhalfalpha}
+# mcmc_intervals(as.array(fit_half, pars = "gmax"))
 ```

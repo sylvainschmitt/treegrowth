@@ -39,6 +39,13 @@ trees <- tbl(guyafor, "inventory") %>%
   filter(CensusYear < FirstDead) %>% 
   ungroup() %>% 
   mutate(DBH = CircCorr/pi) %>% 
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 15) %>% 
+  filter(last(DBH) > first(DBH)) %>% 
   group_by(idTree) %>% 
   filter(n() > n_census) %>% 
   group_by(species) %>% 

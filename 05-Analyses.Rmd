@@ -3,7 +3,6 @@ rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
 library(bayesplot)
-library(greta)
 library(ggtree)
 library(phylosignal)
 library(adephylo)
@@ -19,34 +18,49 @@ opts_chunk$set(
 
 In this chapter we ...
 
+```{r gmax}
+load("save/growthhalf.Rdata")
+pars <- as.data.frame(fit_half, pars = c('gmax')) %>%
+  reshape2::melt(variable.name = "parameter") %>%
+  group_by(parameter) %>%
+  summarise(value = median(value)) %>%
+  separate(parameter, c("parameter", "ind"), convert = T) %>%
+  reshape2::dcast(ind ~ parameter)
+rm(fit_half)
+mdata <- vroom::vroom("save/mdatahalf.tsv")
+pars <- pars %>% 
+  left_join(dplyr::select(mdata, ind, idTree, Family, Genus, species, Plot, Xutm, Yutm) %>% unique())
+vroom::vroom_write(pars, "save/gmaxhalf.tsv")
+```
+
+
 ```{r env, eval=F}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(parallel)
 library(doSNOW)
 library(foreach)
 library(tidyverse)
-load("save/gmax_greta_full.Rdata") 
-rm(mdata, fit)
-cl <- makeCluster(30, outfile = "/dev/null")
+gmax <- vroom::vroom("save/gmaxhalf.tsv")
+cl <- makeCluster(4, outfile = "/dev/null")
 registerDoSNOW(cl)
-pb <- txtProgressBar(max = nrow(data), style = 3)
+pb <- txtProgressBar(max = nrow(gmax), style = 3)
 progress <- function(n) setTxtProgressBar(pb, n)
 opts <- list(progress = progress)
-NC <- foreach(ind=1:nrow(data),
+NC <- foreach(ind=1:nrow(gmax),
               .packages = "dplyr",
               .options.snow = opts) %dopar% {
                 con <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
                 NC <- tbl(con, "inventory") %>% 
-                  filter(Plot == local(data$Plot[ind])) %>% 
-                  filter(idTree != local(data$idTree[ind])) %>% 
-                  mutate(dij = sqrt((local(data$Xutm[ind]) - Xutm)^2+(local(data$Yutm[ind]) - Yutm)^2)) %>% 
+                  filter(Plot == local(gmax$Plot[ind])) %>% 
+                  filter(idTree != local(gmax$idTree[ind])) %>% 
+                  mutate(dij = sqrt((local(gmax$Xutm[ind]) - Xutm)^2+(local(gmax$Yutm[ind]) - Yutm)^2)) %>% 
                   filter(dij < 20) %>% 
                   mutate(DBH = CircCorr/pi) %>% 
                   collect() %>% 
                   group_by(CensusYear) %>% 
                   summarise(NCI = sum(DBH*DBH*exp(-0.25*dij))) %>% 
                   ungroup() %>% 
-                  summarise(idTree = local(data$idTree[ind]),
+                  summarise(idTree = local(gmax$idTree[ind]),
                             NCI = mean(NCI))
                 DBI::dbDisconnect(con)
                 return(NC)
@@ -62,59 +76,47 @@ trees <- tbl(guyafor, "inventory") %>%
   unique()
 DBI::dbDisconnect(guyafor) ; rm(guyafor)
 XY <- NC %>% 
-  left_join(trees) %>% 
+  left_join(gmax) %>% 
   sf::st_as_sf(coords = c("Xutm", "Yutm"),
              crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
 NC$twi <- raster::extract(raster::raster("data/TWI_1m.tif"), XY)
-write_tsv(NC, file = "save/env_full.tsv")
+write_tsv(NC, file = "save/env_half.tsv")
 ```
 
 ```{r phylo, eval=F}
 library(V.PhyloMaker)
-splist <- growth %>% 
+gmax <- vroom::vroom("save/gmaxhalf.tsv")
+splist <- gmax %>% 
   dplyr::select(Family, Genus, species) %>% 
   unique() %>% 
   mutate(genus = Genus, family = Family) %>% 
   dplyr::select(species, genus, family)
 tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
-ape::write.tree(tree$scenario.3, "save/phylogeny_mm.tree")
+ape::write.tree(tree$scenario.3, "save/phylogeny_half.tree")
 ```
 
 ```{r parsan, eval=F}
-mdata <- vroom::vroom("save/mdatahalf.tsv")
-load("save/growthhalf.Rdata")  
-pars <- as.data.frame(fit_half, pars = c('gmax', "dopt", "ks")) %>% 
-  reshape2::melt(variable.name = "parameter") %>% 
-  group_by(parameter) %>% 
-  summarise(value = median(value)) %>% 
-  separate(parameter, c("parameter", "ind"), convert = T) %>% 
-  reshape2::dcast(ind ~ parameter)
-rm(fit_half)
-growth <- pars %>% 
-  left_join(dplyr::select(mdata, ind, idTree, Family, Genus, species)) %>% 
-  left_join(vroom::vroom(file = "save/env_full.tsv")) %>% 
-  unique()
-vroom::vroom_write(growth, file = "save/growthhalf.tsv")
+vroom::vroom("save/gmaxhalf.tsv") %>% 
+  left_join(vroom::vroom(file = "save/env_half.tsv")) %>% 
+  unique() %>% 
+  vroom::vroom_write(file = "save/growthhalf.tsv")
 ```
 
 ```{r dataan}
 growth <- vroom::vroom("save/growthhalf.tsv")
-phylo <- ape::read.tree("save/phylogeny_full.tree")
+phylo <- ape::read.tree("save/phylogeny_half.tree")
 p4d <- phylo4d(phylo,
                data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
-                 left_join(group_by(growth, species) %>% summarise(gmax  = mean(log(gmax), na.rm = T), 
-                                                                   dopt = mean(log(dopt), na.rm = T),
-                                                                   ks = mean(log(ks), na.rm = T))) %>% 
-                 dplyr::select(-species))
-p4d <- subset(p4d, tips.exclude=c("Siparuna_cuspidata"))
+                 left_join(group_by(growth, species) %>% summarise(gmax  = mean(log(gmax), na.rm = T))) %>% 
+                 dplyr::select(-species)) 
 ```
 
 ```{r }
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
-```{r }
+```{r, eval=F}
 m <- lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), 
                 na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, gmax)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
 r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
@@ -125,7 +127,7 @@ partR2::forestplot(r2, type = "R2", text_size = 10)
 ggplot(growth, aes(log(NCI), log(gmax), col = species)) +
   geom_point() +
   geom_smooth(method = "lm", aes(group = NA)) +
-  scale_color_discrete(guide = "none")
+  scale_color_discrete(guide = "none") 
 ```
 
 ```{r }

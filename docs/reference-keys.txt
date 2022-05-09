@@ -25,3 +25,6 @@ model-full
 data-3
 model-1
 analyses
+tab:genomes
+tab:assembly
+genetic-ressources
