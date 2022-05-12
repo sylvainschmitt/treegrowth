@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-09" />
+<meta name="date" content="2022-05-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,35 +212,35 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <tbody>
 <tr class="odd">
 <td align="left">families</td>
-<td align="right">48</td>
+<td align="right">38</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="even">
 <td align="left">genera</td>
-<td align="right">150</td>
+<td align="right">95</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="odd">
 <td align="left">species</td>
-<td align="right">275</td>
+<td align="right">138</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="even">
 <td align="left">individuals</td>
-<td align="right">4 218</td>
+<td align="right">1 995</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="odd">
 <td align="left">observations</td>
-<td align="right">91 002</td>
+<td align="right">30 432</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
@@ -248,37 +248,37 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <tr class="even">
 <td align="left">census</td>
 <td align="right"></td>
-<td align="right">24</td>
+<td align="right">14</td>
 <td align="right">11</td>
-<td align="right">31</td>
+<td align="right">30</td>
 </tr>
 <tr class="odd">
 <td align="left">year0</td>
 <td align="right"></td>
-<td align="right">1 989</td>
-<td align="right">1 984</td>
+<td align="right">1 997</td>
+<td align="right">1 985</td>
 <td align="right">2 010</td>
 </tr>
 <tr class="even">
 <td align="left">yearmax</td>
 <td align="right"></td>
 <td align="right">2 019</td>
-<td align="right">1 994</td>
+<td align="right">2 003</td>
 <td align="right">2 021</td>
 </tr>
 <tr class="odd">
 <td align="left">dbh0</td>
 <td align="right"></td>
-<td align="right">13</td>
+<td align="right">11</td>
 <td align="right">5</td>
-<td align="right">88</td>
+<td align="right">15</td>
 </tr>
 <tr class="even">
 <td align="left">dbhmax</td>
 <td align="right"></td>
-<td align="right">19</td>
+<td align="right">15</td>
 <td align="right">6</td>
-<td align="right">96</td>
+<td align="right">77</td>
 </tr>
 </tbody>
 </table>
@@ -288,8 +288,10 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <h2><span class="header-section-number">3.2</span> Model</h2>
 <p>Using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span> in species <span class="math inline">\(s\)</span>:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1 | DBH_{1,i} = DBH_{recruitment}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)\]</span></p>
-<p><img src="treegrowth_files/figure-html/growthhalftrace-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/growthhalfpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/growthhalfrhat-1.png" width="768" /></p>
+<p><img src="save/figs/growthhalftrace.png" width="1050" /></p>
+<p><img src="save/figs/growthhalfpairs.png" width="1050" /></p>
+<p><img src="save/figs/growthhalfgmax.png" width="1050" /></p>
 
 </div>
 </div>

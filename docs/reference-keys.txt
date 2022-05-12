@@ -1,6 +1,12 @@
 tab:datahalftab
 tab:datafulltab
-tab:unnamed-chunk-5
+fig:gmaxnci
+fig:gmaxphylo
+tab:gmaxphylosignal
+fig:gmaxcorrelog
+fig:lipa
+tab:genomes
+tab:assembly
 model-choice
 data
 michaelis-menten
@@ -25,6 +31,4 @@ model-full
 data-3
 model-1
 analyses
-tab:genomes
-tab:assembly
 genetic-ressources

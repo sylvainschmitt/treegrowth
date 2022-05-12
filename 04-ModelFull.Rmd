@@ -89,7 +89,7 @@ vroom::vroom("save/trees_full.tsv") %>%
                                                 "census", "year0", "yearmax", "dbh0", "dbhmax"))) %>% 
   arrange(variable) %>% 
   kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
-        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).") 
+        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")  
 ```
 
 
@@ -116,7 +116,7 @@ dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>%
   geom_smooth(se = F, aes(col = as.factor(ind))) +
   xlim(0,NA) +
   facet_wrap(~ species, scales = "free") +
-  scale_color_discrete(guide = "none") 
+  scale_color_discrete(guide = "none")  
 ```
 
 ## Model

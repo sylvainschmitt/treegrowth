@@ -60,6 +60,18 @@ dplyr::select(trees, species, idTree) %>%
   vroom::vroom_write("save/trees_half.tsv")
 ```
 
+```{r, eval=F}
+vroom::vroom("save/trees_half.tsv") %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  mutate(AGR = (DBH - last(DBH))/(CensusYear - last(CensusYear))) %>% 
+  dplyr::select(AGR) %>% 
+  na.omit() %>% 
+  ggplot(aes(AGR)) +
+  geom_histogram()
+```
+
+
 ```{r datahalftab}
 options(knitr.kable.NA = '')
 vroom::vroom("save/trees_half.tsv") %>% 
@@ -95,7 +107,7 @@ vroom::vroom("save/trees_half.tsv") %>%
                                                 "census", "year0", "yearmax", "dbh0", "dbhmax"))) %>% 
   arrange(variable) %>% 
   kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
-        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).") 
+        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")  
 ```
 
 
@@ -122,7 +134,7 @@ dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>%
   geom_smooth(se = F, aes(col = as.factor(ind))) +
   xlim(0,NA) +
   facet_wrap(~ species, scales = "free") +
-  scale_color_discrete(guide = "none") 
+  scale_color_discrete(guide = "none")  
 ```
 
 ## Model
@@ -157,25 +169,37 @@ fit_half <- rstan::read_stan_csv(fit$output_files())
 save(fit_half, file = "save/growthhalf.Rdata") 
 ```
 
-```{r growthhalfsampling}
+```{r growthhalfsampling, eval=F}
 mdata <- vroom::vroom("save/mdatahalf.tsv")
-load("save/growthhalf.Rdata")  
-# fit_half <- rstan::read_stan_csv(list.files("save/growthhalf/", full.names = T))
+load("save/growthhalf.Rdata")
 ```
 
-```{r growthhalfrhat, eval=F}
-# convergence <- rhat(fit_half)
-# mcmc_rhat(rhat(fit_half))
+```{r growthhalfrhat}
+# r <- rhat(fit_half)
+# data.frame(parameter = names(r), rhat = r) %>% 
+#   vroom::vroom_write("save/rhathalf.tsv")
+vroom::vroom("save/rhathalf.tsv") %>% 
+  separate(parameter, c("parameter", "indsp")) %>% 
+  filter(parameter == "gmax") %>% 
+  select(rhat) %>% 
+  unlist() %>% 
+  mcmc_rhat()
 ```
 
 ```{r growthhalftrace}
-mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
+# g <- mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
+# ggsave(plot = g, filename = "save/figs/growthhalftrace.png", bg = "white")
+include_graphics("save/figs/growthhalftrace.png")
 ```
 
 ```{r growthhalfpairs}
-mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK"))) 
+# g <- mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
+# ggsave(plot = g, filename = "save/figs/growthhalfpairs.png", bg = "white")
+include_graphics("save/figs/growthhalfpairs.png")
 ```
 
-```{r growthhalfalpha}
-# mcmc_intervals(as.array(fit_half, pars = "gmax"))
+```{r growthhalfgmax}
+# g <- mcmc_intervals(as.array(fit_half, pars = paste0("gmax[", 1:100, "]")))
+# ggsave(plot = g, filename = "save/figs/growthhalfgmax.png", bg = "white")
+include_graphics("save/figs/growthhalfgmax.png")
 ```
