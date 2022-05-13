@@ -123,6 +123,19 @@ ggplot(growth, aes(NCI, gmax, col = species)) +
   ylab("Individual growth potential (Gmax, cm/yr)")
 ```
 
+```{r gmaxtwisp, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr).", eval=F}
+growth %>% 
+  group_by(species) %>% 
+  mutate(twi = exp(mean(log(twi+1))), gmax = exp(mean(log(gmax)))) %>% 
+  ggplot(aes(twi, gmax)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(group = NA)) +
+  scale_color_discrete(guide = "none") +
+  scale_x_log10() + scale_y_log10() +
+  # xlab("Neighbourhood crowding index (NCI)") +
+  ylab("Individual growth potential (Gmax, cm/yr)")
+```
+
 ```{r gmaxphylo, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%

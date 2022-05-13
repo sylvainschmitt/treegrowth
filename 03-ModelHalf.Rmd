@@ -192,6 +192,16 @@ vroom::vroom("save/rhathalf.tsv") %>%
 include_graphics("save/figs/growthhalftrace.png")
 ```
 
+```{r, eval=F}
+vroom::vroom("save/mdatahalf.tsv") %>% 
+  filter(ind == 1) %>% 
+  ggplot(aes(CensusYear, DBH)) +
+  geom_smooth() +
+  geom_point()
+```
+
+
+
 ```{r growthhalfpairs}
 # g <- mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
 # ggsave(plot = g, filename = "save/figs/growthhalfpairs.png", bg = "white")
@@ -202,4 +212,53 @@ include_graphics("save/figs/growthhalfpairs.png")
 # g <- mcmc_intervals(as.array(fit_half, pars = paste0("gmax[", 1:100, "]")))
 # ggsave(plot = g, filename = "save/figs/growthhalfgmax.png", bg = "white")
 include_graphics("save/figs/growthhalfgmax.png")
+```
+
+```{r growthhalfdopts, eval=F}
+# g <- mcmc_intervals(as.array(fit_half, pars = "dopt_s")) + scale_x_sqrt()
+# ggsave(plot = g, filename = "save/figs/growthhalfdopts.png", bg = "white")
+include_graphics("save/figs/growthhalfdopts.png")
+```
+
+```{r growthhalfdoptdmax}
+# g <- mcmc_intervals_data(as.array(fit_half, pars = "dopt_s")) %>% 
+#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>% 
+#   left_join(mdata %>% 
+#               group_by(sp) %>% 
+#               summarise(dmax = max(DBH))) %>% 
+#   ggplot(aes(sp, (m*100)/dmax, col = (m*100)/dmax > 1)) +
+#   geom_point() +
+#   coord_flip() +
+#   scale_y_sqrt() +
+#   ylab(expression(frac(Dopt,Dmax))) + xlab("Species") +
+#   scale_color_discrete(expression(frac(Dopt,Dmax)>1))
+# ggsave(plot = g, filename = "save/figs/growthhalfdoptdmax.png", bg = "white")
+include_graphics("save/figs/growthhalfdoptdmax.png")
+```
+
+```{r growthhalfdoptdmaxsp}
+# sps <- mcmc_intervals_data(as.array(fit_half, pars = "dopt_s")) %>% 
+#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>% 
+#   left_join(mdata %>% 
+#               group_by(sp) %>% 
+#               summarise(dmax = max(DBH))) %>% 
+#   filter( (m*100)/dmax > 1) %>% 
+#   select(sp) %>% 
+#   unlist()
+# g <- dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>% 
+#   unique() %>% 
+#   filter(sp %in% sps) %>% 
+#   group_by(sp) %>% 
+#   unique() %>% 
+#   left_join(vroom::vroom("save/mdatahalf.tsv")) %>% 
+#   ggplot(aes(Year, DBH, group = as.factor(ind))) +
+#   geom_point(col = "grey") +
+#   geom_smooth(se = F, aes(col = as.factor(ind))) +
+#   xlim(0,NA) +
+#   facet_wrap(~ species) +
+#   scale_color_discrete(guide = "none") +
+#   ylim(5, 15) +
+#   ggtitle("Problematic species", expression(frac(Dopt,Dmax)>1))
+# ggsave(plot = g, filename = "save/figs/growthhalfdoptdmaxsp.png", bg = "white")
+include_graphics("save/figs/growthhalfdoptdmaxsp.png")
 ```
