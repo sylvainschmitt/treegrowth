@@ -12,11 +12,15 @@ opts_chunk$set(
 
 # Model full
 
-In this chapter we sample the selected model with full data
+In this chapter, I fitted the selected model with full data.
 
 ## Data
 
-```{r datafulllim, echo=T}
+I focused on trees at 20 meters from any plot edges for neighbourhood effect.
+I used only recruited trees in the censuses with at least 10 measurements of diameter at breast height (DBH, cm).
+I used only species with at least 10 trees following previous requirements (Tab. \@ref(tab:datafulltab) & Fig. \@ref(fig:mdatafullfig)).
+
+```{r datafulllim}
 dist_edge <- 20
 n_census <- 10
 n_ind_species <- 10
@@ -103,7 +107,7 @@ vroom::vroom("save/trees_full.tsv") %>%
   vroom::vroom_write("save/mdatafull.tsv")
 ```
 
-```{r mdatafullfig}
+```{r mdatafullfig, fig.cap="Tree diameter trajectories in reduced data. Color represent individuals."}
 dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>% 
   unique() %>% 
   filter(sp %in% sample(unique(.$sp), 9)) %>% 
@@ -121,9 +125,15 @@ dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>%
 
 ## Model
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$ in species $s$:
+I used a Gompertz model [@Herault2011], were the diameter of individual $i$ at year $t$ is the sum of annual growth from $t0$ to $t$:
 
-$$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1 | DBH_{1,i} = DBH_{recruitment}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)$$
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + Gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) $$
+
+The annual growth rate for individual $i$ at year $y$ with a diameter of $DBH_{y,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011],
+where $Gmax_i$ is the fixed maximum growth potential of every individual,
+$Dopt_i$ is the optimal diameter at which the individual reaches its maximum growth potential,
+and $Ks_i$ is the kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011].
+$Dopt_i$ and $Ks_i$ are random effects centered on species parameters $Dopt_s$ and $Ks_s$ with associated variances $\sigma_D$ and $\sigma_K$.
 
 ```{r growthfit, eval=F}
 mdata <- vroom::vroom("save/mdatafull.tsv")
@@ -150,3 +160,7 @@ fit$save_output_files(dir = "save/growth")
 fit_full <- rstan::read_stan_csv(fit$output_files())
 save(fit_full, file = "save/growth.Rdata") 
 ```
+
+## Fit
+
+*The model is currently running.*

@@ -15,38 +15,6 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Analyses
-
-In this chapter we ...
-
-<!-- We used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years, -->
-<!-- an indirect measurement of access to light and forest gap dynamics. -->
-<!-- The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows: -->
-
-<!-- $$NCI_i=\overline{\sum_{j|\delta_{i,j}<20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}$$ -->
-
-<!-- with $DBH_{j,t}$ the diameter of the neighbouring tree $j$ in year $t$ and $\delta_{i,j}$ its distance to the individual tree $i$. -->
-<!-- $NCI_i$ is computed for all neighbours at a distance $\delta_{i,j}$ inferior to the maximum neighbouring distance of 20 meters. -->
-<!-- The power of neighbours $DBH_{j,t}$ effect was set to 2 to represent a surface.  -->
-<!-- The decrease of neighbours' diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.  -->
-<!-- $NCI_i$ is computed as the mean of yearly $NCI_{i,t}$ over the last 30 years denoted by the overline. -->
-
-<!-- We used the topographic wetness index ($TWI$) as proxies of the distribution of soil water and nutrients in Paracou. -->
-<!-- Waterlogging and topography have been highlighted as crucial for forest dynamics [@Ferry2010], -->
-<!-- species-habitat relationships [@Engelbrecht2007], and phenotypic variation [@Schmitt2020). -->
-<!-- Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging, -->
-<!-- shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010]. -->
-<!-- TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015] -->
-<!-- based on a LiDAR campaign of the whole Paracou field station done in 2015. -->
-
-
-
-<!-- To study the effect of phylogeny and environment,  -->
-<!-- we investigated the effects of family, genus, species & topography $TWI$ and neighbourhood $NCI$ indices  -->
-<!-- on individual growth $Gmax$ with the following linear mixed model: -->
-
-<!-- $$log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})$$ -->
-
 ```{r env, eval=F}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(parallel)
@@ -131,6 +99,59 @@ vroom::vroom("save/mdatahalf.tsv") %>%
   facet_wrap(~idTree)
 ```
 
+# Analyses
+
+In this chapter, I investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
+
+**Current results are using reduced data from chapter 3.**
+
+## Methods
+
+### Environmental descriptors
+
+I used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years,
+an indirect measurement of access to light and forest gap dynamics.
+The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows:
+
+$$NCI_i=\overline{\sum_{j|\delta_{i,j}<20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}$$
+
+with $DBH_{j,t}$ the diameter of the neighbouring tree $j$ in year $t$ and $\delta_{i,j}$ its distance to the individual tree $i$.
+$NCI_i$ is computed for all neighbours at a distance $\delta_{i,j}$ inferior to the maximum neighbouring distance of 20 meters.
+The power of neighbours $DBH_{j,t}$ effect was set to 2 to represent a surface.
+The decrease of neighbours' diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.
+$NCI_i$ is computed as the mean of yearly $NCI_{i,t}$ over the last 30 years denoted by the overline.
+
+I used the topographic wetness index ($TWI$) as proxies of the distribution of soil water and nutrients in Paracou.
+Waterlogging and topography have been highlighted as crucial for forest dynamics [@Ferry2010],
+species-habitat relationships [@Engelbrecht2007], and phenotypic variation [@Schmitt2020].
+Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging,
+shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010].
+TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015]
+based on a LiDAR campaign of the whole Paracou field station done in 2015.
+
+### Analyses
+
+To study the effect of phylogeny and environment,
+we investigated the effects of family, genus, species & topography $TWI$ and neighbourhood $NCI$ indices
+on individual growth potential $Gmax$ with the following linear mixed model:
+
+$$log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})$$
+
+We reported the corresponding marginal and conditional $R^2$ [@Nakagawa2013].
+We further plotted individual growth potential $Gmax$ along environmental gradients and across the phylogeny.
+We used `phylosingal` to test for phylogenetic signal [@keck_phylosignal:_2016],
+before computing phylogenetic correlogram and local indicator of phylogenetic association.
+
+We used R version 3.6 for all statistical analyses (<www.r- project.org>). 
+
+## Results
+
+### General
+
+Most of the variation in growth potential is individual ($\sigma_i = 0.40$), then explained by genus ($\sigma_g = 0.09$)
+before species ($\sigma_s=0.03$) and relatively little by family ($\sigma_f=0.2$). 
+The taxonomic structure explains more than a quarter of the observed variation in individual growth potential ($R^2_c=0.28$).
+Finally, the neighbourhood ($NCI$) has a marked negative significant effect ($\beta=-0.45, p<0.001$, Fig. \@ref(fig:gmaxnci)) which explains 3% of the observed variation ($R^2_m=0.033$).
 
 ```{r dataan}
 growth <- vroom::vroom("save/growthhalf.tsv")
@@ -162,6 +183,15 @@ ggplot(growth, aes(NCI, gmax, col = species)) +
   xlab("Neighbourhood crowding index (NCI)") +
   ylab("Individual growth potential (Gmax, cm/yr)")
 ```
+
+### Phylogenetic
+
+Species growth potential in the phylogeny (Fig. \@ref(fig:gmaxphylo)) is significantly structured (Tab. \@ref(tab:gmaxphylosignal)),
+with a short distance significant positive association and a long distant significant negative association (Fig. \@ref(fig:gmaxcorrelog)).
+Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. \@ref(fig:lipa)),
+as illustrated for instance with fast growing *Cecropia* opposed to slow growing *Eschweilera*.
+However, a few species have different growth potential in the same genus, 
+such as slow growing *Drypetes variabilis* opposed to fast growing *Drypetes fanshawei*.
 
 ```{r gmaxphylo, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
 fortify(phylo) %>% 

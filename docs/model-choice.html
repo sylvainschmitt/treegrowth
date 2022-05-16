@@ -54,70 +54,6 @@
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
-<style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -158,20 +94,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>3</b> Model half</a><ul>
 <li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 <li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.3" data-path="model-half.html"><a href="model-half.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
+<li class="chapter" data-level="3.4" data-path="model-half.html"><a href="model-half.html#dopt_s"><i class="fa fa-check"></i><b>3.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
 <li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
 <li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
+<li class="chapter" data-level="4.3" data-path="model-full.html"><a href="model-full.html#fit-1"><i class="fa fa-check"></i><b>4.3</b> Fit</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a></li>
+<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a><ul>
+<li class="chapter" data-level="5.1" data-path="analyses.html"><a href="analyses.html#methods"><i class="fa fa-check"></i><b>5.1</b> Methods</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="analyses.html"><a href="analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>5.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="5.1.2" data-path="analyses.html"><a href="analyses.html#analyses-1"><i class="fa fa-check"></i><b>5.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="analyses.html"><a href="analyses.html#results"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="analyses.html"><a href="analyses.html#general"><i class="fa fa-check"></i><b>5.2.1</b> General</a></li>
+<li class="chapter" data-level="5.2.2" data-path="analyses.html"><a href="analyses.html#phylogenetic"><i class="fa fa-check"></i><b>5.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="other-analyses.html"><a href="other-analyses.html"><i class="fa fa-check"></i><b>6</b> Other analyses</a><ul>
-<li class="chapter" data-level="6.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>6.1</b> Bridge</a></li>
-<li class="chapter" data-level="6.2" data-path="other-analyses.html"><a href="other-analyses.html#phd"><i class="fa fa-check"></i><b>6.2</b> PhD</a></li>
-<li class="chapter" data-level="6.3" data-path="other-analyses.html"><a href="other-analyses.html#hydro"><i class="fa fa-check"></i><b>6.3</b> hydro</a></li>
-<li class="chapter" data-level="6.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>6.4</b> REW</a></li>
-<li class="chapter" data-level="6.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>6.5</b> Weather</a></li>
+<li class="chapter" data-level="6.1" data-path="other-analyses.html"><a href="other-analyses.html#methods-1"><i class="fa fa-check"></i><b>6.1</b> Methods</a></li>
+<li class="chapter" data-level="6.2" data-path="other-analyses.html"><a href="other-analyses.html#results-1"><i class="fa fa-check"></i><b>6.2</b> Results</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>6.2.1</b> Bridge</a></li>
+<li class="chapter" data-level="6.2.2" data-path="other-analyses.html"><a href="other-analyses.html#paracouitv"><i class="fa fa-check"></i><b>6.2.2</b> ParacouITV</a></li>
+<li class="chapter" data-level="6.2.3" data-path="other-analyses.html"><a href="other-analyses.html#hydroparacou"><i class="fa fa-check"></i><b>6.2.3</b> hydroParacou</a></li>
+<li class="chapter" data-level="6.2.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>6.2.4</b> REW</a></li>
+<li class="chapter" data-level="6.2.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>6.2.5</b> Weather</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="genetic-ressources.html"><a href="genetic-ressources.html"><i class="fa fa-check"></i><b>7</b> Genetic ressources</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -199,7 +149,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="model-choice" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Model choice</h1>
 <p>In this chapter, I looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
-The result is summarised in Table …</p>
+The result is summarised in Table <a href="model-choice.html#tab:mchoicetab">1.1</a>.</p>
 <div id="data" class="section level2">
 <h2><span class="header-section-number">1.1</span> Data</h2>
 <p>I used reduced data to explore the model form.
@@ -322,12 +272,13 @@ Moreover, model errors do not show temporal autocorrelation per individual.</p>
 <h2><span class="header-section-number">1.9</span> Comparisons</h2>
 <p>The Gompertz sum model has the best prediction (lowest RMSEP) associated to the second best evaluation (second lowest loo epld), knowing that the first one use every year diameter and overfit, and a decent computing time. This is the best model that I’ll use in next steps.</p>
 <table>
+<caption><span id="tab:mchoicetab">Table 1.1: </span>Model choice summary with quality of prediciton (Root Mean Square Error of Prediction, RMSEP), cross-validation (Leave-One-Out Estimate of the expected Log pointwise Predictive Density, LOO ELDP), and speed (Elapsed yime).</caption>
 <thead>
 <tr class="header">
 <th align="left">Model</th>
 <th align="right">RMSEP</th>
-<th align="right">elpd_loo</th>
-<th align="right">Time</th>
+<th align="right">LOO ELDP</th>
+<th align="right">Elapsed time</th>
 </tr>
 </thead>
 <tbody>
@@ -335,19 +286,7 @@ Moreover, model errors do not show temporal autocorrelation per individual.</p>
 <td align="left">Michaelis Menten</td>
 <td align="right">6.8055400</td>
 <td align="right">214.3796</td>
-<td align="right">4.508</td>
-</tr>
-<tr class="even">
-<td align="left">Michaelis Menten</td>
-<td align="right">6.8055400</td>
-<td align="right">214.3796</td>
 <td align="right">4.658</td>
-</tr>
-<tr class="odd">
-<td align="left">Gompertz</td>
-<td align="right">0.3945505</td>
-<td align="right">253.4165</td>
-<td align="right">42.479</td>
 </tr>
 <tr class="even">
 <td align="left">Gompertz</td>
@@ -362,18 +301,6 @@ Moreover, model errors do not show temporal autocorrelation per individual.</p>
 <td align="right">1.473</td>
 </tr>
 <tr class="even">
-<td align="left">Lognormal</td>
-<td align="right">1.6143450</td>
-<td align="right">224.0448</td>
-<td align="right">1.202</td>
-</tr>
-<tr class="odd">
-<td align="left">Polynomial</td>
-<td align="right">0.3484090</td>
-<td align="right">228.1646</td>
-<td align="right">38.752</td>
-</tr>
-<tr class="even">
 <td align="left">Polynomial</td>
 <td align="right">0.3484090</td>
 <td align="right">228.1646</td>
@@ -386,34 +313,16 @@ Moreover, model errors do not show temporal autocorrelation per individual.</p>
 <td align="right">6.185</td>
 </tr>
 <tr class="even">
-<td align="left">Weibul</td>
-<td align="right">0.7914120</td>
-<td align="right">218.0608</td>
-<td align="right">6.126</td>
-</tr>
-<tr class="odd">
 <td align="left">Amani</td>
 <td align="right">6.3461250</td>
 <td align="right">243.3392</td>
 <td align="right">93.633</td>
-</tr>
-<tr class="even">
-<td align="left">Amani</td>
-<td align="right">6.3461250</td>
-<td align="right">243.3392</td>
-<td align="right">91.823</td>
 </tr>
 <tr class="odd">
 <td align="left">Gompertz sum</td>
 <td align="right">0.4266840</td>
 <td align="right">248.9798</td>
 <td align="right">208.172</td>
-</tr>
-<tr class="even">
-<td align="left">Gompertz sum</td>
-<td align="right">0.4266840</td>
-<td align="right">248.9798</td>
-<td align="right">194.610</td>
 </tr>
 </tbody>
 </table>
@@ -424,7 +333,7 @@ Figure 1.2: Models root mean square error of predicition. The X scale is sqaure-
 </p>
 </div>
 <table>
-<caption><span id="tab:loo">Table 1.1: </span>Leave one out evaluation of models (<a href="http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html" class="uri">http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html</a>).</caption>
+<caption><span id="tab:loo">Table 1.2: </span>Leave one out evaluation of models (<a href="http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html" class="uri">http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html</a>).</caption>
 <colgroup>
 <col width="17%" />
 <col width="11%" />

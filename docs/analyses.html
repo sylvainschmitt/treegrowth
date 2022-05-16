@@ -54,70 +54,6 @@
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
-<style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -158,20 +94,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>3</b> Model half</a><ul>
 <li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 <li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.3" data-path="model-half.html"><a href="model-half.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
+<li class="chapter" data-level="3.4" data-path="model-half.html"><a href="model-half.html#dopt_s"><i class="fa fa-check"></i><b>3.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
 <li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
 <li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
+<li class="chapter" data-level="4.3" data-path="model-full.html"><a href="model-full.html#fit-1"><i class="fa fa-check"></i><b>4.3</b> Fit</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a></li>
+<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a><ul>
+<li class="chapter" data-level="5.1" data-path="analyses.html"><a href="analyses.html#methods"><i class="fa fa-check"></i><b>5.1</b> Methods</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="analyses.html"><a href="analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>5.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="5.1.2" data-path="analyses.html"><a href="analyses.html#analyses-1"><i class="fa fa-check"></i><b>5.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="analyses.html"><a href="analyses.html#results"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="analyses.html"><a href="analyses.html#general"><i class="fa fa-check"></i><b>5.2.1</b> General</a></li>
+<li class="chapter" data-level="5.2.2" data-path="analyses.html"><a href="analyses.html#phylogenetic"><i class="fa fa-check"></i><b>5.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="other-analyses.html"><a href="other-analyses.html"><i class="fa fa-check"></i><b>6</b> Other analyses</a><ul>
-<li class="chapter" data-level="6.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>6.1</b> Bridge</a></li>
-<li class="chapter" data-level="6.2" data-path="other-analyses.html"><a href="other-analyses.html#phd"><i class="fa fa-check"></i><b>6.2</b> PhD</a></li>
-<li class="chapter" data-level="6.3" data-path="other-analyses.html"><a href="other-analyses.html#hydro"><i class="fa fa-check"></i><b>6.3</b> hydro</a></li>
-<li class="chapter" data-level="6.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>6.4</b> REW</a></li>
-<li class="chapter" data-level="6.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>6.5</b> Weather</a></li>
+<li class="chapter" data-level="6.1" data-path="other-analyses.html"><a href="other-analyses.html#methods-1"><i class="fa fa-check"></i><b>6.1</b> Methods</a></li>
+<li class="chapter" data-level="6.2" data-path="other-analyses.html"><a href="other-analyses.html#results-1"><i class="fa fa-check"></i><b>6.2</b> Results</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>6.2.1</b> Bridge</a></li>
+<li class="chapter" data-level="6.2.2" data-path="other-analyses.html"><a href="other-analyses.html#paracouitv"><i class="fa fa-check"></i><b>6.2.2</b> ParacouITV</a></li>
+<li class="chapter" data-level="6.2.3" data-path="other-analyses.html"><a href="other-analyses.html#hydroparacou"><i class="fa fa-check"></i><b>6.2.3</b> hydroParacou</a></li>
+<li class="chapter" data-level="6.2.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>6.2.4</b> REW</a></li>
+<li class="chapter" data-level="6.2.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>6.2.5</b> Weather</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="genetic-ressources.html"><a href="genetic-ressources.html"><i class="fa fa-check"></i><b>7</b> Genetic ressources</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
@@ -198,27 +148,50 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="analyses" class="section level1">
 <h1><span class="header-section-number">Chapter 5</span> Analyses</h1>
-<p>In this chapter we …</p>
-<!-- We used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years, -->
-<!-- an indirect measurement of access to light and forest gap dynamics. -->
-<!-- The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows: -->
-<!-- $$NCI_i=\overline{\sum_{j|\delta_{i,j}<20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}$$ -->
-<!-- with $DBH_{j,t}$ the diameter of the neighbouring tree $j$ in year $t$ and $\delta_{i,j}$ its distance to the individual tree $i$. -->
-<!-- $NCI_i$ is computed for all neighbours at a distance $\delta_{i,j}$ inferior to the maximum neighbouring distance of 20 meters. -->
-<!-- The power of neighbours $DBH_{j,t}$ effect was set to 2 to represent a surface.  -->
-<!-- The decrease of neighbours' diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.  -->
-<!-- $NCI_i$ is computed as the mean of yearly $NCI_{i,t}$ over the last 30 years denoted by the overline. -->
-<!-- We used the topographic wetness index ($TWI$) as proxies of the distribution of soil water and nutrients in Paracou. -->
-<!-- Waterlogging and topography have been highlighted as crucial for forest dynamics [@Ferry2010], -->
-<!-- species-habitat relationships [@Engelbrecht2007], and phenotypic variation [@Schmitt2020). -->
-<!-- Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging, -->
-<!-- shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010]. -->
-<!-- TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015] -->
-<!-- based on a LiDAR campaign of the whole Paracou field station done in 2015. -->
-<!-- To study the effect of phylogeny and environment,  -->
-<!-- we investigated the effects of family, genus, species & topography $TWI$ and neighbourhood $NCI$ indices  -->
-<!-- on individual growth $Gmax$ with the following linear mixed model: -->
-<!-- $$log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})$$ -->
+<p>In this chapter, I investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.</p>
+<p><strong>Current results are using reduced data from chapter 3.</strong></p>
+<div id="methods" class="section level2">
+<h2><span class="header-section-number">5.1</span> Methods</h2>
+<div id="environmental-descriptors" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Environmental descriptors</h3>
+<p>I used the mean neighbourhood crowding index <span class="citation">(<span class="math inline">\(NCI\)</span>; Uriarte <em>et al.</em> <a href="#ref-Uriarte2004" role="doc-biblioref">2004</a>)</span> over the last 30 years,
+an indirect measurement of access to light and forest gap dynamics.
+The mean neighbourhood crowding index <span class="math inline">\(NCI_i\)</span> from tree individual <span class="math inline">\(i\)</span> was calculated as follows:</p>
+<p><span class="math display">\[NCI_i=\overline{\sum_{j|\delta_{i,j}&lt;20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}\]</span></p>
+<p>with <span class="math inline">\(DBH_{j,t}\)</span> the diameter of the neighbouring tree <span class="math inline">\(j\)</span> in year <span class="math inline">\(t\)</span> and <span class="math inline">\(\delta_{i,j}\)</span> its distance to the individual tree <span class="math inline">\(i\)</span>.
+<span class="math inline">\(NCI_i\)</span> is computed for all neighbours at a distance <span class="math inline">\(\delta_{i,j}\)</span> inferior to the maximum neighbouring distance of 20 meters.
+The power of neighbours <span class="math inline">\(DBH_{j,t}\)</span> effect was set to 2 to represent a surface.
+The decrease of neighbours’ diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.
+<span class="math inline">\(NCI_i\)</span> is computed as the mean of yearly <span class="math inline">\(NCI_{i,t}\)</span> over the last 30 years denoted by the overline.</p>
+<p>I used the topographic wetness index (<span class="math inline">\(TWI\)</span>) as proxies of the distribution of soil water and nutrients in Paracou.
+Waterlogging and topography have been highlighted as crucial for forest dynamics <span class="citation">(Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>)</span>,
+species-habitat relationships <span class="citation">(Engelbrecht <em>et al.</em> <a href="#ref-Engelbrecht2007" role="doc-biblioref">2007</a>)</span>, and phenotypic variation <span class="citation">(Schmitt <em>et al.</em> <a href="#ref-Schmitt2020" role="doc-biblioref">2020</a>)</span>.
+Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging,
+shapes soil nutrient distribution in tropical forests <span class="citation">(John <em>et al.</em> <a href="#ref-John2007" role="doc-biblioref">2007</a>; Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>)</span>.
+TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS <span class="citation">(Conrad <em>et al.</em> <a href="#ref-Conrad2015" role="doc-biblioref">2015</a>)</span>
+based on a LiDAR campaign of the whole Paracou field station done in 2015.</p>
+</div>
+<div id="analyses-1" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Analyses</h3>
+<p>To study the effect of phylogeny and environment,
+we investigated the effects of family, genus, species &amp; topography <span class="math inline">\(TWI\)</span> and neighbourhood <span class="math inline">\(NCI\)</span> indices
+on individual growth potential <span class="math inline">\(Gmax\)</span> with the following linear mixed model:</p>
+<p><span class="math display">\[log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})\]</span></p>
+<p>We reported the corresponding marginal and conditional <span class="math inline">\(R^2\)</span> <span class="citation">(Nakagawa &amp; Schielzeth <a href="#ref-Nakagawa2013" role="doc-biblioref">2013</a>)</span>.
+We further plotted individual growth potential <span class="math inline">\(Gmax\)</span> along environmental gradients and across the phylogeny.
+We used <code>phylosingal</code> to test for phylogenetic signal <span class="citation">(Keck <em>et al.</em> <a href="#ref-keck_phylosignal:_2016" role="doc-biblioref">2016</a>)</span>,
+before computing phylogenetic correlogram and local indicator of phylogenetic association.</p>
+<p>We used R version 3.6 for all statistical analyses (&lt;www.r- project.org&gt;).</p>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2><span class="header-section-number">5.2</span> Results</h2>
+<div id="general" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> General</h3>
+<p>Most of the variation in growth potential is individual (<span class="math inline">\(\sigma_i = 0.40\)</span>), then explained by genus (<span class="math inline">\(\sigma_g = 0.09\)</span>)
+before species (<span class="math inline">\(\sigma_s=0.03\)</span>) and relatively little by family (<span class="math inline">\(\sigma_f=0.2\)</span>).
+The taxonomic structure explains more than a quarter of the observed variation in individual growth potential (<span class="math inline">\(R^2_c=0.28\)</span>).
+Finally, the neighbourhood (<span class="math inline">\(NCI\)</span>) has a marked negative significant effect (<span class="math inline">\(\beta=-0.45, p&lt;0.001\)</span>, Fig. <a href="analyses.html#fig:gmaxnci">5.1</a>) which explains 3% of the observed variation (<span class="math inline">\(R^2_m=0.033\)</span>).</p>
 <table style="border-collapse:collapse; border:none;">
 <tr>
 <th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
@@ -362,6 +335,15 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 Figure 5.1: Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr).
 </p>
 </div>
+</div>
+<div id="phylogenetic" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Phylogenetic</h3>
+<p>Species growth potential in the phylogeny (Fig. <a href="analyses.html#fig:gmaxphylo">5.2</a>) is significantly structured (Tab. <a href="analyses.html#tab:gmaxphylosignal">5.1</a>),
+with a short distance significant positive association and a long distant significant negative association (Fig. <a href="analyses.html#fig:gmaxcorrelog">5.3</a>).
+Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. <a href="analyses.html#fig:lipa">5.4</a>),
+as illustrated for instance with fast growing <em>Cecropia</em> opposed to slow growing <em>Eschweilera</em>.
+However, a few species have different growth potential in the same genus,
+such as slow growing <em>Drypetes variabilis</em> opposed to fast growing <em>Drypetes fanshawei</em>.</p>
 <div class="figure"><span id="fig:gmaxphylo"></span>
 <img src="treegrowth_files/figure-html/gmaxphylo-1.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="768" />
 <p class="caption">
@@ -424,6 +406,35 @@ Figure 5.4: Local phylogenetic associations of of species growth potential (Gmax
 </p>
 </div>
 
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Conrad2015">
+<p>Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). System for Automated Geoscientific Analyses (SAGA) v. 2.1.4. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a></p>
+</div>
+<div id="ref-Engelbrecht2007">
+<p>Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). Drought sensitivity shapes species distribution patterns in tropical forests. <em>Nature</em>, <strong>447</strong>, 80–82.</p>
+</div>
+<div id="ref-Ferry2010">
+<p>Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a></p>
+</div>
+<div id="ref-John2007">
+<p>John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). Soil nutrients influence spatial distributions of tropical tree species. <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="http://arxiv.org/abs/2656">http://arxiv.org/abs/2656</a></p>
+</div>
+<div id="ref-keck_phylosignal:_2016">
+<p>Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). phylosignal: an {R} package to measure, test, and explore the phylogenetic signal. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a></p>
+</div>
+<div id="ref-Nakagawa2013">
+<p>Nakagawa, S. &amp; Schielzeth, H. (2013). A general and simple method for obtaining R2 from generalized linear mixed-effects models. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.</p>
+</div>
+<div id="ref-Schmitt2020">
+<p>Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488%20https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a></p>
+</div>
+<div id="ref-Uriarte2004">
+<p>Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter? <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a></p>
+</div>
 </div>
             </section>
 

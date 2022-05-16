@@ -15,7 +15,7 @@ opts_chunk$set(
 # Model choice
 
 In this chapter, I looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
-The result is summarised in Table ...
+The result is summarised in Table \@ref(tab:mchoicetab).
 
 ## Data
 
@@ -659,7 +659,7 @@ fits <- list(
 )
 ```
 
-```{r}
+```{r mchoicetab}
 lapply(fits, mcmc_intervals_data, "RMSEP") %>% 
   bind_rows(.id = "Model") %>% 
   dplyr::rename(RMSEP = m) %>% 
@@ -674,8 +674,11 @@ lapply(fits, mcmc_intervals_data, "RMSEP") %>%
               bind_rows(.id = "Model") %>% 
               rowwise() %>% 
               mutate(Time = sum(warmup + sample)) %>% 
-              dplyr::select(Model, Time)) %>% 
-  kable()
+              dplyr::select(Model, Time) %>% 
+              group_by(Model) %>% 
+              summarise(Time = max(Time))) %>% 
+  kable(caption = "Model choice summary with quality of prediciton (Root Mean Square Error of Prediction, RMSEP), cross-validation (Leave-One-Out Estimate of the expected Log pointwise Predictive Density, LOO ELDP), and speed (Elapsed yime).",
+        col.names = c("Model", "RMSEP", "LOO ELDP", "Elapsed time"))
 ```
 
 ```{r rmsep, fig.cap="Models root mean square error of predicition. The X scale is sqaure-root transformed."}

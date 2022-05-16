@@ -11,7 +11,17 @@ opts_chunk$set(
 
 # Other analyses
 
-In this chapter we ...
+In this chapter, I quickly  investigated effects of functional traits and weather on individual growth.
+
+**Current results are using reduced data from chapter 3.**
+
+## Methods
+
+I used linear model for individual growth potential relation to functional traits at the individual or species level.
+For weather data, I used the yearly difference between observed diameter and predicted diameter as an index of individual and species annual growth success.
+I used linear mixed model to test weather variables effects on this variation of diameter ($\Delta DBH$).
+For each dataset, I first used a step procedure to select explanatory variables before using linear, mixed or not, models with multiple variables.
+I then plotted the individual relations between response and explanatory variables.
 
 ```{r parsan2, eval=F}
 load("save/growthhalf.Rdata")  
@@ -81,7 +91,11 @@ weather <- vroom::vroom("data/GX-METEO-2004 - 2018E.csv") %>%
   dplyr::select(-DBH, -DBHpred)
 ```
 
-## Bridge
+## Results
+
+### Bridge
+
+As highlighted by @Herault2011, wood specific gravity is a strong driver of species growth potential ($\beta=-2.55, p<0.001, R^2=0.554$), with dense tree growing logically slower.
 
 ```{r, eval=F}
 troll %>% 
@@ -106,7 +120,10 @@ ggplot(aes(wsg, gmax), data = troll) +
   xlab("Wood specific gravity (WSG, g/g)") +  ylab("Species growth potential (Gmax, cm/yr)") + scale_y_log10()
 ```
 
-## PhD
+### ParacouITV
+
+Interestingly, leaf area seems to drive individual growth potential within species of *Symphonia* and *Eschweilera* genera
+($\beta=-0.22, p<0.046, R^2=0.058$), but the signal is weak.
 
 ```{r, eval=F}
 phd %>% 
@@ -133,7 +150,10 @@ ggplot(aes(LA, gmax, col = species, group = NA), data = phd) +
   scale_y_log10() + scale_x_log10()
 ```
 
-## hydro
+### hydroParacou
+
+Interestingly, turgor loss point (Ptlp) and stomatal density (stomateD) appear to influence species growth potential (Gmax) with a positive effect ($\beta=0.12, p<0.011$ 0.53, p=0.011 & $\beta=0.18, p<0.001$, $R^2=0.0288$).
+Species with more stomata lose their turgidity more quickly but grow faster.
 
 ```{r, eval=F}
 hydro %>% 
@@ -147,7 +167,8 @@ hydro %>%
 ```
 
 ```{r hydrolm}
-lm(log(gmax) ~ Ptlp + CN + stomataD, hydro) %>% 
+lm(log(gmax) ~ Ptlp + CN + stomataD,
+   mutate_at(hydro, c("Ptlp", "CN", "stomataD"), scale)) %>% 
   sjPlot::tab_model(show.icc = F)
 ```
 
@@ -163,7 +184,11 @@ hydro %>%
   scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
 ```
 
-## REW
+### REW
+
+The annual median extractable water content (REW, but not the number of days REW<4) has a small negative effect on the observed diameters compared to the expected (-0.54, p<0.001, R2m=0.003). 
+In other words, more waterlogged soils would result in 0.5cm less annual growth than expected.
+But given the distribution of REW I think this is an artefact of $\Delta DBH$ variance according to REW observations.
 
 ```{r, eval=F}
 rew %>% 
@@ -190,7 +215,10 @@ ggplot(rew, aes(log(REW), DeltaDBH, col = species, group = NA)) +
   ylab(expression(Delta[DBH])) + xlab("Relative extractable water") + scale_color_discrete(guide = "none")
 ```
 
-## Weather
+### Weather
+
+For the other climate variables we have significant effects due to the large number of points but with standard effects between -0.03 and 0.02,
+which I think are artefacts
 
 ```{r, eval=F}
 weather %>% 
