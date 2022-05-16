@@ -1,3 +1,7 @@
+fig:mmmdatafig
+fig:rmsep
+tab:loo
+fig:time
 tab:datahalftab
 tab:datafulltab
 fig:gmaxnci
@@ -31,4 +35,10 @@ model-full
 data-3
 model-1
 analyses
+other-analyses
+bridge
+phd
+hydro
+rew
+weather
 genetic-ressources

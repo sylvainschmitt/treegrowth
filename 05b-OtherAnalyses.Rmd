@@ -1,0 +1,221 @@
+```{r analyses2, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(googlesheets4)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+```
+
+# Other analyses
+
+In this chapter we ...
+
+```{r parsan2, eval=F}
+load("save/growthhalf.Rdata")  
+mu <- as.data.frame(fit_half, pars = c('mu')) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value))
+rm(fit_half) ; invisible(gc())
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+mdata <- vroom::vroom("save/mdatahalf.tsv")
+filter(mdata, Year > 0) %>% 
+  mutate(DBHpred = mu$value) %>% 
+  vroom::vroom_write(file = "save/dbhhalf.tsv")
+```
+
+```{r dataan2}
+growth <- vroom::vroom("save/growthhalf.tsv")
+dbh <- vroom::vroom("save/dbhhalf.tsv")
+troll <- vroom::vroom("data/TROLLv3_species.txt") %>% 
+  mutate(species = gsub("_", " ", s_name)) %>% 
+  dplyr::rename(LMA = s_LMA, Nmass = s_Nmass, Pmass = s_Pmass, wsg = s_wsg, dbhmax = s_dbhmax, hmax = s_hmax, ah = s_ah) %>% 
+  dplyr::select(species, LMA, Nmass, Pmass, wsg, dbhmax, hmax, ah) %>% 
+  left_join(group_by(growth, species) %>% summarise(gmax  = median(gmax, na.rm = T)))
+phd <- bind_rows(
+  vroom::vroom("data/Measures_Symphonia - AllTraits.tsv") %>% 
+    mutate(Genus = "Symphonia") %>%
+    rename(Species = Morphotype) %>%
+    mutate(Species = ifelse(Species == "Indet.",
+                            c("globulifera", "sp.1", "sp.1")[fct_recode(Bark, "globulifera" = "G",
+                                                                        "sp.1" =  "S")], Species)),
+  vroom::vroom("data/Measures_Eschweilera - AllTraits.tsv") %>%
+    filter(!(Plot == 14 & SubPlot == 1 & TreeFieldNum == 760))
+) %>% 
+  dplyr::select(idTree, SLA, LDMC, LT, LA, CC, brBT, brWD, brBD) %>% 
+  left_join(dplyr::select(growth, idTree, species, gmax)) %>% 
+  filter(!is.na(gmax))
+hydro <- vroom::vroom("data/211124_TraitDatabase_species_means_updatedNames.csv") %>% 
+  mutate(species = gsub("_", " ", spName.new)) %>% 
+  dplyr::rename(LSWC = LSWC_E.per_corr_mean, RWC = RWC_E.per_corr_mean, Ptlp = ptlp_mean, d13C = d13C.per_mean, CN = C.N_mean,
+                stomataD = stomata_density.mm2_mean, gmin = gmin.slope_mean, LWC = LWC_mean, LDMC = LDMC.mg.g_mean,
+                N = N.per_mean, C = C.per_mean, P12stem = P12_stem.Mpa_mean, P50stem = P50_stem.MPa_mean, P88stem = P88_stem.MPa_mean,
+                P12leaf = P12_leaf.MPa_mean, P50leaf = P50_leaf.MPa_mean, P88leaf = P88_leaf.MPa_mean) %>% 
+  dplyr::select(species, LSWC, RWC, Ptlp, d13C, CN, stomataD, gmin, LWC, LDMC, N, C, P12stem, P50stem, P88stem, P12leaf, P50leaf, P88leaf) %>% 
+  left_join(group_by(growth, species) %>% summarise(gmax  = median(gmax, na.rm = T)))
+rew <- vroom::vroom("data/REW_1978-2017_Fabien.csv") %>% 
+  group_by(year) %>% 
+  summarise(REW = mean(REW), REW4 = sum(REW < 0.4)) %>% 
+  dplyr::rename(CensusYear = year) %>% 
+  left_join(dplyr::select(dbh, CensusYear, DBH, DBHpred, species)) %>% 
+  filter(!is.na(DBH)) %>% 
+  mutate(DeltaDBH = DBH - DBHpred)
+weather <- vroom::vroom("data/GX-METEO-2004 - 2018E.csv") %>% 
+    dplyr::rename(CensusYear = Year, T55 = `Temp(55)`, Hr55 = `Hr(55)`, T30 = `Temp(30)`, Hr30 = `Hr(30)`,
+                  T12=`Temp(12.5)`, Hr12 = `Hr(12.5)`, PAR = `PAR incident`, T0 = `Tsol(CS615)`,
+                  Tm3 = `Tsol(-3cm)`, Tm18 = `Tsol(-18cm)`, Tm33 = `Tsol(-33cm)`, Tm53 = `Tsol(-53cm)`,
+                  Patm = Patm, windspeed = `Vit vent`, rainfall = `Pluie`, VPD55 = vpd55, ETP = `ETP penman (mm h-1) - OK`) %>% 
+  dplyr::select(CensusYear, T55, Hr55, T30, Hr30, T12, Hr12, PAR, T0, Tm3, Tm18, Tm33, Tm53, Patm, windspeed, rainfall, VPD55, ETP) %>% 
+  mutate_all(funs(gsub(",", ".", .))) %>% 
+  mutate_all(as.numeric) %>% 
+  group_by(CensusYear) %>% 
+  mutate(rainfall = sum(rainfall)) %>% 
+  summarise_all(median, na.rm = T) %>% 
+  left_join(dplyr::select(dbh, CensusYear, DBH, DBHpred, species)) %>% 
+  filter(!is.na(DBH)) %>% 
+  mutate(DeltaDBH = DBH - DBHpred) %>% 
+  dplyr::select(-DBH, -DBHpred)
+```
+
+## Bridge
+
+```{r, eval=F}
+troll %>% 
+  na.omit() %>% 
+  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
+  group_by(trait) %>% 
+  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+  filter(term != "intercept") %>% 
+  dplyr::select(-term) %>% 
+  filter(p_value < 0.05)
+```
+
+```{r trolllm}
+lm(log(gmax) ~ wsg + Nmass, troll) %>% 
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r trollfig}
+ggplot(aes(wsg, gmax), data = troll) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("Wood specific gravity (WSG, g/g)") +  ylab("Species growth potential (Gmax, cm/yr)") + scale_y_log10()
+```
+
+## PhD
+
+```{r, eval=F}
+phd %>% 
+  mutate(logLA = log(LA), logSLA = log(SLA)) %>% 
+  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
+  na.omit() %>% 
+  group_by(trait) %>% 
+  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+  filter(term != "intercept") %>% 
+  dplyr::select(-term) %>% 
+  filter(p_value < 0.05)
+```
+
+```{r phdlm}
+lm(log(gmax) ~ CC + log(LA), phd) %>% 
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r phdfig}
+ggplot(aes(LA, gmax, col = species, group = NA), data = phd) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("Leaf area (LA, cm2)") +  ylab("Individual growth potential (Gmax, cm/yr)") + 
+  scale_y_log10() + scale_x_log10()
+```
+
+## hydro
+
+```{r, eval=F}
+hydro %>% 
+  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
+  na.omit() %>% 
+  group_by(trait) %>% 
+  do(lm(log(gmax) ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+  filter(term != "intercept") %>% 
+  dplyr::select(-term) %>% 
+  filter(p_value < 0.05)
+```
+
+```{r hydrolm}
+lm(log(gmax) ~ Ptlp + CN + stomataD, hydro) %>% 
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r hydrofig}
+hydro %>% 
+  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
+  na.omit() %>% 
+  filter(trait %in% c("Ptlp", "CN", "stomataD")) %>% 
+  ggplot(aes(value, gmax)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+```
+
+## REW
+
+```{r, eval=F}
+rew %>% 
+  dplyr::select(species, DeltaDBH, REW, REW4) %>% 
+  reshape2::melt(c("species", "DeltaDBH")) %>% 
+  na.omit() %>% 
+  group_by(variable) %>% 
+  do(lm(DeltaDBH ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+  filter(term != "intercept") %>% 
+  dplyr::select(-term) %>% 
+  filter(p_value < 0.05)
+```
+
+```{r rewlm}
+# lm(DeltaDBH ~ REW, rew) %>%
+lme4::lmer(DeltaDBH ~ REW + (1  | species), rew) %>%  
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r rewfig}
+ggplot(rew, aes(log(REW), DeltaDBH, col = species, group = NA)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  ylab(expression(Delta[DBH])) + xlab("Relative extractable water") + scale_color_discrete(guide = "none")
+```
+
+## Weather
+
+```{r, eval=F}
+weather %>% 
+  reshape2::melt(c("species", "DeltaDBH")) %>% 
+  na.omit() %>% 
+  group_by(variable) %>% 
+  do(lm(DeltaDBH ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+  filter(term != "intercept") %>% 
+  dplyr::select(-term) %>% 
+  filter(p_value < 0.05)
+```
+
+```{r weatherlm}
+lme4::lmer(DeltaDBH ~ T55 + Hr55 + windspeed + rainfall + ETP	 + (1  | species), 
+           mutate_at(weather, c("T55", "Hr55", "windspeed", "rainfall", "ETP"), scale)) %>%
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r weatherfig}
+weather %>% 
+  reshape2::melt(c("species", "DeltaDBH")) %>% 
+  na.omit() %>% 
+  filter(variable %in% c("T55", "Hr55", "windspeed", "rainfall")) %>% 
+  ggplot(aes(value, DeltaDBH, col = species, group = NA)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("") +  ylab(expression(Delta[DBH])) + facet_wrap(~ variable, scales = "free_x") + scale_color_discrete(guide = "none")
+```

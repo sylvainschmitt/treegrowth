@@ -19,6 +19,34 @@ opts_chunk$set(
 
 In this chapter we ...
 
+<!-- We used the mean neighbourhood crowding index [$NCI$; @Uriarte2004] over the last 30 years, -->
+<!-- an indirect measurement of access to light and forest gap dynamics. -->
+<!-- The mean neighbourhood crowding index $NCI_i$ from tree individual $i$ was calculated as follows: -->
+
+<!-- $$NCI_i=\overline{\sum_{j|\delta_{i,j}<20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}$$ -->
+
+<!-- with $DBH_{j,t}$ the diameter of the neighbouring tree $j$ in year $t$ and $\delta_{i,j}$ its distance to the individual tree $i$. -->
+<!-- $NCI_i$ is computed for all neighbours at a distance $\delta_{i,j}$ inferior to the maximum neighbouring distance of 20 meters. -->
+<!-- The power of neighbours $DBH_{j,t}$ effect was set to 2 to represent a surface.  -->
+<!-- The decrease of neighbours' diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.  -->
+<!-- $NCI_i$ is computed as the mean of yearly $NCI_{i,t}$ over the last 30 years denoted by the overline. -->
+
+<!-- We used the topographic wetness index ($TWI$) as proxies of the distribution of soil water and nutrients in Paracou. -->
+<!-- Waterlogging and topography have been highlighted as crucial for forest dynamics [@Ferry2010], -->
+<!-- species-habitat relationships [@Engelbrecht2007], and phenotypic variation [@Schmitt2020). -->
+<!-- Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging, -->
+<!-- shapes soil nutrient distribution in tropical forests [@John2007; @Ferry2010]. -->
+<!-- TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS [@Conrad2015] -->
+<!-- based on a LiDAR campaign of the whole Paracou field station done in 2015. -->
+
+
+
+<!-- To study the effect of phylogeny and environment,  -->
+<!-- we investigated the effects of family, genus, species & topography $TWI$ and neighbourhood $NCI$ indices  -->
+<!-- on individual growth $Gmax$ with the following linear mixed model: -->
+
+<!-- $$log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})$$ -->
+
 ```{r env, eval=F}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(parallel)
@@ -91,6 +119,19 @@ growth <- pars %>%
 vroom::vroom_write(growth, file = "save/growthhalf.tsv")
 ```
 
+```{r, eval=F}
+vroom::vroom("save/mdatahalf.tsv") %>% 
+  filter(species == "Swartzia polyphylla") %>% 
+  filter(DBH < 10) %>% 
+  ggplot(aes(CensusYear, group = as.factor(ind))) +
+  geom_point(aes(y = CircCorr)) +
+  geom_line(aes(y = CircCorr, col = "Corrected")) +
+  geom_point(aes(y = Circ)) +
+  geom_line(aes(y = Circ, col = "Raw")) +
+  facet_wrap(~idTree)
+```
+
+
 ```{r dataan}
 growth <- vroom::vroom("save/growthhalf.tsv")
 phylo <- ape::read.tree("save/phylogeny_half.tree")
@@ -98,17 +139,16 @@ p4d <- phylo4d(phylo,
                data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
                  left_join(group_by(growth, species) %>% summarise(gmax  = mean(log(gmax), na.rm = T))) %>% 
                  dplyr::select(-species))
-# p4d <- subset(p4d, tips.exclude=c("Siparuna_cuspidata"))
 ```
 
-```{r lm}
+```{r lmm}
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
   sjPlot::tab_model(show.icc = F)
 ```
 
 ```{r r2, eval=F }
-m <- lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), 
-                na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, gmax)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
+m <- lme4::lmer(log(gmax) ~ log(NCIs) + log(NCIis) + log(TWIs+1) + log(TWIis+1) + (1  | Family/Genus/species), growth)
+                na.omit(dplyr::select(growth, Family, Genus, species, NCIs, NCIis, TWIs, TWIis, gmax)) %>% mutate(TWIis = ifelse(TWIis <= 0, 10^-6, TWIis)))
 r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
 partR2::forestplot(r2, type = "R2", text_size = 10)
 ```
@@ -116,23 +156,10 @@ partR2::forestplot(r2, type = "R2", text_size = 10)
 ```{r gmaxnci, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)."}
 ggplot(growth, aes(NCI, gmax, col = species)) +
   geom_point() +
-  geom_smooth(method = "lm", aes(group = NA)) +
+  geom_smooth(method = "lm", aes(group = NA), se = T) +
   scale_color_discrete(guide = "none") +
   scale_x_log10() + scale_y_log10() +
   xlab("Neighbourhood crowding index (NCI)") +
-  ylab("Individual growth potential (Gmax, cm/yr)")
-```
-
-```{r gmaxtwisp, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr).", eval=F}
-growth %>% 
-  group_by(species) %>% 
-  mutate(twi = exp(mean(log(twi+1))), gmax = exp(mean(log(gmax)))) %>% 
-  ggplot(aes(twi, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm", aes(group = NA)) +
-  scale_color_discrete(guide = "none") +
-  scale_x_log10() + scale_y_log10() +
-  # xlab("Neighbourhood crowding index (NCI)") +
   ylab("Individual growth potential (Gmax, cm/yr)")
 ```
 

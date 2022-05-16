@@ -12,10 +12,10 @@ colorlinks: yes
 description: "Variation in the growth potential of individual trees at the Paracou research station."
 ---
 
-`r if (knitr:::is_html_output()) '# Preface {-}'`
+# Introduction {-}
 
-`r if (knitr:::is_html_output()) 'Variation in the growth potential of individual trees at the Paracou research station.'`
+I have investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
 
-`r if (knitr:::is_html_output()) 'Have a nice reading.'`
+Have a nice reading.
 
-`r if (knitr:::is_html_output()) '<div align="right">  *Sylvain*'`
+<div align="right">  *Sylvain*

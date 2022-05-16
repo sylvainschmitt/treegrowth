@@ -14,9 +14,16 @@ opts_chunk$set(
 
 # Model choice
 
-In this chapter we looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
+In this chapter, I looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
+The result is summarised in Table ...
 
 ## Data
+
+I used reduced data to explore the model form. 
+I focused on trees at 20 meters from any plot edges for neighbourhood effect.
+I used only recruited trees in the censuses with at least 20 measurements of diameter at breast height (DBH, cm).
+And, I randomly selected 20 trees for lightweight training data.
+I further selected the last diameter measured for each individual as an evaluation data not used for model fitting (Fig. \@ref(fig:mmmdatafig)).
 
 ```{r data}
 guyafor <- DBI::dbConnect(RSQLite::SQLite(), dbname = "data/guyafor.sql")
@@ -28,24 +35,6 @@ trees <- tbl(guyafor, "inventory") %>%
   filter(!grepl("Indet", species)) %>% 
   mutate(DBH = CircCorr/pi)
 DBI::dbDisconnect(guyafor) ; rm(guyafor)
-```
-
-```{r datafig}
-trees %>% 
-  group_by(Plot) %>% 
-  mutate(StartYear = min(CensusYear)) %>% 
-  group_by(idTree) %>% 
-  arrange(CensusYear) %>% 
-  filter(first(CensusYear) > StartYear) %>% 
-  filter(first(DBH) < 12) %>% 
-  filter(last(DBH) > first(DBH)) %>% 
-  filter(n() > 20) %>% 
-  filter(idTree %in% sample(unique(.$idTree), 20)) %>%
-  ggplot(aes(CensusYear, DBH, col = as.factor(idTree))) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(se = F, alpha = 0.5) +
-  scale_y_sqrt() +
-  scale_color_discrete(guide = "none")
 ```
 
 ```{r mdata, eval=F}
@@ -77,20 +66,25 @@ vroom::vroom("save/trees_reduced.tsv") %>%
   vroom::vroom_write("save/mdata_reduced.tsv")
 ```
 
-```{r mmmdatafig}
+```{r mmmdatafig, fig.cap="Tree diameter trajectories in training data. Color represent individuals and the red point the data used for evaluation."}
 ggplot(vroom::vroom("save/mdata_reduced.tsv"),
        aes(Year, DBH, col = as.factor(ind))) +
   geom_point() +
   geom_point(data = vroom::vroom("save/eval_reduced.tsv"), col = "red", size = 2) +
   geom_smooth(se = F) +
-  scale_color_discrete(guide = "none")
+  scale_color_discrete(guide = "none") +
+  xlab("Years since recruitment") + ylab("Diameter at breast hieght (cm)")
 ```
 
 ## Michaelis Menten
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The first tested model is a Michaelis Menten model using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (10 + \frac{\alpha_i \times t}{\beta_i+t}, \sigma)$$
+where $\alpha$ is individual maximum diameter and $\beta$ the year since recruitment when the individual reaches half the maximum diameter value.
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $alpha$ and $beta$.
+$beta$ posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good.
 
 ```{r mmstanfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -159,9 +153,17 @@ ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(beta), group = ind)) +
 
 ## Gompertz
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The second tested model uses a Gompertz model [@Herault2011], were the diameter of individual $i$ at year $t$ is the individual diameter from previous year plus its annual growth:
 
 $$DBH_{i,s,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_i})}{Ks_i}]^2)\times\Delta t, \sigma)$$
+
+The annual growth rate for individual $i$ at year $y$ with a diameter of $DBH_{y,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011],
+where $Gmax$ is the maximum growth potential,
+$Dopt$ is the optimal diameter at which the individual reaches its maximum growth potential,
+and $Ks$ is the kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011].
+On model parameter diverged ($\hat R > 1.05$) with no correlations among parameters.
+$gmax$ posteriors are highly uncertain and does not vary widely among individuals.
+Finally predictions of the diameter trajectories by the model are overfitting because the model uses the diameter from previous census reporting the measurement error from one year to the other.
 
 ```{r gompertzstanfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -229,9 +231,13 @@ left_join(mdata, pars) %>%
 
 ## Lognormal
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The third tested model is a lognormal model using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (10 +\beta \times log(t), \sigma)$$
+where $\beta$ is the slope of year since recruitment effect on the log response of diameter to time.
+The model correctly converged ($\hat R < 1.05$) with no correlations among parameters.
+$beta$ posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are a bit far from observations.
 
 ```{r logfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -301,9 +307,15 @@ ggplot(left_join(mdata, pars),
 
 ## Polynomial
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The fourth tested model is a third degree polynomial model using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)$$
+
+where $\alpha$, $\beta$, and $\gamma$ are the slope of year since recruitment effects to its cube, square or identity.
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $\alpha$, $\beta$, and $\gamma$.
+$gamma$ posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are a bit overfitted with unrealistic inflections at the end of the trajectories
+
 
 ```{r polyfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -373,9 +385,12 @@ ggplot(left_join(mdata, pars),
 
 ## Weibul
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The fifth tested model is a Weibul model using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (10 + \alpha \times (1 − e^{-t_i/\beta}) , \sigma)$$
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $\alpha$ and $\beta$.
+$beta$ posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good.
 
 ```{r weibulfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -445,9 +460,13 @@ ggplot(left_join(mdata, pars),
 
 ## Amani
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The sixth tested model was developed by @Amani2021 and uses time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
 
 $$DBH_{i,t} \sim \mathcal N (\alpha \times (1 − e^{-\lambda \times (\frac{t_i}{\theta})^\beta}) , \sigma)$$
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $\alpha$, $\beta$, and $\lambda$.
+$\theta$ posteriors are highly uncertain and does not vary widely among individuals.
+Finally predictions of the diameter trajectories by the model are good but the inflection point if only used in the yellow trajectory more probably due to a change of POM than real growth change.
+
 ```{r amanifit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
 eval <- vroom::vroom("save/eval_reduced.tsv")
@@ -516,9 +535,18 @@ ggplot(left_join(mdata, pars),
 
 ## Gompertz sum
 
-Using time $t$ since recruitment (DBH=10cm) for each individual tree $i$:
+The seventh tested model uses a Gompertz model [@Herault2011], were the diameter of individual $i$ at year $t$ is the sum of annual growth from $t0$ to $t$:
 
-$$  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+$$DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)$$
+
+The annual growth rate for individual $i$ at year $y$ with a diameter of $DBH_{y,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011],
+where $Gmax$ is the maximum growth potential,
+$Dopt$ is the optimal diameter at which the individual reaches its maximum growth potential,
+and $Ks$ is the kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011].
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $dopt$ and $ks$.
+$gmax$ posteriors have logical uncertainty but are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good and realistic.
+Moreover, model errors do not show temporal autocorrelation per individual.
 
 ```{r gompertzsumfit, eval=F}
 mdata <- vroom::vroom("save/mdata_reduced.tsv")
@@ -617,6 +645,8 @@ left_join(vroom::vroom("save/mdata_reduced.tsv"), pars) %>%
 
 ## Comparisons
 
+The Gompertz sum model has the best prediction (lowest RMSEP) associated to the second best evaluation (second lowest loo epld), knowing that the first one use every year diameter and overfit, and a decent computing time. This is the best model that I'll use in next steps.
+
 ```{r fits}
 fits <- list(
   "Michaelis Menten" = fit_mm,
@@ -629,8 +659,26 @@ fits <- list(
 )
 ```
 
+```{r}
+lapply(fits, mcmc_intervals_data, "RMSEP") %>% 
+  bind_rows(.id = "Model") %>% 
+  dplyr::rename(RMSEP = m) %>% 
+  dplyr::select(Model, RMSEP) %>% 
+  left_join(lapply(fits, loo) %>% 
+              loo_compare() %>% 
+              as.data.frame() %>% 
+              rownames_to_column("Model") %>% 
+              dplyr::select(Model, elpd_loo)) %>% 
+  left_join(lapply(fits, get_elapsed_time) %>% 
+              lapply(as.data.frame) %>% 
+              bind_rows(.id = "Model") %>% 
+              rowwise() %>% 
+              mutate(Time = sum(warmup + sample)) %>% 
+              dplyr::select(Model, Time)) %>% 
+  kable()
+```
 
-```{r rmsep}
+```{r rmsep, fig.cap="Models root mean square error of predicition. The X scale is sqaure-root transformed."}
 lapply(fits, mcmc_intervals_data, "RMSEP") %>% 
   bind_rows(.id = "Model") %>% 
   ggplot(aes(x = Model, xend = Model)) +
@@ -638,16 +686,16 @@ lapply(fits, mcmc_intervals_data, "RMSEP") %>%
   geom_segment(aes(y = ll, yend = hh),
                size = 1, show.legend = F, alpha = 0.5) +
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
-  coord_flip() + ylab("RMSEP") + xlab("") + scale_y_log10()
+  coord_flip() + xlab("") + scale_y_log10() + ylab(expression(sqrt(bar((Y-hat(Y))^2))))
 ```
 
 ```{r loo}
 lapply(fits, loo) %>% 
   loo_compare() %>%
-  kable()
+  kable(caption = "Leave one out evaluation of models (http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html).")
 ```
 
-```{r time}
+```{r time, fig.cap="Model elapsed time."}
 lapply(fits, get_elapsed_time) %>% 
   lapply(as.data.frame) %>% 
   bind_rows(.id = "Model") %>% 
