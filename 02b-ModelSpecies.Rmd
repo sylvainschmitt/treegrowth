@@ -441,10 +441,98 @@ ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
   viridis::scale_color_viridis() 
 ```
 
+## Dmax
+
+We used the selected model, *i.e.* Gompertz model [@Herault2011], with $gmax$ as individual fixed effects and $Dopt$ and $Ks$ as individual random effects centered on species fixed effects:
+
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) $$
+
+But we constrained $dopt$ fitting $d=\frac{dopt}{DBH_{95}}$ with $d\in[0,1]$.
+The model correctly converged ($\hat R < 1.05$) with an acceptable but marked correlation between $dopt$ and $ks$.
+$gmax$ posteriors have logical uncertainty but are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good and realistic.
+
+```{r dmaxfit, eval=F}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dmax <- cmdstan_model("model/dmax.stan")
+fit <- dmax$sample(
+  data = list(
+    N = nrow(mdata),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(max(mdata$Year), max(eval$Year))+1,
+    year = mdata$Year+1,
+    ind = mdata$ind,
+    sp = mdata$sp,
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp,
+    dbh = mdata$DBH,
+    dmax = summarise(group_by(mdata, sp), dmax = max(DBH))$dmax,
+    Np = nrow(eval),
+    dbhp = eval$DBH,
+    indp = eval$ind,
+    yearp = eval$Year+1),
+  chains = 2,
+  parallel_chains = 4,
+  refresh = 200,
+  save_warmup = F
+)
+fit_dmax <- rstan::read_stan_csv(fit$output_files())
+save(fit_dmax, file = "save/dmax.Rdata")
+```
+
+```{r dmaxsampling}
+load("save/dmax.Rdata")  
+```
+
+```{r dmaxrhat}
+mcmc_rhat(rhat(fit_dmax))
+```
+
+```{r dmaxtrace}
+mcmc_trace(as.array(fit_dmax, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK")))
+```
+
+```{r dmaxpairs}
+mcmc_pairs(as.array(fit_dmax, pars = c("gmax[1]", "sigma", "dopt_s[1]", "ks_s[1]", "sigmaD", "sigmaK")))
+```
+
+```{r dmaxgmax}
+mcmc_intervals(as.array(fit_dmax, pars = "gmax"))
+```
+
+```{r dmaxpreds}
+mdata <- vroom::vroom("save/mdata_species.tsv")
+eval <- vroom::vroom("save/eval_species.tsv")
+dbhtoday <- function(t, gmax, dopt, ks){
+  dbh <- 10
+  for(i in 1:t)
+    dbh <- dbh + gmax*exp(-0.5* (log(dbh / dopt) / ks)^2)
+  return(dbh)  
+}
+pars <- as.data.frame(fit_dmax, pars = c('gmax', "dopt", "ks")) %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(value = median(value)) %>% 
+  separate(parameter, c("parameter", "ind"), convert = T) %>% 
+  reshape2::dcast(ind ~ parameter)
+preds <- pars %>% 
+  mutate(Year = list(0:max(eval$Year))) %>% 
+  unnest(Year) %>% 
+  rowwise() %>% 
+  mutate(DBH = dbhtoday(Year+1, gmax, dopt, ks))
+ggplot(left_join(mdata, pars), aes(Year, DBH, col = log(gmax), group = ind)) +
+  geom_point() +
+  geom_point(data = eval, col = "red", size = 2) +
+  geom_line(data = preds) +
+  viridis::scale_color_viridis() 
+```
+
 ## Comparisons
 
 The individual random model has the best prediction (lowest RMSEP) associated to the best evaluation (second lowest loo epld), and a decent computing time. 
 Moreover, model using species level $Dopt$ and $Ks$ are underestimating $Gmax$ absolute value while overestimating individual variation in $Gmax$ (last figures).
+Moreover, constraining $dopt$ fitting $d=\frac{dopt}{DBH_{95}}$ with $d\in[0,1]$ resolved maximum treedepth issues and have similar performances.
 This is the best model that I'll use in next steps.
 
 ```{r fitssp}
@@ -452,7 +540,8 @@ fits <- list(
   "Individual fixed" = fit_indfix,
   "Individual random" = fit_indrand,
   "Species fixed" = fit_spfix,
-  "Species random" = fit_sprand
+  "Species random" = fit_sprand,
+  "Dmax" = fit_dmax
 )
 ```
 
@@ -475,7 +564,7 @@ lapply(fits, mcmc_intervals_data, "RMSEP") %>%
               group_by(Model) %>% 
               summarise(Time = max(Time))) %>% 
   kable(caption = "Model choice summary with quality of prediciton (Root Mean Square Error of Prediction, RMSEP), cross-validation (Leave-One-Out Estimate of the expected Log pointwise Predictive Density, LOO ELDP), and speed (Elapsed yime).",
-        col.names = c("Model", "RMSEP", "LOO ELDP", "Elapsed time"))
+        col.names = c("Model", "RMSEP", "LOO ELDP", "Elapsed time")) 
 ```
 
 ```{r rmsepsp}
@@ -486,13 +575,13 @@ lapply(fits, mcmc_intervals_data, "RMSEP") %>%
   geom_segment(aes(y = ll, yend = hh),
                size = 1, show.legend = F, alpha = 0.5) +
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
-  coord_flip() + ylab("RMSEP") + xlab("") + scale_y_log10()
+  coord_flip() + ylab("RMSEP") + xlab("") + scale_y_log10() 
 ```
 
 ```{r loosp}
 lapply(fits, loo) %>% 
   loo_compare() %>%
-  kable()
+  kable() 
 ```
 
 ```{r timesp}
@@ -507,7 +596,7 @@ lapply(fits, get_elapsed_time) %>%
   geom_point() +
   coord_flip() +
   scale_y_log10() +
-  ylab("Time (seconds)")
+  ylab("Time (seconds)") 
 ```
 
 ```{r gmaxsp}
@@ -519,7 +608,7 @@ lapply(fits, mcmc_intervals_data, paste0('gmax[', 1:5, ']')) %>%
   geom_segment(aes(y = ll, yend = hh),
                size = 1, show.legend = F, alpha = 0.5) +
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
-  coord_flip() + ylab(expression(G[max]))
+  coord_flip() + ylab(expression(G[max])) 
 ```
 
 ```{r lmmsp}
@@ -549,6 +638,6 @@ lapply(fits, as.data.frame, pars = 'gmax') %>%
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
   scale_fill_discrete(expression(sigma^2)) +
-  xlab("Model") + ylab("Percentage of variance") 
+  xlab("Model") + ylab("Percentage of variance")  
 ```
 

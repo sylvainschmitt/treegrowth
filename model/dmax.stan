@@ -8,6 +8,10 @@ data {
   vector[S] dmax ; // diameter
   array[N] int<lower=1, upper=I> ind ; // individuals
   array[I] int<lower=1, upper=S> indsp ; // species corresponding to individual
+  int<lower=1> Np ; // # of observations for prediction
+  vector[Np] dbhp ; // diameter diameter for prediction
+  array[Np] int<lower=1, upper=I> indp ; // individuals for prediction
+  array[Np] int<lower=1> yearp ; // years for prediction
 }
 parameters {
   vector<lower=0.001, upper=5>[I] gmax ;
@@ -40,4 +44,14 @@ model {
   sigma ~ normal(0, 1) ;
   sigmaD ~ normal(0, 1) ;
   sigmaK ~ normal(0, 1) ;
+}
+generated quantities {
+  vector[Np] mup ;
+  real RMSEP ;
+  vector[N] log_lik ;
+  for(n in 1:N)
+    log_lik[n] = normal_lpdf(dbh[n] | mu[n], sigma) ;
+  for(n in 1:Np)
+    mup[n] = DBH[indp[n],yearp[n]] ;
+  RMSEP = sqrt(mean(square(dbhp - mup)));
 }

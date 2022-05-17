@@ -165,6 +165,7 @@ fit <- growth$sample(
     year = filter(mdata, Year > 0)$Year,
     dbh = filter(mdata, Year > 0)$DBH,
     dbh0 = filter(mdata, Year == 0)$DBH,
+    dmax = summarise(group_by(mdata, sp), dmax = max(DBH))$dmax,
     ind = filter(mdata, Year > 0)$ind,
     indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp
   ),

@@ -1,9 +1,8 @@
-```{r analyses, include=FALSE, eval=T}
+```{r analysesb, include=FALSE, eval=T}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
 library(bayesplot)
-library(greta)
 library(ggtree)
 library(phylosignal)
 library(adephylo)
@@ -15,13 +14,13 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-```{r env, eval=F}
+```{r envb, eval=F}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(parallel)
 library(doSNOW)
 library(foreach)
 library(tidyverse)
-data <- vroom::vroom("save/mdatahalf.tsv") %>% 
+data <- vroom::vroom("save/mdatafull.tsv") %>% 
   dplyr::select(idTree, Plot, Xutm, Yutm) %>% 
   unique()
 cl <- makeCluster(4, outfile = "/dev/null")
@@ -56,54 +55,42 @@ XY <- NC %>%
   sf::st_as_sf(coords = c("Xutm", "Yutm"),
              crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
 NC$twi <- raster::extract(raster::raster("data/TWI_1m.tif"), XY)
-write_tsv(NC, file = "save/env_half.tsv")
+write_tsv(NC, file = "save/env_full.tsv")
 ```
 
-```{r phylo, eval=F}
+```{r phylob, eval=F}
 library(V.PhyloMaker)
-splist <- vroom::vroom("save/mdatahalf.tsv") %>% 
+splist <- vroom::vroom("save/mdatafull.tsv") %>% 
   dplyr::select(Family, Genus, species) %>% 
   unique() %>% 
   mutate(genus = Genus, family = Family) %>% 
   dplyr::select(species, genus, family)
 tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
-ape::write.tree(tree$scenario.3, "save/phylogeny_half.tree")
+ape::write.tree(tree$scenario.3, "save/phylogeny_full.tree")
 ```
 
-```{r parsan, eval=F}
-load("save/growthhalf.Rdata")  
-pars <- as.data.frame(fit_half, pars = c('gmax')) %>% 
+```{r parsanb, eval=F}
+load("save/growth.Rdata")  
+pars <- as.data.frame(fit_full, pars = c('gmax')) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
-rm(fit_half) ; invisible(gc())
-mdata <- vroom::vroom("save/mdatahalf.tsv")
+rm(fit_full) ; invisible(gc())
+mdata <- vroom::vroom("save/mdatafull.tsv")
 growth <- pars %>% 
   left_join(dplyr::select(mdata, ind, idTree, Family, Genus, species)) %>% 
-  left_join(vroom::vroom(file = "save/env_half.tsv")) %>% 
+  left_join(vroom::vroom(file = "save/env_full.tsv")) %>% 
   unique()
-vroom::vroom_write(growth, file = "save/growthhalf.tsv")
+vroom::vroom_write(growth, file = "save/growthfull.tsv")
 ```
 
-```{r, eval=F}
-vroom::vroom("save/mdatahalf.tsv") %>% 
-  filter(species == "Swartzia polyphylla") %>% 
-  filter(DBH < 10) %>% 
-  ggplot(aes(CensusYear, group = as.factor(ind))) +
-  geom_point(aes(y = CircCorr)) +
-  geom_line(aes(y = CircCorr, col = "Corrected")) +
-  geom_point(aes(y = Circ)) +
-  geom_line(aes(y = Circ, col = "Raw")) +
-  facet_wrap(~idTree)
-```
-
-# Analyses half
+# Analyses full
 
 In this chapter, I investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
 
-**Current results are using reduced data from chapter 3.**
+**Current results are using full data from chapter 4.**
 
 ## Methods
 
@@ -148,35 +135,37 @@ We used R version 3.6 for all statistical analyses (<www.r- project.org>).
 
 ### General
 
-Most of the variation in growth potential is individual ($\sigma_i = 0.40$), then explained by genus ($\sigma_g = 0.09$)
-before species ($\sigma_s=0.03$) and relatively little by family ($\sigma_f=0.2$). 
-The taxonomic structure explains more than a quarter of the observed variation in individual growth potential ($R^2_c=0.28$).
-Finally, the neighbourhood ($NCI$) has a marked negative significant effect ($\beta=-0.45, p<0.001$, Fig. \@ref(fig:gmaxnci)) which explains 3% of the observed variation ($R^2_m=0.033$).
+Most of the variation in growth potential is individual ($\sigma_i = 0.437$), then explained by genus ($\sigma_g = 0.09$)
+before species ($\sigma_s=0.04$) and relatively little by family ($\sigma_f=0.02$). 
+The taxonomic structure explains almost a third of the observed variation in individual growth potential ($R^2_c=0.322$).
+Finally, the neighbourhood ($NCI$) has a marked negative significant effect ($\beta=-0.49, p<0.001$, Fig. \@ref(fig:gmaxncib)) which explains 3% of the observed variation ($R^2_m=0.033$).
 
-```{r dataan}
-growth <- vroom::vroom("save/growthhalf.tsv")
-phylo <- ape::read.tree("save/phylogeny_half.tree")
+```{r dataanb}
+growth <- vroom::vroom("save/growthfull.tsv")
+phylo <- ape::read.tree("save/phylogeny_full.tree")
 p4d <- phylo4d(phylo,
                data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
                  left_join(group_by(growth, species) %>% summarise(gmax  = mean(log(gmax), na.rm = T))) %>% 
                  dplyr::select(-species))
 ```
 
-```{r lmm}
+```{r lmmb}
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
   sjPlot::tab_model(show.icc = F)
 ```
 
-```{r r2, eval=F }
-m <- lme4::lmer(log(gmax) ~ log(NCIs) + log(NCIis) + log(TWIs+1) + log(TWIis+1) + (1  | Family/Genus/species), growth)
-                na.omit(dplyr::select(growth, Family, Genus, species, NCIs, NCIis, TWIs, TWIis, gmax)) %>% mutate(TWIis = ifelse(TWIis <= 0, 10^-6, TWIis)))
+```{r r2b, eval=F }
+m <- lme4::lmer(log(gmax) ~  log(NCI) + log(twi+1) + (1  | Family/Genus/species),
+                na.omit(dplyr::select(growth, Family, Genus, species, NCI, twi, gmax)) %>% mutate(twi = ifelse(twi <= 0, 10^-6, twi)))
 r2 <- partR2::partR2(m, partvars = c("log(NCI)", "log(twi+1)"), R2_type = "marginal", nboot = 10)
 partR2::forestplot(r2, type = "R2", text_size = 10)
 ```
 
-```{r gmaxnci, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)."}
-ggplot(growth, aes(NCI, gmax, col = species)) +
+```{r gmaxncib, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)."}
+ggplot(growth, aes(NCI, gmax, col = species, group = NA)) +
   geom_point() +
+  # geom_bin2d(bins = 50) +
+  # scale_fill_continuous(type = "viridis") +
   geom_smooth(method = "lm", aes(group = NA), se = T) +
   scale_color_discrete(guide = "none") +
   scale_x_log10() + scale_y_log10() +
@@ -186,14 +175,14 @@ ggplot(growth, aes(NCI, gmax, col = species)) +
 
 ### Phylogenetic
 
-Species growth potential in the phylogeny (Fig. \@ref(fig:gmaxphylo)) is significantly structured (Tab. \@ref(tab:gmaxphylosignal)),
-with a short distance significant positive association and a long distant significant negative association (Fig. \@ref(fig:gmaxcorrelog)).
-Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. \@ref(fig:lipa)),
+Species growth potential in the phylogeny (Fig. \@ref(fig:gmaxphylob)) is significantly structured (Tab. \@ref(tab:gmaxphylosignalb)),
+with a short distance significant positive association and a long distant significant negative association (Fig. \@ref(fig:gmaxcorrelogb)).
+Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. \@ref(fig:lipab)),
 as illustrated for instance with fast growing *Cecropia* opposed to slow growing *Eschweilera*.
 However, a few species have different growth potential in the same genus, 
 such as slow growing *Drypetes variabilis* opposed to fast growing *Drypetes fanshawei*.
 
-```{r gmaxphylo, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
+```{r gmaxphylob, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 
@@ -206,7 +195,7 @@ fortify(phylo) %>%
   viridis::scale_color_viridis(expression(log(gmax)))
 ```
 
-```{r gmaxphylosignal}
+```{r gmaxphylosignalb}
 phyloSignal(p4d = p4d, method = "all") %>% 
   lapply(as.data.frame) %>% 
   lapply(rownames_to_column, "parameter") %>% 
@@ -216,15 +205,15 @@ phyloSignal(p4d = p4d, method = "all") %>%
   kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.")
 ```
 
-```{r gmaxcorrelog, fig.cap="phylogenetic correlogram of species growth potential (Gmax, cm/yr)."}
+```{r gmaxcorrelogb, fig.cap="phylogenetic correlogram of species growth potential (Gmax, cm/yr)."}
 # crlg <- phyloCorrelogram(p4d, trait = "gmax", ci.bs	= 100)
-# png(file = "save/figs/gmaxcorrelog.png", width = 1000, height = 1000, units = "px")
+# png(file = "save/figs/gmaxcorrelog_full.png", width = 1000, height = 1000, units = "px")
 # plot(crlg, main="phylogenetic correlogram")
 # dev.off()
-include_graphics("save/figs/gmaxcorrelog.png")
+include_graphics("save/figs/gmaxcorrelog_full.png")
 ```
 
-```{r lipa, fig.cap="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny."}
+```{r lipab, fig.cap="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny."}
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 

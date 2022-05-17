@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Other analyses | Tree Growth</title>
+  <title>Chapter 7 Other analyses | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Other analyses | Tree Growth" />
+  <meta property="og:title" content="Chapter 7 Other analyses | Tree Growth" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Other analyses | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 7 Other analyses | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-16" />
+<meta name="date" content="2022-05-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="analyses.html"/>
+<link rel="prev" href="analyses-full.html"/>
 <link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -89,7 +89,8 @@
 <li class="chapter" data-level="2.3" data-path="model-species.html"><a href="model-species.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
 <li class="chapter" data-level="2.4" data-path="model-species.html"><a href="model-species.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
 <li class="chapter" data-level="2.5" data-path="model-species.html"><a href="model-species.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
-<li class="chapter" data-level="2.6" data-path="model-species.html"><a href="model-species.html#comparisons-1"><i class="fa fa-check"></i><b>2.6</b> Comparisons</a></li>
+<li class="chapter" data-level="2.6" data-path="model-species.html"><a href="model-species.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
+<li class="chapter" data-level="2.7" data-path="model-species.html"><a href="model-species.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="model-half.html"><a href="model-half.html"><i class="fa fa-check"></i><b>3</b> Model half</a><ul>
 <li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
@@ -101,25 +102,36 @@
 <li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
 <li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
 <li class="chapter" data-level="4.3" data-path="model-full.html"><a href="model-full.html#fit-1"><i class="fa fa-check"></i><b>4.3</b> Fit</a></li>
+<li class="chapter" data-level="4.4" data-path="model-full.html"><a href="model-full.html#dopt_s-1"><i class="fa fa-check"></i><b>4.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="analyses.html"><a href="analyses.html"><i class="fa fa-check"></i><b>5</b> Analyses</a><ul>
-<li class="chapter" data-level="5.1" data-path="analyses.html"><a href="analyses.html#methods"><i class="fa fa-check"></i><b>5.1</b> Methods</a><ul>
-<li class="chapter" data-level="5.1.1" data-path="analyses.html"><a href="analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>5.1.1</b> Environmental descriptors</a></li>
-<li class="chapter" data-level="5.1.2" data-path="analyses.html"><a href="analyses.html#analyses-1"><i class="fa fa-check"></i><b>5.1.2</b> Analyses</a></li>
+<li class="chapter" data-level="5" data-path="analyses-half.html"><a href="analyses-half.html"><i class="fa fa-check"></i><b>5</b> Analyses half</a><ul>
+<li class="chapter" data-level="5.1" data-path="analyses-half.html"><a href="analyses-half.html#methods"><i class="fa fa-check"></i><b>5.1</b> Methods</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="analyses-half.html"><a href="analyses-half.html#environmental-descriptors"><i class="fa fa-check"></i><b>5.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="5.1.2" data-path="analyses-half.html"><a href="analyses-half.html#analyses"><i class="fa fa-check"></i><b>5.1.2</b> Analyses</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="analyses.html"><a href="analyses.html#results"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
-<li class="chapter" data-level="5.2.1" data-path="analyses.html"><a href="analyses.html#general"><i class="fa fa-check"></i><b>5.2.1</b> General</a></li>
-<li class="chapter" data-level="5.2.2" data-path="analyses.html"><a href="analyses.html#phylogenetic"><i class="fa fa-check"></i><b>5.2.2</b> Phylogenetic</a></li>
+<li class="chapter" data-level="5.2" data-path="analyses-half.html"><a href="analyses-half.html#results"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="analyses-half.html"><a href="analyses-half.html#general"><i class="fa fa-check"></i><b>5.2.1</b> General</a></li>
+<li class="chapter" data-level="5.2.2" data-path="analyses-half.html"><a href="analyses-half.html#phylogenetic"><i class="fa fa-check"></i><b>5.2.2</b> Phylogenetic</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="other-analyses.html"><a href="other-analyses.html"><i class="fa fa-check"></i><b>6</b> Other analyses</a><ul>
-<li class="chapter" data-level="6.1" data-path="other-analyses.html"><a href="other-analyses.html#methods-1"><i class="fa fa-check"></i><b>6.1</b> Methods</a></li>
-<li class="chapter" data-level="6.2" data-path="other-analyses.html"><a href="other-analyses.html#results-1"><i class="fa fa-check"></i><b>6.2</b> Results</a><ul>
-<li class="chapter" data-level="6.2.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>6.2.1</b> Bridge</a></li>
-<li class="chapter" data-level="6.2.2" data-path="other-analyses.html"><a href="other-analyses.html#paracouitv"><i class="fa fa-check"></i><b>6.2.2</b> ParacouITV</a></li>
-<li class="chapter" data-level="6.2.3" data-path="other-analyses.html"><a href="other-analyses.html#hydroparacou"><i class="fa fa-check"></i><b>6.2.3</b> hydroParacou</a></li>
-<li class="chapter" data-level="6.2.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>6.2.4</b> REW</a></li>
-<li class="chapter" data-level="6.2.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>6.2.5</b> Weather</a></li>
+<li class="chapter" data-level="6" data-path="analyses-full.html"><a href="analyses-full.html"><i class="fa fa-check"></i><b>6</b> Analyses full</a><ul>
+<li class="chapter" data-level="6.1" data-path="analyses-full.html"><a href="analyses-full.html#methods-1"><i class="fa fa-check"></i><b>6.1</b> Methods</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="analyses-full.html"><a href="analyses-full.html#environmental-descriptors-1"><i class="fa fa-check"></i><b>6.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="6.1.2" data-path="analyses-full.html"><a href="analyses-full.html#analyses-1"><i class="fa fa-check"></i><b>6.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="analyses-full.html"><a href="analyses-full.html#results-1"><i class="fa fa-check"></i><b>6.2</b> Results</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="analyses-full.html"><a href="analyses-full.html#general-1"><i class="fa fa-check"></i><b>6.2.1</b> General</a></li>
+<li class="chapter" data-level="6.2.2" data-path="analyses-full.html"><a href="analyses-full.html#phylogenetic-1"><i class="fa fa-check"></i><b>6.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="other-analyses.html"><a href="other-analyses.html"><i class="fa fa-check"></i><b>7</b> Other analyses</a><ul>
+<li class="chapter" data-level="7.1" data-path="other-analyses.html"><a href="other-analyses.html#methods-2"><i class="fa fa-check"></i><b>7.1</b> Methods</a></li>
+<li class="chapter" data-level="7.2" data-path="other-analyses.html"><a href="other-analyses.html#results-2"><i class="fa fa-check"></i><b>7.2</b> Results</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="other-analyses.html"><a href="other-analyses.html#bridge"><i class="fa fa-check"></i><b>7.2.1</b> Bridge</a></li>
+<li class="chapter" data-level="7.2.2" data-path="other-analyses.html"><a href="other-analyses.html#paracouitv"><i class="fa fa-check"></i><b>7.2.2</b> ParacouITV</a></li>
+<li class="chapter" data-level="7.2.3" data-path="other-analyses.html"><a href="other-analyses.html#hydroparacou"><i class="fa fa-check"></i><b>7.2.3</b> hydroParacou</a></li>
+<li class="chapter" data-level="7.2.4" data-path="other-analyses.html"><a href="other-analyses.html#rew"><i class="fa fa-check"></i><b>7.2.4</b> REW</a></li>
+<li class="chapter" data-level="7.2.5" data-path="other-analyses.html"><a href="other-analyses.html#weather"><i class="fa fa-check"></i><b>7.2.5</b> Weather</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -147,21 +159,21 @@
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
 <div id="other-analyses" class="section level1">
-<h1><span class="header-section-number">Chapter 6</span> Other analyses</h1>
+<h1><span class="header-section-number">Chapter 7</span> Other analyses</h1>
 <p>In this chapter, I quickly investigated effects of functional traits and weather on individual growth.</p>
 <p><strong>Current results are using reduced data from chapter 3.</strong></p>
-<div id="methods-1" class="section level2">
-<h2><span class="header-section-number">6.1</span> Methods</h2>
+<div id="methods-2" class="section level2">
+<h2><span class="header-section-number">7.1</span> Methods</h2>
 <p>I used linear model for individual growth potential relation to functional traits at the individual or species level.
 For weather data, I used the yearly difference between observed diameter and predicted diameter as an index of individual and species annual growth success.
 I used linear mixed model to test weather variables effects on this variation of diameter (<span class="math inline">\(\Delta DBH\)</span>).
 For each dataset, I first used a step procedure to select explanatory variables before using linear, mixed or not, models with multiple variables.
 I then plotted the individual relations between response and explanatory variables.</p>
 </div>
-<div id="results-1" class="section level2">
-<h2><span class="header-section-number">6.2</span> Results</h2>
+<div id="results-2" class="section level2">
+<h2><span class="header-section-number">7.2</span> Results</h2>
 <div id="bridge" class="section level3">
-<h3><span class="header-section-number">6.2.1</span> Bridge</h3>
+<h3><span class="header-section-number">7.2.1</span> Bridge</h3>
 <p>As highlighted by <span class="citation">Hérault <em>et al.</em> (<a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>, wood specific gravity is a strong driver of species growth potential (<span class="math inline">\(\beta=-2.55, p&lt;0.001, R^2=0.554\)</span>), with dense tree growing logically slower.</p>
 <table style="border-collapse:collapse; border:none;">
 <tr>
@@ -248,7 +260,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 <p><img src="treegrowth_files/figure-html/trollfig-1.png" width="768" /></p>
 </div>
 <div id="paracouitv" class="section level3">
-<h3><span class="header-section-number">6.2.2</span> ParacouITV</h3>
+<h3><span class="header-section-number">7.2.2</span> ParacouITV</h3>
 <p>Interestingly, leaf area seems to drive individual growth potential within species of <em>Symphonia</em> and <em>Eschweilera</em> genera
 (<span class="math inline">\(\beta=-0.22, p&lt;0.046, R^2=0.058\)</span>), but the signal is weak.</p>
 <table style="border-collapse:collapse; border:none;">
@@ -336,7 +348,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 <p><img src="treegrowth_files/figure-html/phdfig-1.png" width="768" /></p>
 </div>
 <div id="hydroparacou" class="section level3">
-<h3><span class="header-section-number">6.2.3</span> hydroParacou</h3>
+<h3><span class="header-section-number">7.2.3</span> hydroParacou</h3>
 <p>Interestingly, turgor loss point (Ptlp) and stomatal density (stomateD) appear to influence species growth potential (Gmax) with a positive effect (<span class="math inline">\(\beta=0.12, p&lt;0.011\)</span> 0.53, p=0.011 &amp; <span class="math inline">\(\beta=0.18, p&lt;0.001\)</span>, <span class="math inline">\(R^2=0.0288\)</span>).
 Species with more stomata lose their turgidity more quickly but grow faster.</p>
 <table style="border-collapse:collapse; border:none;">
@@ -438,7 +450,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 <p><img src="treegrowth_files/figure-html/hydrofig-1.png" width="768" /></p>
 </div>
 <div id="rew" class="section level3">
-<h3><span class="header-section-number">6.2.4</span> REW</h3>
+<h3><span class="header-section-number">7.2.4</span> REW</h3>
 <p>The annual median extractable water content (REW, but not the number of days REW&lt;4) has a small negative effect on the observed diameters compared to the expected (-0.54, p&lt;0.001, R2m=0.003).
 In other words, more waterlogged soils would result in 0.5cm less annual growth than expected.
 But given the distribution of REW I think this is an artefact of <span class="math inline">\(\Delta DBH\)</span> variance according to REW observations.</p>
@@ -540,7 +552,7 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 <p><img src="treegrowth_files/figure-html/rewfig-1.png" width="768" /></p>
 </div>
 <div id="weather" class="section level3">
-<h3><span class="header-section-number">6.2.5</span> Weather</h3>
+<h3><span class="header-section-number">7.2.5</span> Weather</h3>
 <p>For the other climate variables we have significant effects due to the large number of points but with standard effects between -0.03 and 0.02,
 which I think are artefacts</p>
 <table style="border-collapse:collapse; border:none;">
@@ -710,7 +722,7 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
           </div>
         </div>
       </div>
-<a href="analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analyses-full.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

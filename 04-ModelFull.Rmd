@@ -147,6 +147,7 @@ fit <- growth$sample(
     year = filter(mdata, Year > 0)$Year,
     dbh = filter(mdata, Year > 0)$DBH,
     dbh0 = filter(mdata, Year == 0)$DBH,
+    dmax = summarise(group_by(mdata, sp), dmax = max(DBH))$dmax,
     ind = filter(mdata, Year > 0)$ind,
     indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp
   ),
@@ -163,4 +164,94 @@ save(fit_full, file = "save/growth.Rdata")
 
 ## Fit
 
-*The model is currently running.*
+The model correctly converged ($\hat R < 1.1$) for the majority of $Gmax_i$.
+All $\sigma$ have a small posterior but difficulties to converge.
+The correlation between $Dopt$ and $Ks$ is acceptable but marked.
+$Gmax_i$ posteriors have logical uncertainty but are varying widely among individuals.
+
+```{r growthfullsampling, eval=F}
+mdata <- vroom::vroom("save/mdatafull.tsv")
+load("save/growth.Rdata")
+```
+
+```{r growthfullrhat}
+# r <- rhat(fit_full)
+# data.frame(parameter = names(r), rhat = r) %>% 
+#   vroom::vroom_write("save/rhatfull.tsv")
+vroom::vroom("save/rhatfull.tsv") %>% 
+  separate(parameter, c("parameter", "indsp")) %>% 
+  filter(parameter == "gmax") %>% 
+  select(rhat) %>% 
+  unlist() %>% 
+  mcmc_rhat() +
+  ggtitle("8569 Gmax_i", "608 with rhat > 1 (7%)")
+```
+
+```{r growthfulltrace}
+# g <- mcmc_trace(as.array(fit_full, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
+# ggsave(plot = g, filename = "save/figs/growthfulltrace.png", bg = "white")
+include_graphics("save/figs/growthfulltrace.png")
+```
+
+```{r growthfullpairs}
+# g <- mcmc_pairs(as.array(fit_full, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
+# ggsave(plot = g, filename = "save/figs/growthfullpairs.png", bg = "white")
+include_graphics("save/figs/growthfullpairs.png")
+```
+
+```{r growthfullgmax}
+# g <- mcmc_intervals(as.array(fit_full, pars = paste0("gmax[", 1:100, "]")))
+# ggsave(plot = g, filename = "save/figs/growthfullgmax.png", bg = "white")
+include_graphics("save/figs/growthfullgmax.png")
+```
+
+## $Dopt_s$
+
+Looking into details, most species showed a $Dopt_s$ around 40% of the observed 95th quantile of their observed diameters, as expected (B. Hérault pers. com.).
+However, 11 species showed a $Dopt_s$ above the observed 95th quantile of their observed diameters.
+This species are understory species that does not follow a Gompertz shape, and they correspond to the slightly divergent $Gmax_i$.
+*Swartia polyphylla* is not round and will be removed from next fits.
+Other species will be constrained on the observed 95th quantile of their observed diameters (1.5X).
+
+```{r growthfulldoptdmax}
+# g <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
+#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
+#   left_join(mdata %>%
+#               group_by(sp) %>%
+#               summarise(dmax = max(DBH))) %>%
+#   ggplot(aes(sp, (m*100)/dmax, col = (m*100)/dmax > 1)) +
+#   geom_point() +
+#   coord_flip() +
+#   scale_y_sqrt() +
+#   ylab(expression(frac(Dopt,Dmax))) + xlab("Species") +
+#   scale_color_discrete(expression(frac(Dopt,Dmax)>1))
+# ggsave(plot = g, filename = "save/figs/growthfulldoptdmax.png", bg = "white")
+include_graphics("save/figs/growthfulldoptdmax.png")
+```
+
+```{r growthfulldoptdmaxsp}
+# sps <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
+#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
+#   left_join(mdata %>%
+#               group_by(sp) %>%
+#               summarise(dmax = max(DBH))) %>%
+#   filter( (m*100)/dmax > 1) %>%
+#   select(sp) %>%
+#   unlist()
+# g <- dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>%
+#   unique() %>%
+#   filter(sp %in% sps) %>%
+#   group_by(sp) %>%
+#   unique() %>%
+#   left_join(vroom::vroom("save/mdatafull.tsv")) %>%
+#   ggplot(aes(Year, DBH, group = as.factor(ind))) +
+#   geom_point(col = "grey") +
+#   geom_smooth(se = F, aes(col = as.factor(ind))) +
+#   xlim(0,NA) +
+#   facet_wrap(~ species) +
+#   scale_color_discrete(guide = "none") +
+#   ylim(5, 15) +
+#   ggtitle("Problematic species", expression(frac(Dopt,Dmax)>1))
+# ggsave(plot = g, filename = "save/figs/growthfulldoptdmaxsp.png", bg = "white")
+include_graphics("save/figs/growthfulldoptdmaxsp.png")
+```
