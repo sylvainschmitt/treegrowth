@@ -39,7 +39,7 @@ filter(mdata, Year > 0) %>%
 ```
 
 ```{r dataan2}
-growth <- vroom::vroom("save/growthhalf.tsv")
+growth <- vroom::vroom("save/growthfull.tsv")
 dbh <- vroom::vroom("save/dbhhalf.tsv")
 troll <- vroom::vroom("data/TROLLv3_species.txt") %>% 
   mutate(species = gsub("_", " ", s_name)) %>% 
