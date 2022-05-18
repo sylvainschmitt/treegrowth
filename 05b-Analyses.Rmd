@@ -129,7 +129,7 @@ We further plotted individual growth potential $Gmax$ along environmental gradie
 We used `phylosingal` to test for phylogenetic signal [@keck_phylosignal:_2016],
 before computing phylogenetic correlogram and local indicator of phylogenetic association.
 
-We used R version 3.6 for all statistical analyses (<www.r- project.org>). 
+We used R version 3.6 for all statistical analyses (<www.r-project.org>). 
 
 ## Results
 
@@ -145,7 +145,7 @@ growth <- vroom::vroom("save/growthfull.tsv")
 phylo <- ape::read.tree("save/phylogeny_full.tree")
 p4d <- phylo4d(phylo,
                data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
-                 left_join(group_by(growth, species) %>% summarise(igv  = var(gmax), gmax  = median(gmax))) %>% 
+                 left_join(group_by(growth, species) %>% summarise(gmax  = median(gmax))) %>% 
                  dplyr::select(-species)) 
 ```
 
@@ -182,17 +182,44 @@ as illustrated for instance with fast growing *Cecropia* opposed to slow growing
 However, a few species have different growth potential in the same genus, 
 such as slow growing *Drypetes variabilis* opposed to fast growing *Drypetes fanshawei*.
 
+```{r, eval=F}
+t <- filter(growth, species %in% sample(unique(growth$species), 9))
+t2 <- group_by(t, species) %>% 
+  summarise(mu = mean(log(gmax)), sigma2 = var(log(gmax)),
+            med = median(gmax), modlog = exp(mu - sigma2), meanlog = exp(mu + sigma2/2),
+            var = var(gmax), cvlog = sqrt(exp(sigma2)-1), varlog = (exp(sigma2)-1)*exp(2*mu+sigma2))
+ggplot(t, aes(gmax)) +
+  geom_density() +
+  geom_vline(data = t2, aes(xintercept = med, col = "median")) +
+  geom_vline(data = t2, aes(xintercept = modlog, col = "modelog")) +
+  geom_vline(data = t2, aes(xintercept = meanlog, col = "meanlog")) +
+  xlab(expression(Gmax[i])) +
+  facet_wrap(~ species)
+ggplot(t, aes(gmax)) +
+  geom_density() +
+  geom_vline(data = t2, aes(xintercept = med)) +
+  geom_vline(data = t2, aes(xintercept = med + var, col = "var")) +
+  geom_vline(data = t2, aes(xintercept = med + cvlog, col = "cvlog")) +
+  geom_vline(data = t2, aes(xintercept = med + varlog, col = "varlog")) +
+    geom_vline(data = t2, aes(xintercept = med - var, col = "var")) +
+  geom_vline(data = t2, aes(xintercept = med - cvlog, col = "cvlog")) +
+  geom_vline(data = t2, aes(xintercept = med - varlog, col = "varlog")) +
+  xlab(expression(Gmax[i])) +
+  facet_wrap(~ species) +
+  xlim(0, 4)
+```
+
 ```{r lmigv}
-lm(igv ~ poly(gmax, 2), summarise(group_by(growth, species), igv  = var(gmax), gmax  = median(gmax))) %>% 
+lm(cvlog_gmaxi ~ poly(median_gmaxi, 2), summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax))) %>% 
   sjPlot::tab_model(show.icc = F)
 ```
 
 ```{r igvgmaxfig, fig.cap="Relation between species variance in growth potential (Gmax, cm/yr) and species median growth potential (Gmax, cm/yr)."}
-summarise(group_by(growth, species), igv  = var(gmax, na.rm = T), gmax  = median(gmax)) %>% 
-  ggplot(aes(gmax, igv)) +
+ summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax)) %>% 
+  ggplot(aes(median_gmaxi, cvlog_gmaxi)) +
   geom_point() +
   geom_smooth(method = "glm", formula= y ~ poly(x,2)) +
-  xlab(expression(median(Gmax[i]))) + ylab(expression(variance(Gmax[i]))) 
+  xlab(expression(Median(Gmax[i])~cm.year^-1)) + ylab(expression(CV[log](Gmax[i])~cm.year^-1)) 
 ```
 
 ```{r gmaxphylob, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
@@ -205,20 +232,20 @@ fortify(phylo) %>%
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(median(Gmax[i])), trans = "log")
+  viridis::scale_color_viridis(expression(median(Gmax[i])~cm.year^-1), trans = "log")
 ```
 
 ```{r igvphylob, fig.cap="Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny."}
 fortify(phylo) %>% 
   mutate(species = gsub("_", " ", label)) %>%
   mutate(label = species) %>% 
-  left_join(group_by(growth, species) %>% summarise(igv = var(gmax, na.rm = T))) %>% 
+  left_join(group_by(growth, species) %>% summarise(igv = sqrt(exp(var(log(gmax)))-1))) %>% 
   ggtree(aes(color = igv), layout="circular") + 
   geom_tiplab2(size = 2) +
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(variance(Gmax[i])), trans = "log")
+  viridis::scale_color_viridis(expression(CV[log](Gmax[i])~cm.year^-1), trans = "log")
 ```
 
 ```{r gmaxphylosignalb}
@@ -228,7 +255,7 @@ phyloSignal(p4d = p4d, method = "all") %>%
   bind_rows(.id = "type") %>% 
   reshape2::melt(c("type", "parameter")) %>% 
   reshape2::dcast(parameter + variable ~ type) %>% 
-  kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.")
+  kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.") 
 ```
 
 ```{r gmaxcorrelogb, fig.cap="phylogenetic correlogram of species growth potential (Gmax, cm/yr)."}

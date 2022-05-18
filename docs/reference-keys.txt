@@ -15,7 +15,9 @@ tab:gmaxphylosignal
 fig:gmaxcorrelog
 fig:lipa
 fig:gmaxncib
+fig:igvgmaxfig
 fig:gmaxphylob
+fig:igvphylob
 tab:gmaxphylosignalb
 fig:gmaxcorrelogb
 fig:lipab
@@ -69,5 +71,3 @@ paracouitv
 hydroparacou
 rew
 weather
-fig:igvgmaxfig
-fig:igvphylob

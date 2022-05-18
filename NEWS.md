@@ -1,3 +1,5 @@
+treegrowth 0.0.0.9016: igv using cvlog
+
 treegrowth 0.0.0.9015: intraspecific growth variability IGV !
 
 treegrowth 0.0.0.9014: full results & dmax model

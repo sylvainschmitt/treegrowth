@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-17" />
+<meta name="date" content="2022-05-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -193,7 +193,7 @@ on individual growth potential <span class="math inline">\(Gmax\)</span> with th
 We further plotted individual growth potential <span class="math inline">\(Gmax\)</span> along environmental gradients and across the phylogeny.
 We used <code>phylosingal</code> to test for phylogenetic signal <span class="citation">(Keck <em>et al.</em> <a href="#ref-keck_phylosignal:_2016" role="doc-biblioref">2016</a>)</span>,
 before computing phylogenetic correlogram and local indicator of phylogenetic association.</p>
-<p>We used R version 3.6 for all statistical analyses (&lt;www.r- project.org&gt;).</p>
+<p>We used R version 3.6 for all statistical analyses (&lt;www.r-project.org&gt;).</p>
 </div>
 </div>
 <div id="results-1" class="section level2">
@@ -362,7 +362,7 @@ such as slow growing <em>Drypetes variabilis</em> opposed to fast growing <em>Dr
  
 </th>
 <th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-igv
+cvlog gmaxi
 </th>
 </tr>
 <tr>
@@ -384,24 +384,10 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.31
+0.73
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.28 – 0.33
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-gmax [1st degree]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-1.57
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-1.28 – 1.86
+0.69 – 0.77
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -409,13 +395,27 @@ gmax [1st degree]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-gmax [2nd degree]
+median gmaxi [1st degree]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.25
+-0.16
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.55 – -0.96
+-0.65 – 0.34
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.532
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+median gmaxi [2nd degree]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.18
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.68 – -0.69
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -434,7 +434,7 @@ Observations
 R<sup>2</sup> / R<sup>2</sup> adjusted
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.579 / 0.573
+0.146 / 0.133
 </td>
 </tr>
 </table>
@@ -471,31 +471,31 @@ Figure 6.4: Distribution of intraspecifig growth variability (IGV, cm/yr) in the
 <td align="left">gmax</td>
 <td align="left">Cmean</td>
 <td align="right">0.001</td>
-<td align="right">0.4695480</td>
+<td align="right">0.4845173</td>
 </tr>
 <tr class="even">
 <td align="left">gmax</td>
 <td align="left">I</td>
 <td align="right">0.001</td>
-<td align="right">0.1578366</td>
+<td align="right">0.1579429</td>
 </tr>
 <tr class="odd">
 <td align="left">gmax</td>
 <td align="left">K</td>
-<td align="right">0.140</td>
-<td align="right">0.0705706</td>
+<td align="right">0.165</td>
+<td align="right">0.0727083</td>
 </tr>
 <tr class="even">
 <td align="left">gmax</td>
 <td align="left">K.star</td>
-<td align="right">0.131</td>
-<td align="right">0.0748034</td>
+<td align="right">0.167</td>
+<td align="right">0.0770785</td>
 </tr>
 <tr class="odd">
 <td align="left">gmax</td>
 <td align="left">Lambda</td>
 <td align="right">0.001</td>
-<td align="right">0.8131744</td>
+<td align="right">0.7158811</td>
 </tr>
 </tbody>
 </table>
