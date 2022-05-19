@@ -182,9 +182,10 @@ save(fit_half, file = "save/growthhalf.Rdata")
 
 ## Fit
 
-The model correctly converged ($\hat R < 1.1$) for the majority of $Gmax_i$.
-The correlation between $Dopt$ and $Ks$ is acceptable but marked.
-$Gmax_i$ posteriors have logical uncertainty but are varying widely among individuals.
+The model correctly converged ($\hat R < 1.05$) for all except one $Gmax_i$ (still below $\hat R < 1.1$).
+The parameters doesn't show correlations.
+$Gmax_i$ posteriors have logical uncertainty but are varying widely among individuals and are not constrained by the superior limit.
+$Dopt_s$ are all strictly below $Dmax$.
 
 ```{r growthhalfsampling, eval=F}
 mdata <- vroom::vroom("save/mdatahalf.tsv")
@@ -200,13 +201,13 @@ vroom::vroom("save/rhathalf.tsv") %>%
   filter(parameter == "gmax") %>% 
   select(rhat) %>% 
   unlist() %>% 
-  mcmc_rhat()
+  mcmc_rhat() 
 ```
 
 ```{r growthhalftrace}
 # g <- mcmc_trace(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
 # ggsave(plot = g, filename = "save/figs/growthhalftrace.png", bg = "white")
-include_graphics("save/figs/growthhalftrace.png")
+include_graphics("save/figs/growthhalftrace.png") 
 ```
 
 ```{r, eval=F}
@@ -220,68 +221,27 @@ vroom::vroom("save/mdatahalf.tsv") %>%
 ```{r growthhalfpairs}
 # g <- mcmc_pairs(as.array(fit_half, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
 # ggsave(plot = g, filename = "save/figs/growthhalfpairs.png", bg = "white")
-include_graphics("save/figs/growthhalfpairs.png")
+include_graphics("save/figs/growthhalfpairs.png") 
 ```
 
 ```{r growthhalfgmax}
 # g <- mcmc_intervals(as.array(fit_half, pars = paste0("gmax[", 1:100, "]")))
 # ggsave(plot = g, filename = "save/figs/growthhalfgmax.png", bg = "white")
-include_graphics("save/figs/growthhalfgmax.png")
-```
-
-## $Dopt_s$
-
-Looking into details, most species showed a $Dopt_s$ around 40% of the observed 95th quantile of their observed diameters, as expected (B. Hérault pers. com.).
-However, 9 species showed a $Dopt_s$ above the observed 95th quantile of their observed diameters.
-This species are understory species that does not follow a Gompertz shape, and they correspond to the slightly divergent $Gmax_i$.
-*Swartia polyphylla* is not round and will be removed from next fits.
-Other species will be constrained on the observed 95th quantile of their observed diameters (1.5X).
-
-```{r growthhalfdopts, eval=F}
-# g <- mcmc_intervals(as.array(fit_half, pars = "dopt_s")) + scale_x_sqrt()
-# ggsave(plot = g, filename = "save/figs/growthhalfdopts.png", bg = "white")
-include_graphics("save/figs/growthhalfdopts.png")
+include_graphics("save/figs/growthhalfgmax.png") 
 ```
 
 ```{r growthhalfdoptdmax}
-# g <- mcmc_intervals_data(as.array(fit_half, pars = "dopt_s")) %>% 
-#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>% 
-#   left_join(mdata %>% 
-#               group_by(sp) %>% 
-#               summarise(dmax = max(DBH))) %>% 
-#   ggplot(aes(sp, (m*100)/dmax, col = (m*100)/dmax > 1)) +
+# g <- mcmc_intervals_data(as.array(fit_half, pars = "dopt_s")) %>%
+#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
+#   left_join(mdata %>%
+#               group_by(sp) %>%
+#               summarise(dmax = max(DBH))) %>%
+#   ggplot(aes(sp, m/dmax, col = m/dmax > 1)) +
 #   geom_point() +
 #   coord_flip() +
 #   scale_y_sqrt() +
 #   ylab(expression(frac(Dopt,Dmax))) + xlab("Species") +
 #   scale_color_discrete(expression(frac(Dopt,Dmax)>1))
 # ggsave(plot = g, filename = "save/figs/growthhalfdoptdmax.png", bg = "white")
-include_graphics("save/figs/growthhalfdoptdmax.png")
-```
-
-```{r growthhalfdoptdmaxsp}
-# sps <- mcmc_intervals_data(as.array(fit_half, pars = "dopt_s")) %>% 
-#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>% 
-#   left_join(mdata %>% 
-#               group_by(sp) %>% 
-#               summarise(dmax = max(DBH))) %>% 
-#   filter( (m*100)/dmax > 1) %>% 
-#   select(sp) %>% 
-#   unlist()
-# g <- dplyr::select(vroom::vroom("save/mdatahalf.tsv"), sp, ind) %>% 
-#   unique() %>% 
-#   filter(sp %in% sps) %>% 
-#   group_by(sp) %>% 
-#   unique() %>% 
-#   left_join(vroom::vroom("save/mdatahalf.tsv")) %>% 
-#   ggplot(aes(Year, DBH, group = as.factor(ind))) +
-#   geom_point(col = "grey") +
-#   geom_smooth(se = F, aes(col = as.factor(ind))) +
-#   xlim(0,NA) +
-#   facet_wrap(~ species) +
-#   scale_color_discrete(guide = "none") +
-#   ylim(5, 15) +
-#   ggtitle("Problematic species", expression(frac(Dopt,Dmax)>1))
-# ggsave(plot = g, filename = "save/figs/growthhalfdoptdmaxsp.png", bg = "white")
-include_graphics("save/figs/growthhalfdoptdmaxsp.png")
+include_graphics("save/figs/growthhalfdoptdmax.png") 
 ```

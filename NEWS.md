@@ -1,3 +1,5 @@
+treegrowth 0.0.0.9017: updated model half (and analyses ch 5+6)
+
 treegrowth 0.0.0.9016: igv using cvlog
 
 treegrowth 0.0.0.9015: intraspecific growth variability IGV !

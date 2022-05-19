@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-18" />
+<meta name="date" content="2022-05-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -96,13 +96,12 @@
 <li class="chapter" data-level="3.1" data-path="model-half.html"><a href="model-half.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 <li class="chapter" data-level="3.2" data-path="model-half.html"><a href="model-half.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
 <li class="chapter" data-level="3.3" data-path="model-half.html"><a href="model-half.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
-<li class="chapter" data-level="3.4" data-path="model-half.html"><a href="model-half.html#dopt_s"><i class="fa fa-check"></i><b>3.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="model-full.html"><a href="model-full.html"><i class="fa fa-check"></i><b>4</b> Model full</a><ul>
 <li class="chapter" data-level="4.1" data-path="model-full.html"><a href="model-full.html#data-3"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
 <li class="chapter" data-level="4.2" data-path="model-full.html"><a href="model-full.html#model-1"><i class="fa fa-check"></i><b>4.2</b> Model</a></li>
 <li class="chapter" data-level="4.3" data-path="model-full.html"><a href="model-full.html#fit-1"><i class="fa fa-check"></i><b>4.3</b> Fit</a></li>
-<li class="chapter" data-level="4.4" data-path="model-full.html"><a href="model-full.html#dopt_s-1"><i class="fa fa-check"></i><b>4.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
+<li class="chapter" data-level="4.4" data-path="model-full.html"><a href="model-full.html#dopt_s"><i class="fa fa-check"></i><b>4.4</b> <span class="math inline">\(Dopt_s\)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="analyses-half.html"><a href="analyses-half.html"><i class="fa fa-check"></i><b>5</b> Analyses half</a><ul>
 <li class="chapter" data-level="5.1" data-path="analyses-half.html"><a href="analyses-half.html#methods"><i class="fa fa-check"></i><b>5.1</b> Methods</a><ul>
@@ -179,7 +178,7 @@ The decrease of neighbours’ diameter effect with distance was set to -0.25 to 
 Waterlogging and topography have been highlighted as crucial for forest dynamics <span class="citation">(Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>)</span>,
 species-habitat relationships <span class="citation">(Engelbrecht <em>et al.</em> <a href="#ref-Engelbrecht2007" role="doc-biblioref">2007</a>)</span>, and phenotypic variation <span class="citation">(Schmitt <em>et al.</em> <a href="#ref-Schmitt2020" role="doc-biblioref">2020</a>)</span>.
 Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging,
-shapes soil nutrient distribution in tropical forests <span class="citation">(Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>; John <em>et al.</em> <a href="#ref-John2007" role="doc-biblioref">2007</a>)</span>.
+shapes soil nutrient distribution in tropical forests <span class="citation">(John <em>et al.</em> <a href="#ref-John2007" role="doc-biblioref">2007</a>; Ferry <em>et al.</em> <a href="#ref-Ferry2010" role="doc-biblioref">2010</a>)</span>.
 TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS <span class="citation">(Conrad <em>et al.</em> <a href="#ref-Conrad2015" role="doc-biblioref">2015</a>)</span>
 based on a LiDAR campaign of the whole Paracou field station done in 2015.</p>
 </div>
@@ -232,10 +231,10 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-3.67
+4.01
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-2.73 – 4.60
+3.01 – 5.02
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -246,10 +245,10 @@ p
 NCI [log]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.49
+-0.53
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.60 – -0.38
+-0.65 – -0.41
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -263,10 +262,10 @@ twi + 1 [log]
 0.00
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.11 – 0.12
+-0.12 – 0.12
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.957
+0.978
 </td>
 </tr>
 <tr>
@@ -279,7 +278,7 @@ Random Effects
 σ<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.40
+0.46
 </td>
 </tr>
 <tr>
@@ -301,7 +300,7 @@ Random Effects
 τ<sub>00</sub> <sub>Family</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.02
+0.04
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
@@ -337,7 +336,7 @@ Observations
 Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.033 / 0.280
+0.033 / 0.292
 </td>
 </tr>
 </table>
@@ -351,8 +350,8 @@ Figure 5.1: Relation between Neighbourhood crowding index (NCI) and individual g
 <div id="phylogenetic" class="section level3">
 <h3><span class="header-section-number">5.2.2</span> Phylogenetic</h3>
 <p>Species growth potential in the phylogeny (Fig. <a href="analyses-half.html#fig:gmaxphylo">5.2</a>) is significantly structured (Tab. <a href="analyses-half.html#tab:gmaxphylosignal">5.1</a>),
-with a short distance significant positive association and a long distant significant negative association (Fig. <a href="analyses-half.html#fig:gmaxcorrelog">5.3</a>).
-Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. <a href="analyses-half.html#fig:lipa">5.4</a>),
+with a short distance significant positive association and a long distant significant negative association (Fig. <a href="analyses-half.html#fig:gmaxcorrelog">5.4</a>).
+Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. <a href="analyses-half.html#fig:lipa">5.5</a>),
 as illustrated for instance with fast growing <em>Cecropia</em> opposed to slow growing <em>Eschweilera</em>.
 However, a few species have different growth potential in the same genus,
 such as slow growing <em>Drypetes variabilis</em> opposed to fast growing <em>Drypetes fanshawei</em>.</p>
@@ -362,59 +361,78 @@ such as slow growing <em>Drypetes variabilis</em> opposed to fast growing <em>Dr
 Figure 5.2: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
 </p>
 </div>
-<table>
+<div class="figure"><span id="fig:igvphylo"></span>
+<img src="treegrowth_files/figure-html/igvphylo-1.png" alt="Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny." width="768" />
+<p class="caption">
+Figure 5.3: Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny.
+</p>
+</div>
+<table style="width:100%;">
 <caption><span id="tab:gmaxphylosignal">Table 5.1: </span>Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.</caption>
+<colgroup>
+<col width="10%" />
+<col width="18%" />
+<col width="18%" />
+<col width="17%" />
+<col width="17%" />
+<col width="18%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">parameter</th>
-<th align="left">variable</th>
-<th align="right">pvalue</th>
-<th align="right">stat</th>
+<th align="left">Cmean</th>
+<th align="left">I</th>
+<th align="left">K</th>
+<th align="left">K.star</th>
+<th align="left">Lambda</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">gmax</td>
-<td align="left">Cmean</td>
-<td align="right">0.001</td>
-<td align="right">0.4784755</td>
+<td align="left">0.5186 (p=0.001)</td>
+<td align="left">0.1626 (p=0.002)</td>
+<td align="left">0.0168 (p=0.423)</td>
+<td align="left">0.0177 (p=0.423)</td>
+<td align="left">0.7603 (p=0.001)</td>
 </tr>
 <tr class="even">
-<td align="left">gmax</td>
-<td align="left">I</td>
-<td align="right">0.001</td>
-<td align="right">0.1593480</td>
+<td align="left">igv</td>
+<td align="left">-0.0663 (p=0.876)</td>
+<td align="left">-0.0709 (p=0.998)</td>
+<td align="left">0.0019 (p=0.803)</td>
+<td align="left">0.0019 (p=0.804)</td>
+<td align="left">1e-04 (p=1)</td>
 </tr>
 <tr class="odd">
-<td align="left">gmax</td>
-<td align="left">K</td>
-<td align="right">0.474</td>
-<td align="right">0.0077496</td>
+<td align="left">loggmax</td>
+<td align="left">0.4462 (p=0.001)</td>
+<td align="left">0.1494 (p=0.001)</td>
+<td align="left">0.0052 (p=0.502)</td>
+<td align="left">0.0055 (p=0.484)</td>
+<td align="left">0.7746 (p=0.001)</td>
 </tr>
 <tr class="even">
-<td align="left">gmax</td>
-<td align="left">K.star</td>
-<td align="right">0.466</td>
-<td align="right">0.0082107</td>
-</tr>
-<tr class="odd">
-<td align="left">gmax</td>
-<td align="left">Lambda</td>
-<td align="right">0.001</td>
-<td align="right">0.7678698</td>
+<td align="left">logigv</td>
+<td align="left">-0.0293 (p=0.618)</td>
+<td align="left">-0.0574 (p=0.987)</td>
+<td align="left">0.0014 (p=0.809)</td>
+<td align="left">0.0015 (p=0.795)</td>
+<td align="left">0.0028 (p=0.9787)</td>
 </tr>
 </tbody>
 </table>
 <div class="figure"><span id="fig:gmaxcorrelog"></span>
 <img src="save/figs/gmaxcorrelog.png" alt="phylogenetic correlogram of species growth potential (Gmax, cm/yr)." width="500" />
 <p class="caption">
-Figure 5.3: phylogenetic correlogram of species growth potential (Gmax, cm/yr).
+Figure 5.4: phylogenetic correlogram of species growth potential (Gmax, cm/yr).
 </p>
 </div>
+<p><img src="save/figs/igvcorrelog.png" width="500" /></p>
 <div class="figure"><span id="fig:lipa"></span>
 <img src="treegrowth_files/figure-html/lipa-1.png" alt="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny." width="768" />
 <p class="caption">
-Figure 5.4: Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny.
+Figure 5.5: Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny.
 </p>
 </div>
 
@@ -430,13 +448,13 @@ Figure 5.4: Local phylogenetic associations of of species growth potential (Gmax
 <p>Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). Drought sensitivity shapes species distribution patterns in tropical forests. <em>Nature</em>, <strong>447</strong>, 80–82.</p>
 </div>
 <div id="ref-Ferry2010">
-<p>Ferry, B., Morneau, F., Bontemps, J.D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116.</p>
+<p>Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a></p>
 </div>
 <div id="ref-John2007">
 <p>John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). Soil nutrients influence spatial distributions of tropical tree species. <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="http://arxiv.org/abs/2656">http://arxiv.org/abs/2656</a></p>
 </div>
 <div id="ref-keck_phylosignal:_2016">
-<p>Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). phylosignal: an {R} package to measure, test, and explore the phylogenetic signal. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a></p>
+<p>Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). phylosignal: an {{}R{}} package to measure, test, and explore the phylogenetic signal. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a></p>
 </div>
 <div id="ref-Nakagawa2013">
 <p>Nakagawa, S. &amp; Schielzeth, H. (2013). A general and simple method for obtaining R2 from generalized linear mixed-effects models. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.</p>
