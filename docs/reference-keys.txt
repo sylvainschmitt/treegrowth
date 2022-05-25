@@ -11,6 +11,7 @@ tab:datafulltab
 fig:mdatafullfig
 fig:gmaxnci
 fig:gmaxphylo
+fig:igvphylo
 tab:gmaxphylosignal
 fig:gmaxcorrelog
 fig:lipa
@@ -43,12 +44,11 @@ model-half
 data-2
 model
 fit
-dopt_s
 model-full
 data-3
 model-1
 fit-1
-dopt_s-1
+dopt_s
 analyses-half
 methods
 environmental-descriptors
@@ -66,9 +66,10 @@ phylogenetic-1
 other-analyses
 methods-2
 results-2
-bridge
 paracouitv
 hydroparacou
-rew
-weather
-fig:igvphylo
+vleminckx-et-al.-2021
+ziegler-et-al.-2019
+santiago-et-al.-2018
+maréchaux-et-al.-2015
+guillemot-et-al.-2022

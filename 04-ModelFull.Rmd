@@ -228,30 +228,3 @@ Other species will be constrained on the observed 95th quantile of their observe
 # ggsave(plot = g, filename = "save/figs/growthfulldoptdmax.png", bg = "white")
 include_graphics("save/figs/growthfulldoptdmax.png")
 ```
-
-```{r growthfulldoptdmaxsp}
-# sps <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
-#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
-#   left_join(mdata %>%
-#               group_by(sp) %>%
-#               summarise(dmax = max(DBH))) %>%
-#   filter( (m*100)/dmax > 1) %>%
-#   select(sp) %>%
-#   unlist()
-# g <- dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>%
-#   unique() %>%
-#   filter(sp %in% sps) %>%
-#   group_by(sp) %>%
-#   unique() %>%
-#   left_join(vroom::vroom("save/mdatafull.tsv")) %>%
-#   ggplot(aes(Year, DBH, group = as.factor(ind))) +
-#   geom_point(col = "grey") +
-#   geom_smooth(se = F, aes(col = as.factor(ind))) +
-#   xlim(0,NA) +
-#   facet_wrap(~ species) +
-#   scale_color_discrete(guide = "none") +
-#   ylim(5, 15) +
-#   ggtitle("Problematic species", expression(frac(Dopt,Dmax)>1))
-# ggsave(plot = g, filename = "save/figs/growthfulldoptdmaxsp.png", bg = "white")
-include_graphics("save/figs/growthfulldoptdmaxsp.png")
-```
