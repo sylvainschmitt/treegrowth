@@ -48,7 +48,6 @@ model-full
 data-3
 model-1
 fit-1
-dopt_s
 analyses-half
 methods
 environmental-descriptors

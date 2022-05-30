@@ -148,12 +148,12 @@ p4d <- phylo4d(phylo,
                  left_join(group_by(growth, species) %>% 
                              summarise(igv  = sqrt(exp(var(log(gmax)))-1), gmax  = median(gmax), logigv = log(igv), loggmax = log(gmax))
                            ) %>% 
-                 dplyr::select(-species)) 
+                 dplyr::select(-species))  
 ```
 
 ```{r lmmb}
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r r2b, eval=F }
@@ -165,14 +165,14 @@ partR2::forestplot(r2, type = "R2", text_size = 10)
 
 ```{r gmaxncib, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)."}
 ggplot(growth, aes(NCI, gmax, col = species, group = NA)) +
-  geom_point() +
-  # geom_bin2d(bins = 50) +
-  # scale_fill_continuous(type = "viridis") +
-  geom_smooth(method = "lm", aes(group = NA), se = T) +
+  # geom_point() +
+  geom_bin2d(bins = 50) +
+  scale_fill_continuous(type = "viridis") +
+  geom_smooth(method = "lm", aes(group = NA), se = T, col = "red") +
   scale_color_discrete(guide = "none") +
   scale_x_log10() + scale_y_log10() +
   xlab("Neighbourhood crowding index (NCI)") +
-  ylab("Individual growth potential (Gmax, cm/yr)")
+  ylab("Individual growth potential (Gmax, cm/yr)") 
 ```
 
 ### Phylogenetic
@@ -211,10 +211,11 @@ ggplot(t, aes(gmax)) +
   xlim(0, 4)
 ```
 
-```{r lmigv}
-lm(cvlog_gmaxi ~ poly(median_gmaxi, 2), summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax))) %>% 
-  sjPlot::tab_model(show.icc = F)
+```{r rlmigv}
+MASS::rlm(cvlog_gmaxi ~ poly(median_gmaxi, 2), method="MM", summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax))) %>% 
+  sjPlot::tab_model(show.icc = F) 
 ```
+
 
 ```{r igvgmaxfig, fig.cap="Relation between species variance in growth potential (Gmax, cm/yr) and species median growth potential (Gmax, cm/yr)."}
 summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax),
@@ -222,10 +223,14 @@ summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1),
   separate(species, c("Genus", "Species"), remove = F) %>% 
   ggplot(aes(median_gmaxi, cvlog_gmaxi)) +
   geom_point() +
-  geom_smooth(method = "glm", formula= y ~ poly(x,2)) +
+  stat_smooth(method=function(formula,data,weights=weight) MASS::rlm(formula,
+                                                                     data,
+                                                                     weights=weight,
+                                                                     method="MM"), formula= y ~ poly(x,2),
+              fullrange=TRUE) +
   xlab(expression(Median(Gmax[i])~cm.year^-1)) + ylab(expression(CV[log](Gmax[i])~cm.year^-1)) +
   ggrepel::geom_text_repel(aes(label = paste0(str_sub(Genus, 1, 1), ". ", Species), alpha = median_gmaxi > 2)) +
-  scale_alpha_manual(values = c(0, 0.8), guide = "none")
+  scale_alpha_manual(values = c(0, 0.8), guide = "none") 
 ```
 
 ```{r gmaxphylob, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
@@ -238,7 +243,7 @@ fortify(phylo) %>%
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(median(Gmax[i])~cm.year^-1), trans = "log")
+  viridis::scale_color_viridis(expression(median(Gmax[i])~cm.year^-1), trans = "log") + xlim(NA, 200)
 ```
 
 ```{r igvphylob, fig.cap="Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny."}
@@ -251,7 +256,7 @@ fortify(phylo) %>%
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
-  viridis::scale_color_viridis(expression(CV[log](Gmax[i])~cm.year^-1), trans = "log")
+  viridis::scale_color_viridis(expression(CV[log](Gmax[i])~cm.year^-1), trans = "log") + xlim(NA, 200)
 ```
 
 ```{r gmaxphylosignalb}
@@ -263,7 +268,7 @@ phyloSignal(p4d = p4d, method = "all") %>%
   reshape2::dcast(parameter + variable ~ type) %>% 
   mutate(value = paste0(round(stat, 4), " (p=", round(pvalue, 4), ")")) %>% 
   reshape2::dcast(parameter ~ variable) %>% 
-  kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.") 
+  kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.")  
 ```
 
 ```{r gmaxcorrelogb, fig.cap="phylogenetic correlogram of species growth potential (Gmax, cm/yr)."}
@@ -271,7 +276,7 @@ phyloSignal(p4d = p4d, method = "all") %>%
 # png(file = "save/figs/gmaxcorrelog_full.png", width = 1000, height = 1000, units = "px")
 # plot(crlg, main="log(gmax) phylogenetic correlogram")
 # dev.off()
-include_graphics("save/figs/gmaxcorrelog_full.png")
+include_graphics("save/figs/gmaxcorrelog_full.png") 
 ```
 
 ```{r igvcorrelogb, eval=T}
@@ -279,7 +284,7 @@ include_graphics("save/figs/gmaxcorrelog_full.png")
 # png(file = "save/figs/igvcorrelog_full.png", width = 1000, height = 1000, units = "px")
 # plot(crlg, main="log(IGV) phylogenetic correlogram")
 # dev.off()
-include_graphics("save/figs/igvcorrelog_full.png")
+include_graphics("save/figs/igvcorrelog_full.png") 
 ```
 
 ```{r lipab, fig.cap="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny."}
@@ -297,7 +302,7 @@ fortify(phylo) %>%
   scale_alpha_manual("taxon", values = c(0.2, 1)) +
   scale_size_manual("taxon", values = c(1, 2)) +
   scale_color_manual("Local\nIndicator\nof\nPhylogenetic\nAssociation\np<0.05", values =  c("grey", "red", "grey")) +
-  xlim(NA, 200)
+  xlim(NA, 200) 
 ```
 
 ```{r figall, fig.width=10, fig.height=7}
@@ -314,8 +319,10 @@ g.phylo <- fortify(phylo) %>%
   theme(legend.position = "bottom") + xlim(NA, 200) +
   ggtitle("A.", expression(Pagel~lambda==0.72~p<0.001))
 g.nci <- ggplot(growth, aes(NCI, gmax, col = species, group = NA)) +
-  geom_point() +
-  geom_smooth(method = "lm", aes(group = NA), se = T) +
+  # geom_point() +
+  geom_bin2d(bins = 50) +
+  scale_fill_continuous(type = "viridis") +
+  geom_smooth(method = "lm", aes(group = NA), se = T, col = "red") +
   scale_color_discrete(guide = "none") +
   scale_x_log10() + scale_y_log10() +
   xlab("Neighbourhood crowding index (NCI)") +
@@ -326,7 +333,7 @@ g.igv <- summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gm
   geom_point() +
   geom_smooth(method = "glm", formula= y ~ poly(x,2)) +
   xlab(expression(Median(Gmax[i])~cm.year^-1)) + ylab(expression(CV[log](Gmax[i])~cm.year^-1)) +
-  ggtitle("C.", expression(gamma==-1.18~p<0.001~R^2==0.146))
+  ggtitle("C.", expression(beta==-0.56~p==0.018~R^2==0.146))
 gridExtra::grid.arrange(
   grobs = list(g.phylo,  g.nci, g.igv),
   layout_matrix = rbind(c(1, 2),

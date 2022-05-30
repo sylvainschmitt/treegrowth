@@ -181,11 +181,25 @@ load("save/growth.Rdata")
 vroom::vroom("save/rhatfull.tsv") %>% 
   separate(parameter, c("parameter", "indsp")) %>% 
   filter(parameter == "gmax") %>% 
+  # arrange(desc(rhat))
+  # filter(rhat > 1.1)
   select(rhat) %>% 
   unlist() %>% 
   mcmc_rhat() +
-  ggtitle("8569 Gmax_i", "608 with rhat > 1 (7%)")
+  ggtitle("7,961 Gmax_i", "100 with rhat > 1.1 (1.3%)") 
 ```
+
+```{r, eval=F}
+vroom::vroom("save/rhatfull.tsv") %>% 
+  separate(parameter, c("parameter", "indsp")) %>% 
+  filter(parameter == "gmax") %>% 
+  arrange(desc(rhat))
+i <- 1508
+vroom::vroom("save/mdatafull.tsv") %>% 
+  filter(ind == i) %>% 
+  ggplot(aes(CensusYear, DBH)) + geom_point()
+```
+
 
 ```{r growthfulltrace}
 # g <- mcmc_trace(as.array(fit_full, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
@@ -204,14 +218,6 @@ include_graphics("save/figs/growthfullpairs.png")
 # ggsave(plot = g, filename = "save/figs/growthfullgmax.png", bg = "white")
 include_graphics("save/figs/growthfullgmax.png")
 ```
-
-## $Dopt_s$
-
-Looking into details, most species showed a $Dopt_s$ around 40% of the observed 95th quantile of their observed diameters, as expected (B. Hérault pers. com.).
-However, 11 species showed a $Dopt_s$ above the observed 95th quantile of their observed diameters.
-This species are understory species that does not follow a Gompertz shape, and they correspond to the slightly divergent $Gmax_i$.
-*Swartia polyphylla* is not round and will be removed from next fits.
-Other species will be constrained on the observed 95th quantile of their observed diameters (1.5X).
 
 ```{r growthfulldoptdmax}
 # g <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
