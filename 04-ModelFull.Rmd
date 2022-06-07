@@ -181,12 +181,11 @@ load("save/growth.Rdata")
 vroom::vroom("save/rhatfull.tsv") %>% 
   separate(parameter, c("parameter", "indsp")) %>% 
   filter(parameter == "gmax") %>% 
-  # arrange(desc(rhat))
-  # filter(rhat > 1.1)
+  # arrange(desc(rhat)) %>% filter(rhat > 1.1)
   select(rhat) %>% 
   unlist() %>% 
   mcmc_rhat() +
-  ggtitle("7,961 Gmax_i", "100 with rhat > 1.1 (1.3%)") 
+  ggtitle("7,961 Gmax_i", "64 with rhat > 1.1 (0.8%)")
 ```
 
 ```{r, eval=F}

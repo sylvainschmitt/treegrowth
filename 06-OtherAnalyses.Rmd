@@ -20,7 +20,7 @@ For each dataset, I first used a step procedure to select explanatory variables 
 I then plotted the individual relations between response and explanatory variables.
 
 ```{r dataan2}
-growth <- vroom::vroom("save/growthhalf.tsv")
+growth <- vroom::vroom("save/growthfull.tsv")
 phd <- bind_rows(
   vroom::vroom("data/Measures_Symphonia - AllTraits.tsv") %>% 
     mutate(Genus = "Symphonia") %>%
