@@ -105,219 +105,146 @@ guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>%
 
 ## Results
 
-### ParacouITV
+### All
 
-Interestingly, leaf dry matter content seems to drive individual growth potential within species of *Symphonia* and *Eschweilera* genera
-($\beta=-0.91, p=0.016, R^2=0.083$), but the signal is weak.
+```{r }
+all_data <- bind_rows(
+  phd %>% 
+    mutate(dataset = "Schmitt et al., (2020)", response = "Gmax_i", response_value = gmax) %>% 
+    dplyr::select(dataset, species, response, response_value, SLA, LDMC, LT, LA, CC) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value"),
+  fg %>% 
+    mutate(dataset = "Vleminckx et al., (2021)", response = "Gmax_s", response_value = gmax) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value"),
+  cam %>% 
+    mutate(dataset = "Ziegler et al., (2019)", response = "Gmax_s", response_value = gmax) %>% 
+    dplyr::select(-Species, -Genus) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value"),
+  santi %>% 
+    mutate(dataset = "Santiago et al., (2018)", response = "Gmax_s", response_value = gmax, species = paste(Species, Genus)) %>% 
+    dplyr::select(-Species, -Genus) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value"),
+  isa %>% 
+    mutate(dataset = "Maréchaux et al., (2015)", response = "Gmax_s", response_value = gmax, species = paste(Species, Genus)) %>% 
+    dplyr::select(-Species, -Genus) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value"),
+  guillemot %>% 
+    mutate(dataset = "Guillemot et al., (2022)", response = "Gmax_s", response_value = gmax) %>% 
+    dplyr::select(-genus, -family, -leaf_habit) %>% 
+    reshape2::melt(c("dataset", "species", "response", "response_value"), variable.name = "trait", value.name = "trait_value")
+) %>% na.omit() %>% 
+  filter(!(trait %in% c("slope_P50", "branchiness", "branch_Psi12", "branch_Psi88", "HSM_Psimd_Psi88",
+                        "branch_vulnerability_slope", "SMleaf", "HSM_Psimd2010_Psi12", "HSM_Psimd2010_Psi50",
+                        "HSM_Psimd_Psi12", "HSM_PiTLP_Psi12", "total_sapwood_bulk_elastic_modulus"))) %>% 
+  mutate(trait = recode(trait,
+                        "P50"	= "xylem pressure inducing 50% loss of hydraulic conductance",			
+                        "TLP"	= "leaf water potential at turgor loss point",				
+                        "LMA"	= "leaf mass per area",				
+                        "leaf_size"	= "leaf area",				
+                        "Leaf_N"	= "leaf nitrogen content",				
+                        "Leaf_P"	= "leaf phosphorus content",				
+                        "Wood_density"	= "trunk wood specific gravity",					
+                        "Seed_mass"	= "seed mass",				
+                        "max_height"	= "maximum tree height",				
+                        "Pi_tlp"	= "leaf water potential at turgor loss point",
+                        "sapwood_saturated_water_content"	= "sapwood saturated water content",				
+                        "sapwood_osmotic_potential_at_full_turgor"	= "sapwood osmotic potential at full turgor",				
+                        "sapwood_water_potential_at_turgor_loss_point"	= "sapwood water potential at turgor loss point",				
+                        "total_sapwood_relative_water_content_at_turgor_loss_point"	= "total sapwood relative water content at turgor loss_point",				
+                        "sapwood_capacitance_at_full_turgor"	= "sapwood capacitance at full turgor",				
+                        "SLA"	= "specific leaf area",				
+                        "LDMC"	= "leaf dry matter content",				
+                        "LT"	= "leaf thickness",
+                        "LA"	= "leaf area",				
+                        "CC"	= "chlorophyll content",				
+                        "Chlorophyll_content"	= "chlorophyll content",				
+                        "Thickness"	= "leaf thickness",				
+                        "Toughness"	= "leaf thoughness",				
+                        "Leaf_Area"	= "leaf area",				
+                        "C"	= "leaf carbon content",				
+                        "N"	= "leaf nitrogen content",				
+                        "13C"	= "leaf delta 13C",				
+                        "Ca"	= "leaf calcium content",	
+                        "P"	= "leaf phosphorus content",				
+                        "K"	= "leaf potassium content",				
+                        "Trunk_bark_thickness"	= "trunk bark thickness",				
+                        "Sapwood_WSG"	= "sapwood specific gravity",				
+                        "WSG"	= "roots wood specific gravity",				
+                        "Diameter"	= "fine roots diameter",				
+                        "SRL"	= "specific root length",				
+                        "Tissue_density"	= "fine roots tissue density",				
+                        "SRTA"	= "specific root tip abundance",				
+                        "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))
+```
 
-```{r, eval=F}
-phd %>% 
-  mutate(logSLA = log(SLA), logLDMC = log(LDMC), logLT = log(LT), logLA = log(LA),
-         logCC = log(CC), logbrBT = log(brBT), logbrWD = log(brWD), logbrBD = log(brBD)) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  group_by(trait) %>% 
-  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
+```{r }
+all_reg <- all_data %>% 
+  filter(trait != "gmax") %>% 
+  group_by(dataset, response, trait) %>% 
+  do(lm(log(response_value) ~ scale(log(abs(trait_value))), data = .) %>% moderndive::get_regression_table()) %>% 
   filter(term != "intercept") %>% 
-  dplyr::select(-term) %>% 
-  filter(p_value < 0.05)
+  dplyr::select(-term)
 ```
 
-```{r phdlm}
-lm(log(gmax) ~ CC + log(LA) + log(LDMC), phd) %>% 
-  sjPlot::tab_model(show.icc = F)  
+```{r , fig.height=10, fig.width=8}
+all_reg %>% 
+  mutate(p_value = ifelse(p_value == 0, 10^-4, p_value)) %>%
+  ggplot(aes(x = trait, y = estimate, alpha = p_value < 0.01, fill  = log10(p_value), label = trait)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = .2) +
+  geom_hline(yintercept = 0, col = "black") +
+  coord_flip() +
+  facet_grid(dataset ~ ., scale = "free_y", space = "free_y") +
+  viridis::scale_fill_viridis(expression(log[10](p[value])), direction = -1) +
+  ylab("Standard estimate with confidence interval") +
+  theme(strip.text.y = element_text(angle = 0), axis.title.y = element_blank(), legend.position = "bottom") +
+  scale_alpha_discrete(guide = "none")
 ```
 
-```{r phdfig}
-ggplot(aes(LDMC, gmax, col = species, group = NA), data = phd) +
+```{r}
+t <- all_data %>% 
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
+  group_by(species, trait) %>% 
+  summarise(response_value = mean(response_value), trait_value = mean(trait_value)) %>% 
+  reshape2::dcast(response_value + species ~ trait, value.var = "trait_value") %>% 
+  na.omit() %>% 
+  dplyr::select(-species) %>% 
+  mutate_all(log) %>% 
+  mutate_all(scale) %>% 
+  dplyr::rename(gmax = response_value)
+```
+
+```{r}
+lm(gmax ~ ., data = t) %>%
+  step(trace = F) %>%
+  sjPlot::tab_model(show.icc = F)
+```
+
+```{r}
+(lm(gmax ~ ., data = t) %>%
+  step(trace = F) %>%
+  relaimpo::calc.relimp())@lmg %>% 
+  data.frame(trait = names(.), lmg = .) %>% 
+  ggplot(aes(reorder(trait, lmg), lmg, label = paste(round(lmg*100), "%"))) +
+  geom_col() +
+  geom_text(nudge_y = .01) +
+  coord_flip() +
+  ylab(expression(R^2)) +
+  theme(axis.title.y = element_blank())
+```
+
+
+```{r}
+all_data %>%  
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
+  filter(!(trait %in% c("leaf phosphorus content", "fine roots tissue density"))) %>% 
+  ggplot(aes(trait_value, response_value)) +
   geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("Leaf dry matter content (LDMC, g/g)") +  ylab("Individual growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + scale_x_log10()  
-```
-
-### hydroParacou
-
-Interestingly, turgor loss point and stomatal density appear to influence species growth potential with a positive effect ($\beta=1.13, p=0.004$ & $\beta=0.28, p<0.001$, $R^2=0.0312$).
-Species with more stomata lose their turgidity more quickly but grow faster.
-
-```{r, eval=F}
-bind_rows(
-  hydro %>% 
-    reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-    na.omit() %>% 
-    group_by(trait) %>% 
-    do(lm(log(gmax) ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
-    filter(term != "intercept") %>% 
-    dplyr::select(-term) %>% 
-    filter(p_value < 0.05),
-  hydro %>% 
-    reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-    na.omit() %>% 
-    group_by(trait) %>% 
-    mutate(value = log(abs(value)), trait = paste0("log", trait)) %>% 
-    do(lm(log(gmax) ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
-    filter(term != "intercept") %>% 
-    dplyr::select(-term) %>% 
-  filter(p_value < 0.05)
-)
-```
-
-```{r hydrolm}
-lm(log(gmax) ~ Ptlp + log(CN) + log(stomataD),
-   mutate_at(hydro, c("Ptlp", "CN", "stomataD"), scale, center = F)) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r hydrofig}
-hydro %>% 
-  mutate(logStomataD = log(stomataD)) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  filter(trait %in% c("Ptlp", "logStomataD")) %>% 
-  ggplot(aes(value, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
-```
-
-### Vleminckx et al. 2021
-
-```{r Vleminckxlm}
-lm(log(gmax) ~ C + N + K + Sapwood_WSG + WSG, 
-   mutate_at(fg, c("C", "N", "K", "Sapwood_WSG", "WSG"), scale)) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r Vleminckxfig}
-fg %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  filter(trait %in% c("N", "K", "Sapwood_WSG", "WSG")) %>%
-  ggplot(aes(value, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
-```
-
-### Ziegler et al. 2019
-
-```{r, eval=F}
-cam %>% 
-  select(-Species, -Genus) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  group_by(trait) %>% 
-  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
-  filter(term != "intercept") %>% 
-  dplyr::select(-term) %>% 
-  filter(p_value < 0.05)
-```
-
-
-```{r Zieglerlm}
-lm(log(gmax) ~ branch_vulnerability_slope + HSM_PiTLP_Psi88, cam) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r Zieglerfig}
-cam %>% 
-    select(-Species, -Genus) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  # filter(trait %in% c("N", "K", "Sapwood_WSG", "WSG")) %>%
-  ggplot(aes(value, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
-```
-
-### Santiago et al. 2018
-
-```{r, eval=F}
-santi %>% 
-  mutate(species = paste(Species, Genus)) %>% 
-  select(-Species, -Genus) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  group_by(trait) %>% 
-  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
-  filter(term != "intercept") %>% 
-  dplyr::select(-term) %>% 
-  filter(p_value < 0.05)
-```
-
-
-```{r Santiagolm}
-lm(log(gmax) ~ total_sapwood_relative_water_content_at_turgor_loss_point, santi) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r Santiagofig}
-santi %>% 
-  mutate(species = paste(Species, Genus)) %>% 
-  select(-Species, -Genus) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  mutate(trait = gsub("_", " ", trait)) %>% 
-  filter(trait %in% c("total sapwood relative water content at turgor loss point")) %>%
-  ggplot(aes(value, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
-```
-
-### Maréchaux et al. 2015
-
-
-```{r Marechauxlm}
-lm(log(gmax) ~ Pi_tlp, isa) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r Marechauxfig}
-ggplot(isa, aes(Pi_tlp, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() 
-```
-
-### Guillemot et al. 2022
-
-```{r, eval=F}
-guillemot %>% 
-  select(-genus, -family, -leaf_habit) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  group_by(trait) %>% 
-  do(lm(gmax ~ value, data = .) %>% moderndive::get_regression_table()) %>% 
-  filter(term != "intercept") %>% 
-  dplyr::select(-term) %>% 
-  filter(p_value < 0.05)
-```
-
-
-```{r Guillemotlm}
-lm(log(gmax) ~ log(leaf_size) + Leaf_N + Leaf_P + Wood_density, guillemot) %>% 
-  sjPlot::tab_model(show.icc = F) 
-```
-
-```{r Guillemotfig}
-guillemot %>% 
-  mutate(leaf_size = log(leaf_size)) %>% 
-  select(-genus, -family, -leaf_habit) %>% 
-  reshape2::melt(c("species", "gmax"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  mutate(trait = gsub("_", " ", trait)) %>% 
-  # filter(trait %in% c("total sapwood relative water content at turgor loss point")) %>%
-  ggplot(aes(value, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
+  facet_wrap(~ trait, scales = "free") +
+  scale_x_log10() + scale_y_log10() + geom_smooth(method = "lm") + 
+  ylab(expression(Gmax[s]~cm.year^-1)) +
+  theme(axis.title.x = element_blank(), legend.position = "bottom") +
+  scale_color_discrete(guide = "none")
 ```

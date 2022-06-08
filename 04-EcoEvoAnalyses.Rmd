@@ -133,10 +133,9 @@ We used R version 3.6 for all statistical analyses (<www.r-project.org>).
 
 ### General
 
-Most of the variation in growth potential is individual ($\sigma_i = 0.437$), then explained by genus ($\sigma_g = 0.09$)
-before species ($\sigma_s=0.04$) and relatively little by family ($\sigma_f=0.02$). 
-The taxonomic structure explains almost a third of the observed variation in individual growth potential ($R^2_c=0.322$).
-Finally, the neighbourhood ($NCI$) has a marked negative significant effect ($\beta=-0.49, p<0.001$, Fig. \@ref(fig:gmaxncib)) which explains 3% of the observed variation ($R^2_m=0.033$).
+Most of the variation in growth potential is individual, then explained by genus before species and family. 
+The taxonomic structure explains almost a third of the observed variation in individual growth potential.
+Finally, the neighbourhood ($NCI$) has a marked negative significant effect (Fig. \@ref(fig:gmaxncib)) which explains 10% of the observed variation.
 
 ```{r dataanb}
 growth <- vroom::vroom("save/growthfull.tsv")
@@ -217,7 +216,7 @@ MASS::rlm(cvlog_gmaxi ~ median_gmaxi, method="MM",
 ```
 
 ```{r igvgmaxfig, fig.cap="Relation between species variance in growth potential (Gmax, cm/yr) and species median growth potential (Gmax, cm/yr)."}
-(g.igv <- summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax),
+summarise(group_by(growth, species), cvlog_gmaxi  = sqrt(exp(var(log(gmax)))-1), median_gmaxi  = median(gmax),
           cvlog_nci  = sqrt(exp(var(log(NCI)))-1), median_nci  = median(NCI)) %>% 
   separate(species, c("Genus", "Species"), remove = F) %>% 
   ggplot(aes(median_gmaxi, cvlog_gmaxi)) +
@@ -225,8 +224,7 @@ MASS::rlm(cvlog_gmaxi ~ median_gmaxi, method="MM",
   stat_smooth(method=MASS::rlm) +
   xlab(expression(Median(Gmax[i])~cm.year^-1)) + ylab(expression(CV[log](Gmax[i])~cm.year^-1)) +
   ggrepel::geom_text_repel(aes(label = paste0(str_sub(Genus, 1, 1), ". ", Species), alpha = median_gmaxi > 2)) +
-  scale_alpha_manual(values = c(0, 0.8), guide = "none")  +
-  ggtitle("X.", expression(beta==-0.07~p==0.018~R^2==0.015))) 
+  scale_alpha_manual(values = c(0, 0.8), guide = "none")
 ```
 
 ```{r gmaxphylob, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
@@ -241,7 +239,7 @@ MASS::rlm(cvlog_gmaxi ~ median_gmaxi, method="MM",
   scale_size_manual("taxon", values = c(1, 2)) +
   viridis::scale_color_viridis(expression(Median(Gmax[i])~cm.year^-1), trans = "log", labels=scales::comma) +
   theme(legend.position = "bottom") + xlim(NA, 200) +
-  ggtitle("C.", expression(Pagel~lambda==0.72~p<0.001))) 
+  ggtitle("C.", expression(Pagel~lambda==0.78~p<0.001)))  
 ```
 
 ```{r igvphylob, fig.cap="Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny."}
@@ -309,5 +307,5 @@ gridExtra::grid.arrange(
   layout_matrix = rbind(c(2, 2, 1, 1, 1),
                         c(3, 1, 1, 1, 1)),
   widths = c(1,0.5,1, 1, 1)
-) 
+)  
 ```
