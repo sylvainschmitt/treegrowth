@@ -86,11 +86,9 @@ growth <- pars %>%
 vroom::vroom_write(growth, file = "save/growthfull.tsv") 
 ```
 
-# Analyses full
+# Eco-evolutionary analyses
 
 In this chapter, I investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.
-
-**Current results are using full data from chapter 4.**
 
 ## Methods
 
@@ -150,6 +148,7 @@ p4d <- phylo4d(phylo,
                            ) %>% 
                  dplyr::select(-species))   
 ```
+
 
 ```{r lmmb}
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
@@ -312,11 +311,3 @@ gridExtra::grid.arrange(
   widths = c(1,0.5,1, 1, 1)
 ) 
 ```
-
-```{r figall2, fig.width=10, fig.height=5}
-gridExtra::grid.arrange(
-  grobs = list(g.phylo,  g.nci),
-  layout_matrix = rbind(c(2, 1)),
-) 
-```
-

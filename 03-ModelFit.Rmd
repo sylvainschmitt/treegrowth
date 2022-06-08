@@ -10,9 +10,9 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Model full
+# Model fit
 
-In this chapter, I fitted the selected model with full data.
+In this chapter, I fitted the selected model.
 
 ## Data
 

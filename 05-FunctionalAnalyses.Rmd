@@ -9,7 +9,7 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Other analyses
+# Functional analyses
 
 In this chapter, I quickly  investigated effects of functional traits and weather on individual growth.
 
@@ -100,7 +100,7 @@ isa2 <- read_tsv("data/fec12452-sup-0002-appendixs1.csv") %>%
   filter(!is.na(gmax)) 
 guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>% 
  left_join(group_by(growth, species) %>% summarise(gmax  = median(gmax, na.rm = T))) %>% 
-    filter(!is.na(gmax)) 
+    filter(!is.na(gmax))  
 ```
 
 ## Results
@@ -125,7 +125,7 @@ phd %>%
 
 ```{r phdlm}
 lm(log(gmax) ~ CC + log(LA) + log(LDMC), phd) %>% 
-  sjPlot::tab_model(show.icc = F) 
+  sjPlot::tab_model(show.icc = F)  
 ```
 
 ```{r phdfig}
@@ -133,7 +133,7 @@ ggplot(aes(LDMC, gmax, col = species, group = NA), data = phd) +
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("Leaf dry matter content (LDMC, g/g)") +  ylab("Individual growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + scale_x_log10() 
+  scale_y_log10() + scale_x_log10()  
 ```
 
 ### hydroParacou
@@ -166,7 +166,7 @@ bind_rows(
 ```{r hydrolm}
 lm(log(gmax) ~ Ptlp + log(CN) + log(stomataD),
    mutate_at(hydro, c("Ptlp", "CN", "stomataD"), scale, center = F)) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r hydrofig}
@@ -179,7 +179,7 @@ hydro %>%
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
 ```
 
 ### Vleminckx et al. 2021
@@ -187,7 +187,7 @@ hydro %>%
 ```{r Vleminckxlm}
 lm(log(gmax) ~ C + N + K + Sapwood_WSG + WSG, 
    mutate_at(fg, c("C", "N", "K", "Sapwood_WSG", "WSG"), scale)) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r Vleminckxfig}
@@ -199,7 +199,7 @@ fg %>%
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
 ```
 
 ### Ziegler et al. 2019
@@ -219,7 +219,7 @@ cam %>%
 
 ```{r Zieglerlm}
 lm(log(gmax) ~ branch_vulnerability_slope + HSM_PiTLP_Psi88, cam) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r Zieglerfig}
@@ -232,7 +232,7 @@ cam %>%
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
 ```
 
 ### Santiago et al. 2018
@@ -253,7 +253,7 @@ santi %>%
 
 ```{r Santiagolm}
 lm(log(gmax) ~ total_sapwood_relative_water_content_at_turgor_loss_point, santi) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r Santiagofig}
@@ -268,7 +268,7 @@ santi %>%
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
 ```
 
 ### Maréchaux et al. 2015
@@ -276,7 +276,7 @@ santi %>%
 
 ```{r Marechauxlm}
 lm(log(gmax) ~ Pi_tlp, isa) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r Marechauxfig}
@@ -284,20 +284,7 @@ ggplot(isa, aes(Pi_tlp, gmax)) +
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10()
-```
-
-```{r Marechaux2lm}
-lm(log(gmax) ~ Pi_tlp, isa2) %>% 
-  sjPlot::tab_model(show.icc = F)
-```
-
-```{r Marechaux2fig}
-ggplot(isa2, aes(Pi_tlp, gmax)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10()
+  scale_y_log10() 
 ```
 
 ### Guillemot et al. 2022
@@ -317,7 +304,7 @@ guillemot %>%
 
 ```{r Guillemotlm}
 lm(log(gmax) ~ log(leaf_size) + Leaf_N + Leaf_P + Wood_density, guillemot) %>% 
-  sjPlot::tab_model(show.icc = F)
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ```{r Guillemotfig}
@@ -332,5 +319,5 @@ guillemot %>%
   geom_point() +
   geom_smooth(method = "lm") +
   xlab("") +  ylab("Species growth potential (Gmax, cm/yr)") + 
-  scale_y_log10() + facet_wrap(~ trait, scales = "free_x")
+  scale_y_log10() + facet_wrap(~ trait, scales = "free_x") 
 ```

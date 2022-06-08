@@ -12,7 +12,7 @@ opts_chunk$set(
   cache = T, cache.lazy = F, eval=T)
 ```
 
-# Model Species
+# Species integration
 
 In this chapter, I looked for the best model to integrate species information based on quality of fit, cross-validation (LOO), and prediction (RMSEP). The result is summarised in Table \@ref(tab:spchoicetab).
 

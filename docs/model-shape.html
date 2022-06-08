@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Model shape | Tree Growth</title>
+  <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Model shape | Tree Growth" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Model shape | Tree Growth" />
+  
+  <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+<meta name="author" content="Sylvain Schmitt" />
+
+
+<meta name="date" content="2022-06-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="species-integration.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script async defer src="https://hypothes.is/embed.js"></script>
+
+
+
+<link rel="stylesheet" href="html/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Tree Growth</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a><ul>
+<li class="chapter" data-level="1.1" data-path="model-shape.html"><a href="model-shape.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
+<li class="chapter" data-level="1.2" data-path="model-shape.html"><a href="model-shape.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="1.3" data-path="model-shape.html"><a href="model-shape.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
+<li class="chapter" data-level="1.4" data-path="model-shape.html"><a href="model-shape.html#lognormal"><i class="fa fa-check"></i><b>1.4</b> Lognormal</a></li>
+<li class="chapter" data-level="1.5" data-path="model-shape.html"><a href="model-shape.html#polynomial"><i class="fa fa-check"></i><b>1.5</b> Polynomial</a></li>
+<li class="chapter" data-level="1.6" data-path="model-shape.html"><a href="model-shape.html#weibul"><i class="fa fa-check"></i><b>1.6</b> Weibul</a></li>
+<li class="chapter" data-level="1.7" data-path="model-shape.html"><a href="model-shape.html#amani"><i class="fa fa-check"></i><b>1.7</b> Amani</a></li>
+<li class="chapter" data-level="1.8" data-path="model-shape.html"><a href="model-shape.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
+<li class="chapter" data-level="1.9" data-path="model-shape.html"><a href="model-shape.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a><ul>
+<li class="chapter" data-level="2.1" data-path="species-integration.html"><a href="species-integration.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="species-integration.html"><a href="species-integration.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
+<li class="chapter" data-level="2.3" data-path="species-integration.html"><a href="species-integration.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
+<li class="chapter" data-level="2.4" data-path="species-integration.html"><a href="species-integration.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
+<li class="chapter" data-level="2.5" data-path="species-integration.html"><a href="species-integration.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
+<li class="chapter" data-level="2.6" data-path="species-integration.html"><a href="species-integration.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
+<li class="chapter" data-level="2.7" data-path="species-integration.html"><a href="species-integration.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-fit.html"><a href="model-fit.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
+<li class="chapter" data-level="3.2" data-path="model-fit.html"><a href="model-fit.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.3" data-path="model-fit.html"><a href="model-fit.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a><ul>
+<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>4.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="4.1.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#analyses"><i class="fa fa-check"></i><b>4.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#general"><i class="fa fa-check"></i><b>4.2.1</b> General</a></li>
+<li class="chapter" data-level="4.2.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#phylogenetic"><i class="fa fa-check"></i><b>4.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a><ul>
+<li class="chapter" data-level="5.1" data-path="functional-analyses.html"><a href="functional-analyses.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#paracouitv"><i class="fa fa-check"></i><b>5.2.1</b> ParacouITV</a></li>
+<li class="chapter" data-level="5.2.2" data-path="functional-analyses.html"><a href="functional-analyses.html#hydroparacou"><i class="fa fa-check"></i><b>5.2.2</b> hydroParacou</a></li>
+<li class="chapter" data-level="5.2.3" data-path="functional-analyses.html"><a href="functional-analyses.html#vleminckx-et-al.-2021"><i class="fa fa-check"></i><b>5.2.3</b> Vleminckx et al. 2021</a></li>
+<li class="chapter" data-level="5.2.4" data-path="functional-analyses.html"><a href="functional-analyses.html#ziegler-et-al.-2019"><i class="fa fa-check"></i><b>5.2.4</b> Ziegler et al. 2019</a></li>
+<li class="chapter" data-level="5.2.5" data-path="functional-analyses.html"><a href="functional-analyses.html#santiago-et-al.-2018"><i class="fa fa-check"></i><b>5.2.5</b> Santiago et al. 2018</a></li>
+<li class="chapter" data-level="5.2.6" data-path="functional-analyses.html"><a href="functional-analyses.html#maréchaux-et-al.-2015"><i class="fa fa-check"></i><b>5.2.6</b> Maréchaux et al. 2015</a></li>
+<li class="chapter" data-level="5.2.7" data-path="functional-analyses.html"><a href="functional-analyses.html#guillemot-et-al.-2022"><i class="fa fa-check"></i><b>5.2.7</b> Guillemot et al. 2022</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tree Growth</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class = rmdreview>
+This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
+</div>
+<div id="model-shape" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Model shape</h1>
+<p>In this chapter, I looked for the best model shape based on quality of fit, cross-validation (LOO), and prediction (RMSEP).
+The result is summarised in Table <a href="model-shape.html#tab:mchoicetab">1.1</a>.</p>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.1</span> Data</h2>
+<p>I used reduced data to explore the model form.
+I focused on trees at 20 meters from any plot edges for neighbourhood effect.
+I used only recruited trees in the censuses with at least 20 measurements of diameter at breast height (DBH, cm).
+And, I randomly selected 20 trees for lightweight training data.
+I further selected the last diameter measured for each individual as an evaluation data not used for model fitting (Fig. <a href="model-shape.html#fig:mmmdatafig">1.1</a>).</p>
+<div class="figure"><span id="fig:mmmdatafig"></span>
+<img src="treegrowth_files/figure-html/mmmdatafig-1.png" alt="Tree diameter trajectories in training data. Color represent individuals and the red point the data used for evaluation." width="768" />
+<p class="caption">
+Figure 1.1: Tree diameter trajectories in training data. Color represent individuals and the red point the data used for evaluation.
+</p>
+</div>
+</div>
+<div id="michaelis-menten" class="section level2">
+<h2><span class="header-section-number">1.2</span> Michaelis Menten</h2>
+<p>The first tested model is a Michaelis Menten model using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (10 + \frac{\alpha_i \times t}{\beta_i+t}, \sigma)\]</span>
+where <span class="math inline">\(\alpha\)</span> is individual maximum diameter and <span class="math inline">\(\beta\)</span> the year since recruitment when the individual reaches half the maximum diameter value.
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(alpha\)</span> and <span class="math inline">\(beta\)</span>.
+<span class="math inline">\(beta\)</span> posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good.</p>
+<p><img src="treegrowth_files/figure-html/mmrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mmtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mmpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mmbeta-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mmpreds-1.png" width="768" /></p>
+</div>
+<div id="gompertz" class="section level2">
+<h2><span class="header-section-number">1.3</span> Gompertz</h2>
+<p>The second tested model uses a Gompertz model <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the individual diameter from previous year plus its annual growth:</p>
+<p><span class="math display">\[DBH_{i,s,t} \sim \mathcal N (DBH_{i,t-i} + Gmax_i \times  exp(-\frac12.[\frac{log(\frac{DBH_{i,t-i}}{100.Dopt_i})}{Ks_i}]^2)\times\Delta t, \sigma)\]</span></p>
+<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(Gompertz <a href="#ref-Gompertz1825" role="doc-biblioref">1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>,
+where <span class="math inline">\(Gmax\)</span> is the maximum growth potential,
+<span class="math inline">\(Dopt\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
+and <span class="math inline">\(Ks\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>.
+On model parameter diverged (<span class="math inline">\(\hat R &gt; 1.05\)</span>) with no correlations among parameters.
+<span class="math inline">\(gmax\)</span> posteriors are highly uncertain and does not vary widely among individuals.
+Finally predictions of the diameter trajectories by the model are overfitting because the model uses the diameter from previous census reporting the measurement error from one year to the other.</p>
+<p><img src="treegrowth_files/figure-html/gompertzrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertztrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzgmax-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzpreds-1.png" width="768" /></p>
+</div>
+<div id="lognormal" class="section level2">
+<h2><span class="header-section-number">1.4</span> Lognormal</h2>
+<p>The third tested model is a lognormal model using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (10 +\beta \times log(t), \sigma)\]</span>
+where <span class="math inline">\(\beta\)</span> is the slope of year since recruitment effect on the log response of diameter to time.
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with no correlations among parameters.
+<span class="math inline">\(beta\)</span> posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are a bit far from observations.</p>
+<p><img src="treegrowth_files/figure-html/logrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/logtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/logpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/loggmax-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/logpreds-1.png" width="768" /></p>
+</div>
+<div id="polynomial" class="section level2">
+<h2><span class="header-section-number">1.5</span> Polynomial</h2>
+<p>The fourth tested model is a third degree polynomial model using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (\alpha \times t^3 + \beta_i \times t^2+ \gamma_i \times t + 10, \sigma)\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\gamma\)</span> are the slope of year since recruitment effects to its cube, square or identity.
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\gamma\)</span>.
+<span class="math inline">\(gamma\)</span> posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are a bit overfitted with unrealistic inflections at the end of the trajectories</p>
+<p><img src="treegrowth_files/figure-html/polyrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/polytrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/polypairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/polyalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/polypreds-1.png" width="768" /></p>
+</div>
+<div id="weibul" class="section level2">
+<h2><span class="header-section-number">1.6</span> Weibul</h2>
+<p>The fifth tested model is a Weibul model using time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (10 + \alpha \times (1 − e^{-t_i/\beta}) , \sigma)\]</span>
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.
+<span class="math inline">\(beta\)</span> posteriors have not too much uncertainty and are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good.</p>
+<p><img src="treegrowth_files/figure-html/weibulrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibultrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibulpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibulbeta-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/weibulpreds-1.png" width="768" /></p>
+</div>
+<div id="amani" class="section level2">
+<h2><span class="header-section-number">1.7</span> Amani</h2>
+<p>The sixth tested model was developed by <span class="citation">Amani <em>et al.</em> (<a href="#ref-Amani2021" role="doc-biblioref">2021</a>)</span> and uses time <span class="math inline">\(t\)</span> since recruitment (DBH=10cm) for each individual tree <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[DBH_{i,t} \sim \mathcal N (\alpha \times (1 − e^{-\lambda \times (\frac{t_i}{\theta})^\beta}) , \sigma)\]</span>
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\lambda\)</span>.
+<span class="math inline">\(\theta\)</span> posteriors are highly uncertain and does not vary widely among individuals.
+Finally predictions of the diameter trajectories by the model are good but the inflection point if only used in the yellow trajectory more probably due to a change of POM than real growth change.</p>
+<p><img src="treegrowth_files/figure-html/amanirhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/amanitrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/amanipairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/amanibeta-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/amanpreds-1.png" width="768" /></p>
+</div>
+<div id="gompertz-sum" class="section level2">
+<h2><span class="header-section-number">1.8</span> Gompertz sum</h2>
+<p>The seventh tested model uses a Gompertz model <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)\]</span></p>
+<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(Gompertz <a href="#ref-Gompertz1825" role="doc-biblioref">1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>,
+where <span class="math inline">\(Gmax\)</span> is the maximum growth potential,
+<span class="math inline">\(Dopt\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
+and <span class="math inline">\(Ks\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>.
+The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
+<span class="math inline">\(gmax\)</span> posteriors have logical uncertainty but are varying widely among individuals.
+Finally predictions of the diameter trajectories by the model are good and realistic.
+Moreover, model errors do not show temporal autocorrelation per individual.</p>
+<p><img src="treegrowth_files/figure-html/gompertzsumrhat-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzsumtrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzsumpairs-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzsumalpha-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzsumpreds-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/gompertzsumres-1.png" width="768" /></p>
+</div>
+<div id="comparisons" class="section level2">
+<h2><span class="header-section-number">1.9</span> Comparisons</h2>
+<p>The Gompertz sum model has the best prediction (lowest RMSEP) associated to the second best evaluation (second lowest loo epld), knowing that the first one use every year diameter and overfit, and a decent computing time. This is the best model that I’ll use in next steps.</p>
+<table>
+<caption><span id="tab:mchoicetab">Table 1.1: </span>Model choice summary with quality of prediciton (Root Mean Square Error of Prediction, RMSEP), cross-validation (Leave-One-Out Estimate of the expected Log pointwise Predictive Density, LOO ELDP), and speed (Elapsed yime).</caption>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="right">RMSEP</th>
+<th align="right">LOO ELDP</th>
+<th align="right">Elapsed time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Michaelis Menten</td>
+<td align="right">6.8055400</td>
+<td align="right">214.3796</td>
+<td align="right">4.658</td>
+</tr>
+<tr class="even">
+<td align="left">Gompertz</td>
+<td align="right">0.3945505</td>
+<td align="right">253.4165</td>
+<td align="right">50.508</td>
+</tr>
+<tr class="odd">
+<td align="left">Lognormal</td>
+<td align="right">1.6143450</td>
+<td align="right">224.0448</td>
+<td align="right">1.473</td>
+</tr>
+<tr class="even">
+<td align="left">Polynomial</td>
+<td align="right">0.3484090</td>
+<td align="right">228.1646</td>
+<td align="right">39.918</td>
+</tr>
+<tr class="odd">
+<td align="left">Weibul</td>
+<td align="right">0.7914120</td>
+<td align="right">218.0608</td>
+<td align="right">6.185</td>
+</tr>
+<tr class="even">
+<td align="left">Amani</td>
+<td align="right">6.3461250</td>
+<td align="right">243.3392</td>
+<td align="right">93.633</td>
+</tr>
+<tr class="odd">
+<td align="left">Gompertz sum</td>
+<td align="right">0.4266840</td>
+<td align="right">248.9798</td>
+<td align="right">208.172</td>
+</tr>
+</tbody>
+</table>
+<div class="figure"><span id="fig:rmsep"></span>
+<img src="treegrowth_files/figure-html/rmsep-1.png" alt="Models root mean square error of predicition. The X scale is sqaure-root transformed." width="768" />
+<p class="caption">
+Figure 1.2: Models root mean square error of predicition. The X scale is sqaure-root transformed.
+</p>
+</div>
+<table>
+<caption><span id="tab:loo">Table 1.2: </span>Leave one out evaluation of models (<a href="http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html" class="uri">http://cran.nexr.com/web/packages/loo/vignettes/loo-example.html</a>).</caption>
+<colgroup>
+<col width="17%" />
+<col width="11%" />
+<col width="9%" />
+<col width="9%" />
+<col width="12%" />
+<col width="9%" />
+<col width="10%" />
+<col width="10%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">elpd_diff</th>
+<th align="right">se_diff</th>
+<th align="right">elpd_loo</th>
+<th align="right">se_elpd_loo</th>
+<th align="right">p_loo</th>
+<th align="right">se_p_loo</th>
+<th align="right">looic</th>
+<th align="right">se_looic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Gompertz</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">253.4165</td>
+<td align="right">5.289775</td>
+<td align="right">3.677858</td>
+<td align="right">0.1734296</td>
+<td align="right">-506.8329</td>
+<td align="right">10.57955</td>
+</tr>
+<tr class="even">
+<td align="left">Gompertz sum</td>
+<td align="right">-4.436612</td>
+<td align="right">5.580873</td>
+<td align="right">248.9798</td>
+<td align="right">5.119035</td>
+<td align="right">4.585733</td>
+<td align="right">0.1731198</td>
+<td align="right">-497.9597</td>
+<td align="right">10.23807</td>
+</tr>
+<tr class="odd">
+<td align="left">Amani</td>
+<td align="right">-10.077260</td>
+<td align="right">5.973658</td>
+<td align="right">243.3392</td>
+<td align="right">5.300027</td>
+<td align="right">5.546408</td>
+<td align="right">0.1846141</td>
+<td align="right">-486.6784</td>
+<td align="right">10.60005</td>
+</tr>
+<tr class="even">
+<td align="left">Polynomial</td>
+<td align="right">-25.251839</td>
+<td align="right">5.920798</td>
+<td align="right">228.1646</td>
+<td align="right">5.071129</td>
+<td align="right">5.282179</td>
+<td align="right">0.1782722</td>
+<td align="right">-456.3292</td>
+<td align="right">10.14226</td>
+</tr>
+<tr class="odd">
+<td align="left">Lognormal</td>
+<td align="right">-29.371666</td>
+<td align="right">7.170428</td>
+<td align="right">224.0448</td>
+<td align="right">5.272432</td>
+<td align="right">2.126424</td>
+<td align="right">0.0725016</td>
+<td align="right">-448.0896</td>
+<td align="right">10.54486</td>
+</tr>
+<tr class="even">
+<td align="left">Weibul</td>
+<td align="right">-35.355644</td>
+<td align="right">6.867527</td>
+<td align="right">218.0608</td>
+<td align="right">5.474185</td>
+<td align="right">2.973836</td>
+<td align="right">0.1021080</td>
+<td align="right">-436.1216</td>
+<td align="right">10.94837</td>
+</tr>
+<tr class="odd">
+<td align="left">Michaelis Menten</td>
+<td align="right">-39.036891</td>
+<td align="right">7.029287</td>
+<td align="right">214.3796</td>
+<td align="right">5.441283</td>
+<td align="right">2.801023</td>
+<td align="right">0.0923876</td>
+<td align="right">-428.7591</td>
+<td align="right">10.88257</td>
+</tr>
+</tbody>
+</table>
+<div class="figure"><span id="fig:time"></span>
+<img src="treegrowth_files/figure-html/time-1.png" alt="Model elapsed time." width="768" />
+<p class="caption">
+Figure 1.3: Model elapsed time.
+</p>
+</div>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Amani2021">
+<p>Amani, B.H.K., N’Guessan, A.E., Derroire, G., N’dja, J.K., Elogne, A.G.M., Traoré, K., Zo-Bi, I.C. &amp; Hérault, B. (2021). The potential of secondary forests to restore biodiversity of the lost forests in semi-deciduous West Africa. <em>Biological Conservation</em>, <strong>259</strong>.</p>
+</div>
+<div id="ref-Gompertz1825">
+<p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
+</div>
+<div id="ref-Herault2011">
+<p>Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). Functional traits shape ontogenetic growth trajectories of rain forest tree species. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="species-integration.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
