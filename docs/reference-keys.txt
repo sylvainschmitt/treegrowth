@@ -14,6 +14,8 @@ fig:igvphylob
 tab:gmaxphylosignalb
 fig:gmaxcorrelogb
 fig:lipab
+tab:guyafortab
+fig:mdataguyaforfig
 model-shape
 data
 michaelis-menten
@@ -47,3 +49,6 @@ functional-analyses
 methods-1
 results-1
 all
+guyafor
+data-3
+model-1

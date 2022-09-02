@@ -1,0 +1,157 @@
+```{r guyafor, include=FALSE, eval=T}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+library(cmdstanr)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F, eval=T)
+```
+
+# Guyafor
+
+In this chapter, I repeated the model fit for the whole Guyafor network.
+
+## Data
+
+I used only recruited trees in the censuses with at least 4 measurements of diameter at breast height (DBH, cm).
+I used only species with at least 4 trees following previous requirements (Tab. \@ref(tab:datafulltab) & Fig. \@ref(fig:mdatafullfig)).
+
+```{r guyaforlim}
+n_census <- 4
+n_ind_species <- 4
+```
+
+```{r guyaforfull, eval=F}
+trees <- vroom::vroom("data/Selection_Guyafor_Gmax_4_4.csv") %>% 
+  mutate(species = paste(Genus, Species)) %>% 
+  filter(!grepl("Indet", species)) %>% 
+  filter(BotaSource == "Bota") %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  mutate(FirstDead = first(CensusYear[CodeAlive == 0])) %>% 
+  mutate(FirstDead = ifelse(is.na(FirstDead), max(CensusYear)+1, FirstDead)) %>% 
+  filter(CensusYear < FirstDead) %>% 
+  ungroup() %>% 
+  mutate(DBH = CircCorr/pi) %>%
+  group_by(Plot) %>% 
+  mutate(StartYear = min(CensusYear)) %>% 
+  group_by(idTree) %>% 
+  arrange(CensusYear) %>% 
+  filter(first(CensusYear) > StartYear) %>% 
+  filter(first(DBH) < 15) %>%
+  filter(last(DBH) > first(DBH)) %>% 
+  group_by(idTree) %>% 
+  filter(n() > n_census) %>% 
+  group_by(species) %>% 
+  filter(length(unique(idTree)) > n_ind_species)
+rm(n_census, n_ind_species)
+vroom::vroom_write(trees, "save/trees_guyafor.tsv")
+```
+
+```{r  guyafortab}
+options(knitr.kable.NA = '')
+vroom::vroom("save/trees_guyafor.tsv") %>% 
+  group_by(Family, Genus, species, idTree) %>% 
+  summarise(census = n(), year_start = min(CensusYear), year_end = max(CensusYear),
+            dbh_start = min(DBH), dbh_end = max(DBH)) %>% 
+  ungroup() %>% 
+  summarise(n_families = length(unique(Family)),
+            n_genera = length(unique(Genus)),
+            n_species = length(unique(species)),
+            n_individuals = length(unique(idTree)),
+            n_observations = nrow(vroom::vroom("save/trees_guyafor.tsv")),
+            min_census = min(census),
+            med_census = median(census),
+            max_census = max(census),
+            min_year0 = min(year_start),
+            med_year0 = median(year_start),
+            max_year0 = max(year_start),
+            min_yearmax = min(year_end),
+            med_yearmax = median(year_end),
+            max_yearmax = max(year_end),
+            min_dbh0 = min(dbh_start),
+            med_dbh0 = median(dbh_start),
+            max_dbh0 = max(dbh_start),
+            min_dbhmax = min(dbh_end),
+            med_dbhmax = median(dbh_end),
+            max_dbhmax = max(dbh_end)) %>% 
+  reshape2::melt() %>% 
+  separate(variable, c("measure", "variable")) %>% 
+  reshape2::dcast(variable ~ measure) %>% 
+  dplyr::select(variable, n, med, min, max) %>% 
+  mutate(variable = factor(variable, levels = c("families", "genera", "species", "individuals", "observations",
+                                                "census", "year0", "yearmax", "dbh0", "dbhmax"))) %>% 
+  arrange(variable) %>% 
+  kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
+        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")  
+```
+
+
+```{r mdataguyafor, eval=F}
+vroom::vroom("save/trees_guyafor.tsv") %>% 
+  group_by(idTree) %>% 
+  mutate(Year = CensusYear - min(CensusYear)) %>%
+  ungroup() %>% 
+  mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
+  mutate(sp = as.numeric(as.factor(species))) %>% 
+  vroom::vroom_write("save/mdataguyafor.tsv")
+```
+
+```{r mdataguyaforfig, fig.cap="Tree diameter trajectories in reduced data. Color represent individuals."}
+dplyr::select(vroom::vroom("save/mdataguyafor.tsv"), sp, ind) %>% 
+  unique() %>% 
+  filter(sp %in% sample(unique(.$sp), 1)) %>% 
+  group_by(sp) %>% 
+  sample_n(1, replace = T) %>%
+  unique() %>% 
+  left_join(vroom::vroom("save/mdataguyafor.tsv")) %>% 
+  ggplot(aes(Year, DBH, group = as.factor(ind))) +
+  geom_point(aes(col = as.factor(ind))) +
+  geom_smooth(se = F, aes(col = as.factor(ind))) +
+  xlim(0,NA) +
+  facet_wrap(~ species, scales = "free") +
+  scale_color_discrete(guide = "none")  
+```
+
+## Model
+
+I used a Gompertz model [@Herault2011], were the diameter of individual $i$ at year $t$ is the sum of annual growth from $t0$ to $t$:
+
+$$  DBH_{t,i,s} \sim \mathcal N  (10 + Gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) $$
+
+The annual growth rate for individual $i$ at year $y$ with a diameter of $DBH_{y,i}$ is defined following a Gompertz model [@Gompertz1825] already identified as the best model for growth-trajectories in Paracou [@Herault2011],
+where $Gmax_i$ is the fixed maximum growth potential of every individual,
+$Dopt_i$ is the optimal diameter at which the individual reaches its maximum growth potential,
+and $Ks_i$ is the kurtosis defining the width of the bell-shaped growth-trajectory [see figure 1 in @Herault2011].
+$Dopt_i$ and $Ks_i$ are random effects centered on species parameters $Dopt_s$ and $Ks_s$ with associated variances $\sigma_D$ and $\sigma_K$.
+
+```{r growthguyaforfit, eval=F}
+mdata <- vroom::vroom("save/mdataguyafor.tsv")
+growth <- cmdstan_model("model/growth.stan")
+fit <- growth$sample(
+  data = list(
+    N = nrow(filter(mdata, Year > 0)),
+    I = max(mdata$ind),
+    S = max(mdata$sp),
+    Y = max(mdata$Year),
+    year = filter(mdata, Year > 0)$Year,
+    dbh = filter(mdata, Year > 0)$DBH,
+    dbh0 = filter(mdata, Year == 0)$DBH,
+    dmax = summarise(group_by(mdata, sp), dmax = max(DBH))$dmax,
+    ind = filter(mdata, Year > 0)$ind,
+    indsp = arrange(unique(mdata[c("ind", "sp")]), ind)$sp
+  ),
+  chains = 4, 
+  parallel_chains = 4,
+  refresh = 10,
+  save_warmup = F,
+  max_treedepth = 12
+)
+fit$save_output_files(dir = "save/growthguyafor")
+fit_guyafor <- rstan::read_stan_csv(fit$output_files())
+save(fit_guyafor, file = "save/growthguyafor.Rdata") 
+```
+

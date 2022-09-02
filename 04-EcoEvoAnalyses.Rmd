@@ -149,6 +149,17 @@ p4d <- phylo4d(phylo,
 ```
 
 
+```{r, eval=F}
+read_tsv("data/growthfull_binded.tsv") %>% 
+  # ggplot(aes(species, Mean)) + geom_boxplot() + coord_flip() + scale_y_sqrt()
+  group_by(species) %>% 
+  mutate(hi = Mean/quantile(Mean, 0.95, na.rm = T)) %>% 
+  # ggplot(aes(species, hi)) + geom_boxplot() + coord_flip() + scale_y_sqrt()
+  # ggplot(aes(hi, gmax)) + geom_point() + scale_y_log10() + geom_smooth(method = "lm")
+  lme4::lmer(log(gmax) ~ log(NCI) + hi + (1  | Family/Genus/species), .) %>% 
+  sjPlot::tab_model(show.icc = F)  
+```
+
 ```{r lmmb}
 lme4::lmer(log(gmax) ~ log(NCI) + log(twi+1) + (1  | Family/Genus/species), growth) %>% 
   sjPlot::tab_model(show.icc = F)  
@@ -176,7 +187,10 @@ partR2::forestplot(r2, type = "R2", text_size = 10)
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(y = variance, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
   scale_fill_discrete(expression(sigma^2)) +
-  theme(axis.title = element_blank(), axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank())+
+  theme(axis.title = element_blank(), axis.line = element_blank(), axis.text = element_blank(), 
+        axis.ticks = element_blank(), legend.position = "bottom")+
+  coord_flip() +
+  scale_y_reverse() +
   ggtitle("B."))  
 ```
 
@@ -304,8 +318,8 @@ fortify(phylo) %>%
 ```{r figall, fig.width=10, fig.height=7}
 gridExtra::grid.arrange(
   grobs = list(g.phylo,  g.nci, g.var),
-  layout_matrix = rbind(c(2, 2, 1, 1, 1),
-                        c(3, 1, 1, 1, 1)),
-  widths = c(1,0.5,1, 1, 1)
+  layout_matrix = rbind(c(2, 1),
+                        c(3, 1)),
+  heights = c(3, 1), widths = c(1.5, 2)
 )  
 ```

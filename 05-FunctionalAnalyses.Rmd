@@ -221,6 +221,94 @@ lm(gmax ~ ., data = t) %>%
   sjPlot::tab_model(show.icc = F)
 ```
 
+```{r, eval=F}
+fg %>% 
+  left_join(select(growth, Family, Genus, species) %>% unique()) %>% 
+  lme4::lmer(log(gmax) ~ log(Toughness) + log(N) + log(P) + log(Sapwood_WSG) + log(Diameter) + log(SRL) + (1  | Family/Genus), data = .) %>% 
+  sjPlot::tab_model(show.icc = F)  
+```
+
+
+
+```{r}
+all_data %>% 
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% c("leaf thoughness", "leaf nitrogen content", "leaf potassium content",
+                      "sapwood specific gravity", "fine roots diameter", "specific root length")) %>% 
+  left_join(dplyr::select(growth, Family, Genus, species) %>% unique()) %>% 
+  dplyr::rename(gmax = response_value) %>% 
+  reshape2::dcast(Family + Genus + species + gmax ~ trait, value.var = "trait_value") %>% 
+  reshape2::melt(c("Family", "Genus", "species")) %>%
+  # split(.$variable) %>% lapply(function(x) nlme::lme(log(abs(value)) ~  1, random=~1|Family/Genus, data = x)) %>%  sjPlot::tab_model(show.icc = F)
+  group_by(variable) %>% 
+  do(nlme::lme(log(abs(value)) ~  1, random=~1|Family/Genus, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Family", "Genus", "Species"), variance = as.vector(.)) %>% 
+       select(-`.`)) %>% 
+  mutate(pct = variance / sum(variance)*100) %>% 
+  mutate(level = factor(level, levels = c("Family", "Genus", "Species"))) %>% 
+  mutate(pct_text = paste0(round(pct), "%")) %>% 
+  mutate(pct_text = gsub("^0%", "", pct_text)) %>% 
+  ggplot(aes(x = variable, y = pct, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
+  scale_fill_discrete(expression(sigma^2)) +
+  coord_flip() +
+  theme(axis.title = element_blank(), axis.line = element_blank(), axis.text.x = element_blank(), axis.ticks = element_blank())
+```
+
+```{r phylov, eval=F}
+library(V.PhyloMaker)
+t <- all_data %>% 
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% c("leaf thoughness", "leaf nitrogen content", "leaf potassium content",
+                      "sapwood specific gravity", "fine roots diameter", "specific root length")) %>% 
+  left_join(dplyr::select(growth, Family, Genus, species) %>% unique()) %>% 
+  dplyr::rename(gmax = response_value) %>% 
+  reshape2::dcast(Family + Genus + species + gmax ~ trait, value.var = "trait_value")
+splist <- t %>% 
+  dplyr::select(Family, Genus, species) %>% 
+  unique() %>% 
+  mutate(genus = Genus, family = Family) %>% 
+  dplyr::select(species, genus, family)
+tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
+ape::write.tree(tree$scenario.3, "save/phylogeny_Vleminckx.tree")
+```
+
+```{r, eval=F}
+library(adephylo)
+library(ape)
+library(phylobase)
+library(phylosignal)
+t <- all_data %>% 
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% c("leaf thoughness", "leaf nitrogen content", "leaf potassium content",
+                      "sapwood specific gravity", "fine roots diameter", "specific root length")) %>% 
+  left_join(dplyr::select(growth, Family, Genus, species) %>% unique()) %>% 
+  dplyr::rename(gmax = response_value) %>% 
+  reshape2::dcast(Family + Genus + species + gmax ~ trait, value.var = "trait_value")
+phylo <- ape::read.tree("save/phylogeny_Vleminckx.tree")
+p4d <- phylo4d(phylo,
+               data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
+                 left_join(t %>% group_by(Family, Genus, species) %>% mutate_all(abs) %>% mutate_all(log)) %>% 
+                 dplyr::select(-species))   
+t <- lapply(names(p4d@data)[-c(1,2)], function(t) {
+  c <- as.data.frame(phyloCorrelogram(p4d, trait = t, ci.bs	= 10)$res)
+  names(c) <- c("phylo_dist", "ll", "hh", "m")
+  return(c)
+})
+names(t) <- names(p4d@data)[-c(1,2)]
+bind_rows(t, .id = "trait") %>% 
+  mutate(trait = gsub(".", " ", trait, fixed = T)) %>% 
+  ggplot(aes(x = phylo_dist, col = trait, fill = trait)) +
+  geom_ribbon(aes(ymin = ll, ymax = hh), alpha = 0.2, col = NA) +
+  geom_line(aes(y = m), size = 1.5) +
+  geom_hline(yintercept = 0, col = "black") +
+  theme(legend.position = c(0.8, 0.7)) + 
+  xlab("phylogenetic distance") + ylab("Correlation")
+```
+
 ```{r}
 (lm(gmax ~ ., data = t) %>%
   step(trace = F) %>%
