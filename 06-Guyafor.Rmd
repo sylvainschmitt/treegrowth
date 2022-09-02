@@ -20,12 +20,13 @@ I used only recruited trees in the censuses with at least 4 measurements of diam
 I used only species with at least 4 trees following previous requirements (Tab. \@ref(tab:datafulltab) & Fig. \@ref(fig:mdatafullfig)).
 
 ```{r guyaforlim}
-n_census <- 4
 n_ind_species <- 4
+n_years <- 10
+n_census <- 4
 ```
 
 ```{r guyaforfull, eval=F}
-trees <- vroom::vroom("data/Selection_Guyafor_Gmax_4_4.csv") %>% 
+trees <- vroom::vroom("data/Selection_Guyafor_Gmax_4_4.csv", locale=locale(decimal_mark=',')) %>% 
   mutate(species = paste(Genus, Species)) %>% 
   filter(!grepl("Indet", species)) %>% 
   filter(BotaSource == "Bota") %>% 
@@ -44,9 +45,10 @@ trees <- vroom::vroom("data/Selection_Guyafor_Gmax_4_4.csv") %>%
   filter(first(DBH) < 15) %>%
   filter(last(DBH) > first(DBH)) %>% 
   group_by(idTree) %>% 
-  filter(n() > n_census) %>% 
+  filter(max(CensusYear) - min(CensusYear) >= n_years) %>% 
+  filter(n() >= n_census) %>% 
   group_by(species) %>% 
-  filter(length(unique(idTree)) > n_ind_species)
+  filter(length(unique(idTree)) >= n_ind_species)
 rm(n_census, n_ind_species)
 vroom::vroom_write(trees, "save/trees_guyafor.tsv")
 ```
@@ -86,7 +88,7 @@ vroom::vroom("save/trees_guyafor.tsv") %>%
                                                 "census", "year0", "yearmax", "dbh0", "dbhmax"))) %>% 
   arrange(variable) %>% 
   kable(col.names = c("", "N", "Median", "Minimum", "Maximum"), format.args = list(big.mark = " "), digits = 0,
-        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")  
+        caption = "Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).")    
 ```
 
 
@@ -103,13 +105,13 @@ vroom::vroom("save/trees_guyafor.tsv") %>%
 ```{r mdataguyaforfig, fig.cap="Tree diameter trajectories in reduced data. Color represent individuals."}
 dplyr::select(vroom::vroom("save/mdataguyafor.tsv"), sp, ind) %>% 
   unique() %>% 
-  filter(sp %in% sample(unique(.$sp), 1)) %>% 
+  filter(sp %in% sample(unique(.$sp), 9)) %>% 
   group_by(sp) %>% 
-  sample_n(1, replace = T) %>%
+  sample_n(5, replace = T) %>%
   unique() %>% 
   left_join(vroom::vroom("save/mdataguyafor.tsv")) %>% 
   ggplot(aes(Year, DBH, group = as.factor(ind))) +
-  geom_point(aes(col = as.factor(ind))) +
+  geom_point(col = "grey") +
   geom_smooth(se = F, aes(col = as.factor(ind))) +
   xlim(0,NA) +
   facet_wrap(~ species, scales = "free") +
