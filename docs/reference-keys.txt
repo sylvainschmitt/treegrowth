@@ -16,6 +16,8 @@ fig:gmaxcorrelogb
 fig:lipab
 tab:guyafortab
 fig:mdataguyaforfig
+fig:gmaxphyloc
+tab:maxphylosignalc
 model-shape
 data
 michaelis-menten
@@ -52,3 +54,6 @@ all
 guyafor
 data-3
 model-1
+fit-1
+evolutionary-analyses
+functional-analyses-1

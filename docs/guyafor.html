@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-09-02" />
+<meta name="date" content="2022-09-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -116,6 +116,9 @@
 <li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a><ul>
 <li class="chapter" data-level="6.1" data-path="guyafor.html"><a href="guyafor.html#data-3"><i class="fa fa-check"></i><b>6.1</b> Data</a></li>
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
+<li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
+<li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#functional-analyses-1"><i class="fa fa-check"></i><b>6.5</b> Functional analyses</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -147,7 +150,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="data-3" class="section level2">
 <h2><span class="header-section-number">6.1</span> Data</h2>
 <p>I used only recruited trees in the censuses with at least 4 measurements of diameter at breast height (DBH, cm).
-I used only species with at least 4 trees following previous requirements (Tab. <a href="model-fit.html#tab:datafulltab">3.1</a> &amp; Fig. <a href="model-fit.html#fig:mdatafullfig">3.1</a>).</p>
+I used only species with at least 4 trees following previous requirements (Tab. <a href="guyafor.html#tab:guyafortab">6.1</a> &amp; Fig. <a href="guyafor.html#fig:mdataguyaforfig">6.1</a>).</p>
 <table>
 <caption><span id="tab:guyafortab">Table 6.1: </span>Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).</caption>
 <thead>
@@ -248,6 +251,183 @@ where <span class="math inline">\(Gmax_i\)</span> is the fixed maximum growth po
 <span class="math inline">\(Dopt_i\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
 and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>.
 <span class="math inline">\(Dopt_i\)</span> and <span class="math inline">\(Ks_i\)</span> are random effects centered on species parameters <span class="math inline">\(Dopt_s\)</span> and <span class="math inline">\(Ks_s\)</span> with associated variances <span class="math inline">\(\sigma_D\)</span> and <span class="math inline">\(\sigma_K\)</span>.</p>
+</div>
+<div id="fit-1" class="section level2">
+<h2><span class="header-section-number">6.3</span> Fit</h2>
+<p><img src="treegrowth_files/figure-html/growthguyafortrace-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/growthguyaforgmax-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/growthguyafordoptdmax-1.png" width="768" /></p>
+</div>
+<div id="evolutionary-analyses" class="section level2">
+<h2><span class="header-section-number">6.4</span> Evolutionary analyses</h2>
+<p><img src="treegrowth_files/figure-html/figvarc-1.png" width="768" /></p>
+<div class="figure"><span id="fig:gmaxphyloc"></span>
+<img src="save/figs/phylogeny.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="2460" />
+<p class="caption">
+Figure 6.2: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
+</p>
+</div>
+<table>
+<caption><span id="tab:maxphylosignalc">Table 6.2: </span>Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.</caption>
+<thead>
+<tr class="header">
+<th align="left">parameter</th>
+<th align="left">Cmean</th>
+<th align="left">I</th>
+<th align="left">K</th>
+<th align="left">K.star</th>
+<th align="left">Lambda</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gmax</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">0.9999 (p=NA)</td>
+</tr>
+<tr class="even">
+<td align="left">loggmax</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">NA (p=0.001)</td>
+<td align="left">0.9999 (p=NA)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="functional-analyses-1" class="section level2">
+<h2><span class="header-section-number">6.5</span> Functional analyses</h2>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+gmax
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.10 – 0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.941
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf area
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.03 – 0.24
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.115
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+chlorophyll content
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.20
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.08 – 0.31
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf thoughness
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.13
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.28 – 0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.108
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf nitrogen content
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.16
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04 – 0.29
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.009</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+sapwood specific gravity
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.25
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.37 – -0.13
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+281
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.185 / 0.170
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-19-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-20-1.png" width="768" /></p>
 
 </div>
 </div>
