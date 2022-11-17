@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 6 Guyafor | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 6 Guyafor | Tree Growth" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-09-28" />
+<meta name="date" content="2022-11-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +31,9 @@
   
   
 <link rel="prev" href="functional-analyses.html"/>
-<link rel="next" href="references.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="next" href="microtopo.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,11 +49,35 @@
 
 
 
-
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -72,7 +96,8 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a><ul>
+<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="model-shape.html"><a href="model-shape.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
 <li class="chapter" data-level="1.2" data-path="model-shape.html"><a href="model-shape.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
 <li class="chapter" data-level="1.3" data-path="model-shape.html"><a href="model-shape.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
@@ -83,7 +108,8 @@
 <li class="chapter" data-level="1.8" data-path="model-shape.html"><a href="model-shape.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
 <li class="chapter" data-level="1.9" data-path="model-shape.html"><a href="model-shape.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a><ul>
+<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="species-integration.html"><a href="species-integration.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
 <li class="chapter" data-level="2.2" data-path="species-integration.html"><a href="species-integration.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
 <li class="chapter" data-level="2.3" data-path="species-integration.html"><a href="species-integration.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
@@ -92,33 +118,54 @@
 <li class="chapter" data-level="2.6" data-path="species-integration.html"><a href="species-integration.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
 <li class="chapter" data-level="2.7" data-path="species-integration.html"><a href="species-integration.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a><ul>
+<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="model-fit.html"><a href="model-fit.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 <li class="chapter" data-level="3.2" data-path="model-fit.html"><a href="model-fit.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
 <li class="chapter" data-level="3.3" data-path="model-fit.html"><a href="model-fit.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a><ul>
-<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a><ul>
+<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a>
+<ul>
 <li class="chapter" data-level="4.1.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>4.1.1</b> Environmental descriptors</a></li>
 <li class="chapter" data-level="4.1.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#analyses"><i class="fa fa-check"></i><b>4.1.2</b> Analyses</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a><ul>
+<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a>
+<ul>
 <li class="chapter" data-level="4.2.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#general"><i class="fa fa-check"></i><b>4.2.1</b> General</a></li>
 <li class="chapter" data-level="4.2.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#phylogenetic"><i class="fa fa-check"></i><b>4.2.2</b> Phylogenetic</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a><ul>
+<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="functional-analyses.html"><a href="functional-analyses.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
-<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
+<ul>
 <li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a><ul>
+<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
+<ul>
 <li class="chapter" data-level="6.1" data-path="guyafor.html"><a href="guyafor.html#data-3"><i class="fa fa-check"></i><b>6.1</b> Data</a></li>
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
 <li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#functional-analyses-1"><i class="fa fa-check"></i><b>6.5</b> Functional analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
+<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
+<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
+<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -144,11 +191,11 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="guyafor" class="section level1">
-<h1><span class="header-section-number">Chapter 6</span> Guyafor</h1>
+<div id="guyafor" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Guyafor<a href="guyafor.html#guyafor" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this chapter, I repeated the model fit for the whole Guyafor network.</p>
-<div id="data-3" class="section level2">
-<h2><span class="header-section-number">6.1</span> Data</h2>
+<div id="data-3" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Data<a href="guyafor.html#data-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>I used only recruited trees in the censuses with at least 4 measurements of diameter at breast height (DBH, cm).
 I used only species with at least 4 trees following previous requirements (Tab. <a href="guyafor.html#tab:guyafortab">6.1</a> &amp; Fig. <a href="guyafor.html#fig:mdataguyaforfig">6.1</a>).</p>
 <table>
@@ -235,40 +282,38 @@ I used only species with at least 4 trees following previous requirements (Tab. 
 </tr>
 </tbody>
 </table>
-<div class="figure"><span id="fig:mdataguyaforfig"></span>
+<div class="figure"><span style="display:block;" id="fig:mdataguyaforfig"></span>
 <img src="treegrowth_files/figure-html/mdataguyaforfig-1.png" alt="Tree diameter trajectories in reduced data. Color represent individuals." width="768" />
 <p class="caption">
 Figure 6.1: Tree diameter trajectories in reduced data. Color represent individuals.
 </p>
 </div>
 </div>
-<div id="model-1" class="section level2">
-<h2><span class="header-section-number">6.2</span> Model</h2>
-<p>I used a Gompertz model <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
+<div id="model-1" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Model<a href="guyafor.html#model-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>I used a Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + Gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
-<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(Gompertz <a href="#ref-Gompertz1825" role="doc-biblioref">1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>,
+<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(<a href="#ref-Gompertz1825" role="doc-biblioref">Gompertz 1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>,
 where <span class="math inline">\(Gmax_i\)</span> is the fixed maximum growth potential of every individual,
 <span class="math inline">\(Dopt_i\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
-and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in Hérault <em>et al.</em> <a href="#ref-Herault2011" role="doc-biblioref">2011</a>)</span>.
+and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in <a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>.
 <span class="math inline">\(Dopt_i\)</span> and <span class="math inline">\(Ks_i\)</span> are random effects centered on species parameters <span class="math inline">\(Dopt_s\)</span> and <span class="math inline">\(Ks_s\)</span> with associated variances <span class="math inline">\(\sigma_D\)</span> and <span class="math inline">\(\sigma_K\)</span>.</p>
 </div>
-<div id="fit-1" class="section level2">
-<h2><span class="header-section-number">6.3</span> Fit</h2>
-<p><img src="treegrowth_files/figure-html/growthguyafortrace-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/growthguyaforgmax-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/growthguyafordoptdmax-1.png" width="768" /></p>
+<div id="fit-1" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Fit<a href="guyafor.html#fit-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 </div>
-<div id="evolutionary-analyses" class="section level2">
-<h2><span class="header-section-number">6.4</span> Evolutionary analyses</h2>
-<p><img src="treegrowth_files/figure-html/figvarc-1.png" width="768" /></p>
-<div class="figure"><span id="fig:gmaxphyloc"></span>
-<img src="save/figs/phylogeny.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="2460" />
-<p class="caption">
-Figure 6.2: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
-</p>
-</div>
+<div id="evolutionary-analyses" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Evolutionary analyses<a href="guyafor.html#evolutionary-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <table>
 <caption><span id="tab:maxphylosignalc">Table 6.2: </span>Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.</caption>
+<colgroup>
+<col width="10%" />
+<col width="17%" />
+<col width="18%" />
+<col width="17%" />
+<col width="17%" />
+<col width="17%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">parameter</th>
@@ -282,162 +327,51 @@ Figure 6.2: Distribution of species growth potential (Gmax, cm/yr) in the phylog
 <tbody>
 <tr class="odd">
 <td align="left">gmax</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">0.9999 (p=NA)</td>
+<td align="left">0.4756 (p=0.001)</td>
+<td align="left">0.1371 (p=0.001)</td>
+<td align="left">0.1297 (p=0.027)</td>
+<td align="left">0.1375 (p=0.023)</td>
+<td align="left">0.6875 (p=0.001)</td>
 </tr>
 <tr class="even">
+<td align="left">igv</td>
+<td align="left">0.0308 (p=0.231)</td>
+<td align="left">-0.0204 (p=0.79)</td>
+<td align="left">0.0031 (p=0.66)</td>
+<td align="left">0.0032 (p=0.688)</td>
+<td align="left">1e-04 (p=1)</td>
+</tr>
+<tr class="odd">
 <td align="left">loggmax</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">NA (p=0.001)</td>
-<td align="left">0.9999 (p=NA)</td>
+<td align="left">0.4373 (p=0.001)</td>
+<td align="left">0.1456 (p=0.001)</td>
+<td align="left">0.0799 (p=0.07)</td>
+<td align="left">0.0845 (p=0.075)</td>
+<td align="left">0.7757 (p=0.001)</td>
+</tr>
+<tr class="even">
+<td align="left">logigv</td>
+<td align="left">0.0669 (p=0.098)</td>
+<td align="left">-0.0079 (p=0.485)</td>
+<td align="left">0.0035 (p=0.638)</td>
+<td align="left">0.0037 (p=0.642)</td>
+<td align="left">0.1089 (p=0.315)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="functional-analyses-1" class="section level2">
-<h2><span class="header-section-number">6.5</span> Functional analyses</h2>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
-<table style="border-collapse:collapse; border:none;">
-<tr>
-<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
- 
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-gmax
-</th>
-</tr>
-<tr>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
-Predictors
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-p
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(Intercept)
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.00
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.10 – 0.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.941
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-leaf area
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.03 – 0.24
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.115
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-chlorophyll content
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.20
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.08 – 0.31
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-leaf thoughness
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.13
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.28 – 0.03
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.108
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-leaf nitrogen content
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.16
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.04 – 0.29
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.009</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-sapwood specific gravity
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.25
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.37 – -0.13
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
-Observations
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-281
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-R<sup>2</sup> / R<sup>2</sup> adjusted
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.185 / 0.170
-</td>
-</tr>
-</table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-19-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-20-1.png" width="768" /></p>
+<div id="functional-analyses-1" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Functional analyses<a href="guyafor.html#functional-analyses-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
 </div>
 </div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-Gompertz1825">
-<p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Gompertz1825" class="csl-entry">
+Gompertz, B. (1825). <span class="nocase">On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies</span>. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a>
 </div>
-<div id="ref-Herault2011">
-<p>Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). Functional traits shape ontogenetic growth trajectories of rain forest tree species. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.</p>
+<div id="ref-Herault2011" class="csl-entry">
+Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). <a href="https://doi.org/10.1111/j.1365-2745.2011.01883.x"><span class="nocase">Functional traits shape ontogenetic growth trajectories of rain forest tree species</span></a>. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.
 </div>
 </div>
             </section>
@@ -446,11 +380,10 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
         </div>
       </div>
 <a href="functional-analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="microtopo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -469,6 +402,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -489,6 +423,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true
@@ -503,7 +441,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

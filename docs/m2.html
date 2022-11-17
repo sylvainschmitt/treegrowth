@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 M2 | Test rcontroll &amp; LoggingLab</title>
+  <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 M2 | Test rcontroll &amp; LoggingLab" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 M2 | Test rcontroll &amp; LoggingLab" />
+  
+  <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+<meta name="author" content="Sylvain Schmitt" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="guyafor.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script async defer src="https://hypothes.is/embed.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="html/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Tree Growth</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="model-shape.html"><a href="model-shape.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
+<li class="chapter" data-level="1.2" data-path="model-shape.html"><a href="model-shape.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="1.3" data-path="model-shape.html"><a href="model-shape.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
+<li class="chapter" data-level="1.4" data-path="model-shape.html"><a href="model-shape.html#lognormal"><i class="fa fa-check"></i><b>1.4</b> Lognormal</a></li>
+<li class="chapter" data-level="1.5" data-path="model-shape.html"><a href="model-shape.html#polynomial"><i class="fa fa-check"></i><b>1.5</b> Polynomial</a></li>
+<li class="chapter" data-level="1.6" data-path="model-shape.html"><a href="model-shape.html#weibul"><i class="fa fa-check"></i><b>1.6</b> Weibul</a></li>
+<li class="chapter" data-level="1.7" data-path="model-shape.html"><a href="model-shape.html#amani"><i class="fa fa-check"></i><b>1.7</b> Amani</a></li>
+<li class="chapter" data-level="1.8" data-path="model-shape.html"><a href="model-shape.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
+<li class="chapter" data-level="1.9" data-path="model-shape.html"><a href="model-shape.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="species-integration.html"><a href="species-integration.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="species-integration.html"><a href="species-integration.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
+<li class="chapter" data-level="2.3" data-path="species-integration.html"><a href="species-integration.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
+<li class="chapter" data-level="2.4" data-path="species-integration.html"><a href="species-integration.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
+<li class="chapter" data-level="2.5" data-path="species-integration.html"><a href="species-integration.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
+<li class="chapter" data-level="2.6" data-path="species-integration.html"><a href="species-integration.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
+<li class="chapter" data-level="2.7" data-path="species-integration.html"><a href="species-integration.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-fit.html"><a href="model-fit.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
+<li class="chapter" data-level="3.2" data-path="model-fit.html"><a href="model-fit.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.3" data-path="model-fit.html"><a href="model-fit.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>4.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="4.1.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#analyses"><i class="fa fa-check"></i><b>4.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#general"><i class="fa fa-check"></i><b>4.2.1</b> General</a></li>
+<li class="chapter" data-level="4.2.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#phylogenetic"><i class="fa fa-check"></i><b>4.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="functional-analyses.html"><a href="functional-analyses.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="guyafor.html"><a href="guyafor.html#data-3"><i class="fa fa-check"></i><b>6.1</b> Data</a></li>
+<li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
+<li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
+<li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#functional-analyses-1"><i class="fa fa-check"></i><b>6.5</b> Functional analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="m2.html"><a href="m2.html"><i class="fa fa-check"></i><b>7</b> M2</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Test rcontroll &amp; LoggingLab</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class = rmdreview>
+This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
+</div>
+<div id="m2" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> M2<a href="m2.html#m2" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Packages.</p>
+<p>TROLL simulation an prelog forest.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="m2.html#cb1-1" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">troll</span>(<span class="at">name =</span> <span class="st">&quot;pre&quot;</span>,</span>
+<span id="cb1-2"><a href="m2.html#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">global =</span> <span class="fu">generate_parameters</span>(<span class="at">cols =</span> <span class="dv">300</span>, <span class="at">rows =</span> <span class="dv">300</span>,</span>
+<span id="cb1-3"><a href="m2.html#cb1-3" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">iterperyear =</span> <span class="dv">12</span>, <span class="at">nbiter =</span> <span class="dv">12</span><span class="sc">*</span><span class="dv">600</span>),</span>
+<span id="cb1-4"><a href="m2.html#cb1-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">species =</span> TROLLv3_species,</span>
+<span id="cb1-5"><a href="m2.html#cb1-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">climate =</span> TROLLv3_climatedaytime12,</span>
+<span id="cb1-6"><a href="m2.html#cb1-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">daily =</span> TROLLv3_daytimevar,</span>
+<span id="cb1-7"><a href="m2.html#cb1-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-8"><a href="m2.html#cb1-8" aria-hidden="true" tabindex="-1"></a>prelog <span class="ot">&lt;-</span> <span class="fu">get_forest</span>(sim) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="m2.html#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Forest =</span> <span class="st">&quot;Paracou&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="m2.html#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="st">&quot;6&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="m2.html#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CensusYear =</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="m2.html#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlotArea =</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="m2.html#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idTree =</span> <span class="fu">as.integer</span>(<span class="fu">as.factor</span>(<span class="fu">paste</span>(col, row)))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-14"><a href="m2.html#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CodeAlive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-15"><a href="m2.html#cb1-15" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate</span>(s_name, <span class="fu">c</span>(<span class="st">&quot;Genus&quot;</span>, <span class="st">&quot;Species&quot;</span>), <span class="at">remove =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="m2.html#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&quot;save/M2/paracou.tsv&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="m2.html#cb1-17" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(Family, Genus, Species) <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="m2.html#cb1-18" aria-hidden="true" tabindex="-1"></a>              <span class="fu">unique</span>(), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Genus&quot;</span>, <span class="st">&quot;Species&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="m2.html#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VernName =</span> <span class="cn">NA_character_</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="m2.html#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DBH =</span> dbh<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="m2.html#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Circ =</span> dbh<span class="sc">*</span><span class="dv">100</span><span class="sc">*</span>pi, <span class="at">CircCorr =</span> dbh<span class="sc">*</span><span class="dv">100</span><span class="sc">*</span>pi) <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="m2.html#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Xfield =</span> col, <span class="at">Yfield =</span> row) <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="m2.html#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Xutm =</span> <span class="dv">286395</span> <span class="sc">+</span> Xfield, <span class="at">Yutm =</span> <span class="fl">582935.9</span> <span class="sc">+</span> Yfield, <span class="at">UTMZone =</span> <span class="fu">as.integer</span>(<span class="dv">22</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="m2.html#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Lat =</span> Xutm, <span class="at">Lon =</span> Yutm)</span>
+<span id="cb1-25"><a href="m2.html#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(prelog, <span class="st">&quot;save/M2/prelog.tsv&quot;</span>)</span></code></pre></div>
+<p>Loading and plotting prelog forest.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="m2.html#cb2-1" aria-hidden="true" tabindex="-1"></a>prelog <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(<span class="st">&quot;save/M2/prelog.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 8700 Columns: 73
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr  (6): s_name, Genus, Species, Forest, Plot, Family
+## dbl (65): col, row, CrownDisplacement, Pmass, Nmass, LMA, wsg, Rdark, Vcmax,...
+## lgl  (2): CodeAlive, VernName
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="m2.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb4-2"><a href="m2.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> raster<span class="sc">::</span><span class="fu">as.data.frame</span>(DTMParacou, <span class="at">xy =</span> T),</span>
+<span id="cb4-3"><a href="m2.html#cb4-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> DEM2016)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="m2.html#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">st_as_sf</span>(PlotMask), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="m2.html#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> prelog, <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH)) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="m2.html#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(prelog, Genus <span class="sc">==</span> <span class="st">&quot;Dicorynia&quot;</span>),</span>
+<span id="cb4-7"><a href="m2.html#cb4-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="m2.html#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-9"><a href="m2.html#cb4-9" aria-hidden="true" tabindex="-1"></a>  viridis<span class="sc">::</span><span class="fu">scale_fill_viridis</span>()</span></code></pre></div>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>LoggingLab and postlog forest.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="m2.html#cb5-1" aria-hidden="true" tabindex="-1"></a>prelog <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(<span class="st">&quot;save/M2/prelog.tsv&quot;</span>)</span>
+<span id="cb5-2"><a href="m2.html#cb5-2" aria-hidden="true" tabindex="-1"></a>prelog <span class="ot">&lt;-</span> prelog <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="fu">as.character</span>(Plot),</span>
+<span id="cb5-3"><a href="m2.html#cb5-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">idTree =</span> <span class="fu">as.integer</span>(idTree), </span>
+<span id="cb5-4"><a href="m2.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">UTMZone  =</span> <span class="fu">as.integer</span>(UTMZone), </span>
+<span id="cb5-5"><a href="m2.html#cb5-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">CensusYear =</span> <span class="fu">as.integer</span>(CensusYear), </span>
+<span id="cb5-6"><a href="m2.html#cb5-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">VernName =</span> <span class="fu">as.character</span>(VernName))</span>
+<span id="cb5-7"><a href="m2.html#cb5-7" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">loggingsimulation1</span>(prelog,</span>
+<span id="cb5-8"><a href="m2.html#cb5-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">plotmask =</span> PlotMask, </span>
+<span id="cb5-9"><a href="m2.html#cb5-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">topography =</span> DTMParacou,</span>
+<span id="cb5-10"><a href="m2.html#cb5-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">creekdistances  =</span> CreekDistances, </span>
+<span id="cb5-11"><a href="m2.html#cb5-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">speciescriteria =</span> SpeciesCriteria,</span>
+<span id="cb5-12"><a href="m2.html#cb5-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">volumeparameters =</span> ForestZoneVolumeParametersTable,</span>
+<span id="cb5-13"><a href="m2.html#cb5-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">scenario =</span> <span class="st">&quot;RIL2&quot;</span>, </span>
+<span id="cb5-14"><a href="m2.html#cb5-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">objective =</span> <span class="dv">20</span>,</span>
+<span id="cb5-15"><a href="m2.html#cb5-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">specieslax =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb5-16"><a href="m2.html#cb5-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">objectivelax =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-17"><a href="m2.html#cb5-17" aria-hidden="true" tabindex="-1"></a>                          <span class="at">crowndiameterparameters =</span> ParamCrownDiameterAllometry,</span>
+<span id="cb5-18"><a href="m2.html#cb5-18" aria-hidden="true" tabindex="-1"></a>                          <span class="at">advancedloggingparameters =</span> <span class="fu">loggingparameters</span>())</span>
+<span id="cb5-19"><a href="m2.html#cb5-19" aria-hidden="true" tabindex="-1"></a>postlog <span class="ot">&lt;-</span> sim<span class="sc">$</span>inventory</span>
+<span id="cb5-20"><a href="m2.html#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(postlog, <span class="st">&quot;save/M2/postlog.tsv&quot;</span>)</span></code></pre></div>
+<p>Loading and plotting postlog forest.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="m2.html#cb6-1" aria-hidden="true" tabindex="-1"></a>postlog <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(<span class="st">&quot;save/M2/postlog.tsv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 1547 Columns: 110
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr (15): s_name, ScientificName, Genus, Species, Forest, Plot, Family.x, Ta...
+## dbl (88): col, row, CrownDisplacement, Pmass, Nmass, LMA, wsg, Rdark, Vcmax,...
+## lgl  (7): CodeAlive, VernName, Aggregative, DistCriteria, SlopeCriteria, Har...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="m2.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-2"><a href="m2.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> raster<span class="sc">::</span><span class="fu">as.data.frame</span>(DTMParacou, <span class="at">xy =</span> T),</span>
+<span id="cb8-3"><a href="m2.html#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> DEM2016)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="m2.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">st_as_sf</span>(PlotMask), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="m2.html#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> postlog, <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="m2.html#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(postlog, Genus <span class="sc">==</span> <span class="st">&quot;Dicorynia&quot;</span>),</span>
+<span id="cb8-7"><a href="m2.html#cb8-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="m2.html#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-9"><a href="m2.html#cb8-9" aria-hidden="true" tabindex="-1"></a>  viridis<span class="sc">::</span><span class="fu">scale_fill_viridis</span>()</span></code></pre></div>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>TROLL simulation an forest regrowth.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="m2.html#cb9-1" aria-hidden="true" tabindex="-1"></a>postlog <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(<span class="st">&quot;save/M2/postlog.tsv&quot;</span>)</span>
+<span id="cb9-2"><a href="m2.html#cb9-2" aria-hidden="true" tabindex="-1"></a>postlog <span class="ot">&lt;-</span> postlog[<span class="dv">1</span><span class="sc">:</span><span class="dv">54</span>]</span>
+<span id="cb9-3"><a href="m2.html#cb9-3" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">troll</span>(<span class="at">name =</span> <span class="st">&quot;regrowth.&quot;</span>,</span>
+<span id="cb9-4"><a href="m2.html#cb9-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">global =</span> <span class="fu">generate_parameters</span>(<span class="at">cols =</span> <span class="dv">300</span>, <span class="at">rows =</span> <span class="dv">300</span>,</span>
+<span id="cb9-5"><a href="m2.html#cb9-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">iterperyear =</span> <span class="dv">12</span>, <span class="at">nbiter =</span> <span class="dv">12</span><span class="sc">*</span><span class="dv">65</span>),</span>
+<span id="cb9-6"><a href="m2.html#cb9-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">species =</span> TROLLv3_species,</span>
+<span id="cb9-7"><a href="m2.html#cb9-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">climate =</span> TROLLv3_climatedaytime12,</span>
+<span id="cb9-8"><a href="m2.html#cb9-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">daily =</span> TROLLv3_daytimevar,</span>
+<span id="cb9-9"><a href="m2.html#cb9-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">forest =</span> <span class="fu">as.data.frame</span>(postlog),</span>
+<span id="cb9-10"><a href="m2.html#cb9-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-11"><a href="m2.html#cb9-11" aria-hidden="true" tabindex="-1"></a>regrowth <span class="ot">&lt;-</span> <span class="fu">get_forest</span>(sim) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="m2.html#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Forest =</span> <span class="st">&quot;Paracou&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-13"><a href="m2.html#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Plot =</span> <span class="st">&quot;6&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="m2.html#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CensusYear =</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-15"><a href="m2.html#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlotArea =</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-16"><a href="m2.html#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idTree =</span> <span class="fu">as.integer</span>(<span class="fu">as.factor</span>(<span class="fu">paste</span>(col, row)))) <span class="sc">%&gt;%</span></span>
+<span id="cb9-17"><a href="m2.html#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CodeAlive =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="m2.html#cb9-18" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate</span>(s_name, <span class="fu">c</span>(<span class="st">&quot;Genus&quot;</span>, <span class="st">&quot;Species&quot;</span>), <span class="at">remove =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb9-19"><a href="m2.html#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&quot;save/M2/paracou.tsv&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-20"><a href="m2.html#cb9-20" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(Family, Genus, Species) <span class="sc">%&gt;%</span></span>
+<span id="cb9-21"><a href="m2.html#cb9-21" aria-hidden="true" tabindex="-1"></a>              <span class="fu">unique</span>(), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Genus&quot;</span>, <span class="st">&quot;Species&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-22"><a href="m2.html#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">VernName =</span> <span class="cn">NA_character_</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-23"><a href="m2.html#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DBH =</span> dbh<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-24"><a href="m2.html#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Circ =</span> dbh<span class="sc">*</span><span class="dv">100</span><span class="sc">*</span>pi, <span class="at">CircCorr =</span> dbh<span class="sc">*</span><span class="dv">100</span><span class="sc">*</span>pi) <span class="sc">%&gt;%</span></span>
+<span id="cb9-25"><a href="m2.html#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Xfield =</span> col, <span class="at">Yfield =</span> row) <span class="sc">%&gt;%</span></span>
+<span id="cb9-26"><a href="m2.html#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Xutm =</span> <span class="dv">286395</span> <span class="sc">+</span> Xfield, <span class="at">Yutm =</span> <span class="fl">582935.9</span> <span class="sc">+</span> Yfield, <span class="at">UTMZone =</span> <span class="fu">as.integer</span>(<span class="dv">22</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-27"><a href="m2.html#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Lat =</span> Xutm, <span class="at">Lon =</span> Yutm)</span>
+<span id="cb9-28"><a href="m2.html#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(regrowth, <span class="st">&quot;save/M2/regrowth.tsv&quot;</span>)</span></code></pre></div>
+<p>Loading and plotting postlog forest.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="m2.html#cb10-1" aria-hidden="true" tabindex="-1"></a>regrowth <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(<span class="st">&quot;save/M2/regrowth.tsv&quot;</span>)</span>
+<span id="cb10-2"><a href="m2.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="m2.html#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="at">data =</span> <span class="fu">as.data.frame</span>(DTMParacou, <span class="at">xy =</span> T),</span>
+<span id="cb10-4"><a href="m2.html#cb10-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> DEM2016)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="m2.html#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">st_as_sf</span>(PlotMask), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="m2.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> regrowth, <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="m2.html#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">filter</span>(regrowth, Genus <span class="sc">==</span> <span class="st">&quot;Dicorynia&quot;</span>),</span>
+<span id="cb10-8"><a href="m2.html#cb10-8" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> Xutm, <span class="at">y =</span> Yutm, <span class="at">size =</span> DBH), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="m2.html#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb10-10"><a href="m2.html#cb10-10" aria-hidden="true" tabindex="-1"></a>  viridis<span class="sc">::</span><span class="fu">scale_fill_viridis</span>()</span></code></pre></div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="guyafor.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

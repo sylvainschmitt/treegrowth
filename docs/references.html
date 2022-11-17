@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | Tree Growth" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -24,16 +23,17 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-09-28" />
+<meta name="date" content="2022-11-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="guyafor.html"/>
+<link rel="prev" href="microtopo.html"/>
 
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,11 +49,35 @@
 
 
 
-
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -72,7 +96,8 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a><ul>
+<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="model-shape.html"><a href="model-shape.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
 <li class="chapter" data-level="1.2" data-path="model-shape.html"><a href="model-shape.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
 <li class="chapter" data-level="1.3" data-path="model-shape.html"><a href="model-shape.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
@@ -83,7 +108,8 @@
 <li class="chapter" data-level="1.8" data-path="model-shape.html"><a href="model-shape.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
 <li class="chapter" data-level="1.9" data-path="model-shape.html"><a href="model-shape.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a><ul>
+<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="species-integration.html"><a href="species-integration.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
 <li class="chapter" data-level="2.2" data-path="species-integration.html"><a href="species-integration.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
 <li class="chapter" data-level="2.3" data-path="species-integration.html"><a href="species-integration.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
@@ -92,33 +118,54 @@
 <li class="chapter" data-level="2.6" data-path="species-integration.html"><a href="species-integration.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
 <li class="chapter" data-level="2.7" data-path="species-integration.html"><a href="species-integration.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a><ul>
+<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="model-fit.html"><a href="model-fit.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 <li class="chapter" data-level="3.2" data-path="model-fit.html"><a href="model-fit.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
 <li class="chapter" data-level="3.3" data-path="model-fit.html"><a href="model-fit.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a><ul>
-<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a><ul>
+<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a>
+<ul>
 <li class="chapter" data-level="4.1.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>4.1.1</b> Environmental descriptors</a></li>
 <li class="chapter" data-level="4.1.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#analyses"><i class="fa fa-check"></i><b>4.1.2</b> Analyses</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a><ul>
+<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a>
+<ul>
 <li class="chapter" data-level="4.2.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#general"><i class="fa fa-check"></i><b>4.2.1</b> General</a></li>
 <li class="chapter" data-level="4.2.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#phylogenetic"><i class="fa fa-check"></i><b>4.2.2</b> Phylogenetic</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a><ul>
+<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="functional-analyses.html"><a href="functional-analyses.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
-<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a><ul>
+<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
+<ul>
 <li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a><ul>
+<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
+<ul>
 <li class="chapter" data-level="6.1" data-path="guyafor.html"><a href="guyafor.html#data-3"><i class="fa fa-check"></i><b>6.1</b> Data</a></li>
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
 <li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#functional-analyses-1"><i class="fa fa-check"></i><b>6.5</b> Functional analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
+<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
+<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
+<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -144,42 +191,42 @@
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="references" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
-<div id="refs" class="references">
-<div>
-<p>Amani, B.H.K., N’Guessan, A.E., Derroire, G., N’dja, J.K., Elogne, A.G.M., Traoré, K., Zo-Bi, I.C. &amp; Hérault, B. (2021). The potential of secondary forests to restore biodiversity of the lost forests in semi-deciduous West Africa. <em>Biological Conservation</em>, <strong>259</strong>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+Amani, B.H.K., N’Guessan, A.E., Derroire, G., N’dja, J.K., Elogne, A.G.M., Traoré, K., Zo-Bi, I.C. &amp; Hérault, B. (2021). <a href="https://doi.org/10.1016/j.biocon.2021.109154"><span class="nocase">The potential of secondary forests to restore biodiversity of the lost forests in semi-deciduous West Africa</span></a>. <em>Biological Conservation</em>, <strong>259</strong>.
 </div>
-<div>
-<p>Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). System for Automated Geoscientific Analyses (SAGA) v. 2.1.4. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a></p>
+<div class="csl-entry">
+Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). <span class="nocase">System for Automated Geoscientific Analyses (SAGA) v. 2.1.4</span>. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a>
 </div>
-<div>
-<p>Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). Drought sensitivity shapes species distribution patterns in tropical forests. <em>Nature</em>, <strong>447</strong>, 80–82.</p>
+<div class="csl-entry">
+Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). <a href="https://doi.org/10.1038/nature05747"><span class="nocase">Drought sensitivity shapes species distribution patterns in tropical forests</span></a>. <em>Nature</em>, <strong>447</strong>, 80–82.
 </div>
-<div>
-<p>Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a></p>
+<div class="csl-entry">
+Ferry, B., Morneau, F., Bontemps, J.D., Blanc, L. &amp; Freycon, V. (2010). <a href="https://doi.org/10.1111/j.1365-2745.2009.01604.x"><span class="nocase">Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest</span></a>. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116.
 </div>
-<div>
-<p>Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a></p>
+<div class="csl-entry">
+Gompertz, B. (1825). <span class="nocase">On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies</span>. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a>
 </div>
-<div>
-<p>Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). Functional traits shape ontogenetic growth trajectories of rain forest tree species. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.</p>
+<div class="csl-entry">
+Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). <a href="https://doi.org/10.1111/j.1365-2745.2011.01883.x"><span class="nocase">Functional traits shape ontogenetic growth trajectories of rain forest tree species</span></a>. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.
 </div>
-<div>
-<p>John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). Soil nutrients influence spatial distributions of tropical tree species. <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="http://arxiv.org/abs/2656">http://arxiv.org/abs/2656</a></p>
+<div class="csl-entry">
+John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). <span class="nocase">Soil nutrients influence spatial distributions of tropical tree species.</span> <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="https://arxiv.org/abs/2656">https://arxiv.org/abs/2656</a>
 </div>
-<div>
-<p>Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). phylosignal: an {R} package to measure, test, and explore the phylogenetic signal. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a></p>
+<div class="csl-entry">
+Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). <span class="nocase">phylosignal: an <span>{</span>R<span>}</span> package to measure, test, and explore the phylogenetic signal</span>. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a>
 </div>
-<div>
-<p>Nakagawa, S. &amp; Schielzeth, H. (2013). A general and simple method for obtaining R2 from generalized linear mixed-effects models. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.</p>
+<div class="csl-entry">
+Nakagawa, S. &amp; Schielzeth, H. (2013). <a href="https://doi.org/10.1111/j.2041-210x.2012.00261.x"><span class="nocase">A general and simple method for obtaining R2 from generalized linear mixed-effects models</span></a>. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.
 </div>
-<div>
-<p>Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488%20https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a></p>
+<div class="csl-entry">
+Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). <span class="nocase">Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest</span>. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a>
 </div>
-<div>
-<p>Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter? <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a></p>
+<div class="csl-entry">
+Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). <span class="nocase">A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter?</span> <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a>
 </div>
 </div>
 </div>
@@ -188,12 +235,11 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
           </div>
         </div>
       </div>
-<a href="guyafor.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="microtopo.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -212,6 +258,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -232,6 +279,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "section",
 "scroll_highlight": true
@@ -246,7 +297,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

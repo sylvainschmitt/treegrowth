@@ -16,7 +16,6 @@ fig:gmaxcorrelogb
 fig:lipab
 tab:guyafortab
 fig:mdataguyaforfig
-fig:gmaxphyloc
 tab:maxphylosignalc
 model-shape
 data
@@ -57,3 +56,11 @@ model-1
 fit-1
 evolutionary-analyses
 functional-analyses-1
+microtopo
+functional-traits
+all-1
+interspecific
+intraspecific
+growth
+interspecific-1
+intraspecific-1

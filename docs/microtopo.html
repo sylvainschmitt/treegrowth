@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Model fit | Tree Growth</title>
+  <title>Chapter 7 MicroTopo | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Model fit | Tree Growth" />
+  <meta property="og:title" content="Chapter 7 MicroTopo | Tree Growth" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Model fit | Tree Growth" />
+  <meta name="twitter:title" content="Chapter 7 MicroTopo | Tree Growth" />
   
   <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="species-integration.html"/>
-<link rel="next" href="eco-evolutionary-analyses.html"/>
+<link rel="prev" href="guyafor.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -191,136 +191,352 @@ div.csl-indent {
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="model-fit" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Model fit<a href="model-fit.html#model-fit" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this chapter, I fitted the selected model.</p>
-<div id="data-2" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Data<a href="model-fit.html#data-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I focused on trees at 20 meters from any plot edges for neighbourhood effect.
-I used only recruited trees in the censuses with at least 10 measurements of diameter at breast height (DBH, cm).
-I used only species with at least 10 trees following previous requirements (Tab. <a href="model-fit.html#tab:datafulltab">3.1</a> &amp; Fig. <a href="model-fit.html#fig:mdatafullfig">3.1</a>).</p>
-<table>
-<caption><span id="tab:datafulltab">Table 3.1: </span>Metrics on inventory data used to fit the full model including sample size (N), memdian, minimum and maximum values for families, genera, species, individuals, observations, cenusus, recruitment year (year0), last censused year (yearmax), recruitment diameter (dbh0) and last censused diameter (dbhmax).</caption>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">N</th>
-<th align="right">Median</th>
-<th align="right">Minimum</th>
-<th align="right">Maximum</th>
+<div id="microtopo" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> MicroTopo<a href="microtopo.html#microtopo" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="functional-traits" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Functional traits<a href="microtopo.html#functional-traits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="all-1" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> All<a href="microtopo.html#all-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-23-1.png" width="768" /></p>
+</div>
+<div id="interspecific" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Interspecific<a href="microtopo.html#interspecific" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Based on Vleminckx et al., (2021).</p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+betatwi
+</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">families</td>
-<td align="right">38</td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
 </tr>
-<tr class="even">
-<td align="left">genera</td>
-<td align="right">95</td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.24 – 0.22
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.925
+</td>
 </tr>
-<tr class="odd">
-<td align="left">species</td>
-<td align="right">138</td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf thickness
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.20
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.43 – 0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.096
+</td>
 </tr>
-<tr class="even">
-<td align="left">individuals</td>
-<td align="right">7 961</td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf area
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.31
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.05 – 0.57
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.019</strong>
+</td>
 </tr>
-<tr class="odd">
-<td align="left">observations</td>
-<td align="right">117 688</td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+trunk bark thickness
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.26
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01 – 0.51
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.039</strong>
+</td>
 </tr>
-<tr class="even">
-<td align="left">census</td>
-<td align="right"></td>
-<td align="right">13</td>
-<td align="right">11</td>
-<td align="right">30</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+67
+</td>
 </tr>
-<tr class="odd">
-<td align="left">year0</td>
-<td align="right"></td>
-<td align="right">1 995</td>
-<td align="right">1 985</td>
-<td align="right">2 010</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.148 / 0.107
+</td>
 </tr>
-<tr class="even">
-<td align="left">yearmax</td>
-<td align="right"></td>
-<td align="right">2 019</td>
-<td align="right">1 995</td>
-<td align="right">2 021</td>
-</tr>
-<tr class="odd">
-<td align="left">dbh0</td>
-<td align="right"></td>
-<td align="right">11</td>
-<td align="right">5</td>
-<td align="right">15</td>
-</tr>
-<tr class="even">
-<td align="left">dbhmax</td>
-<td align="right"></td>
-<td align="right">15</td>
-<td align="right">6</td>
-<td align="right">77</td>
-</tr>
-</tbody>
 </table>
-<div class="figure"><span style="display:block;" id="fig:mdatafullfig"></span>
-<img src="treegrowth_files/figure-html/mdatafullfig-1.png" alt="Tree diameter trajectories in reduced data. Color represent individuals." width="768" />
-<p class="caption">
-Figure 3.1: Tree diameter trajectories in reduced data. Color represent individuals.
-</p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-26-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-27-1.png" width="768" /></p>
+</div>
+<div id="intraspecific" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Intraspecific<a href="microtopo.html#intraspecific" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Based on Schmitt et al., (2020).</p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+yhat
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.63 – 0.63
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.000
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+specific leaf area
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.57
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.26 – 0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.088
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+leaf area
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.38
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.06 – 0.31
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.240
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+11
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.353 / 0.191
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-30-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-31-1.png" width="768" /></p>
 </div>
 </div>
-<div id="model" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Model<a href="model-fit.html#model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I used a Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
-<p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + Gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
-<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(<a href="#ref-Gompertz1825" role="doc-biblioref">Gompertz 1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>,
-where <span class="math inline">\(Gmax_i\)</span> is the fixed maximum growth potential of every individual,
-<span class="math inline">\(Dopt_i\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
-and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in <a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>.
-<span class="math inline">\(Dopt_i\)</span> and <span class="math inline">\(Ks_i\)</span> are random effects centered on species parameters <span class="math inline">\(Dopt_s\)</span> and <span class="math inline">\(Ks_s\)</span> with associated variances <span class="math inline">\(\sigma_D\)</span> and <span class="math inline">\(\sigma_K\)</span>.</p>
+<div id="growth" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Growth<a href="microtopo.html#growth" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="interspecific-1" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Interspecific<a href="microtopo.html#interspecific-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+log(gmax)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.18 – -0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.003</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+betatwi
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.11
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04 – 0.19
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.002</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+108
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.084 / 0.075
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-34-1.png" width="768" /></p>
 </div>
-<div id="fit" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> Fit<a href="model-fit.html#fit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The model correctly converged (<span class="math inline">\(\hat R &lt; 1.1\)</span>) for the majority of <span class="math inline">\(Gmax_i\)</span>.
-All <span class="math inline">\(\sigma\)</span> have a small posterior but difficulties to converge.
-The correlation between <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> is acceptable but marked.
-<span class="math inline">\(Gmax_i\)</span> posteriors have logical uncertainty but are varying widely among individuals.</p>
-<p><img src="treegrowth_files/figure-html/growthfullrhat-1.png" width="768" /></p>
-<p><img src="save/figs/growthfulltrace.png" width="1050" /></p>
-<p><img src="save/figs/growthfullpairs.png" width="1094" /></p>
-<p><img src="save/figs/growthfullgmax.png" width="1050" /></p>
-<p><img src="save/figs/growthfulldoptdmax.png" width="1050" /></p>
+<div id="intraspecific-1" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Intraspecific<a href="microtopo.html#intraspecific-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+log(gmax)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.79
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.83 – -0.74
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+yhat
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.86
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-2.20 – 0.47
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.206
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+1942
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.001 / 0.000
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-37-1.png" width="768" /></p>
 
 </div>
-</div>
-<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-Gompertz1825" class="csl-entry">
-Gompertz, B. (1825). <span class="nocase">On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies</span>. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a>
-</div>
-<div id="ref-Herault2011" class="csl-entry">
-Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). <a href="https://doi.org/10.1111/j.1365-2745.2011.01883.x"><span class="nocase">Functional traits shape ontogenetic growth trajectories of rain forest tree species</span></a>. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.
 </div>
 </div>
             </section>
@@ -328,8 +544,8 @@ Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Pain
           </div>
         </div>
       </div>
-<a href="species-integration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="eco-evolutionary-analyses.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="guyafor.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

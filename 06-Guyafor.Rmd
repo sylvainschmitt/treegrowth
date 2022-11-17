@@ -165,14 +165,14 @@ save(fit_guyafor, file = "save/growthguyafor.Rdata")
 
 ## Fit
 
-```{r growthguyafortrace}
+```{r growthguyafortrace, eval=F}
 vroom::vroom('save/growthguyafor/sigma.tsv', col_names = c("iteration", "parameter", "value")) %>% 
   ggplot(aes(iteration, value)) +
   geom_line() +
   facet_wrap(~ parameter, scales = "free_y", nrow = 3)
 ```
 
-```{r growthguyaforgmax}
+```{r growthguyaforgmax, eval=F}
 vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
   filter(ind %in% 1:100) %>% 
   group_by(ind) %>% 
@@ -190,7 +190,7 @@ vroom::vroom('save/growthguyafor/gmax.tsv') %>%
   scale_y_log10()
 ```
 
-```{r growthguyafordoptdmax}
+```{r growthguyafordoptdmax, eval=F}
 vroom::vroom('save/growthguyafor/dopt.tsv', col_names = c("iteration", "parameter", "value")) %>% 
   group_by(parameter) %>% 
   summarise(value = median(value)) %>% 
@@ -232,7 +232,7 @@ tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.
 ape::write.tree(tree$scenario.3, "save/growthguyafor/phylogeny_guyafor.tree")
 ```
 
-```{r dataanc}
+```{r dataanc, eval=F}
 growth <- vroom::vroom("save/growthguyafor/growthguyafor.tsv") %>% 
   mutate(species = paste(Genus, Species))
 phylo <- ape::read.tree("save/growthguyafor/phylogeny_guyafor.tree")
@@ -246,7 +246,7 @@ p4d <- phylo4d(phylo,
                  dplyr::select(-species))   
 ```
 
-```{r figvarc}
+```{r figvarc, eval=F}
 nlme::lme(log(median) ~  1, random=~1|Family/Genus/species, growth) %>% 
   ape::varcomp(scale = F, cum = F) %>% 
   as.vector() %>% 
@@ -266,7 +266,7 @@ nlme::lme(log(median) ~  1, random=~1|Family/Genus/species, growth) %>%
   scale_y_reverse()
 ```
 
-```{r gmaxphyloc, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
+```{r gmaxphyloc, eval=F, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
 g <- fortify(phylo) %>% 
    mutate(species = gsub("_", " ", label)) %>%
    mutate(label = species) %>% 
@@ -296,7 +296,7 @@ phyloSignal(p4d = p4d, method = "all") %>%
 
 ## Functional analyses
 
-```{r dataan2c}
+```{r dataan2c, eval=F}
 rm(list = ls()) ; invisible(gc())
 growth <- vroom::vroom('save/growthguyafor/growthguyafor.tsv') %>% 
   mutate(species = paste(Genus, Species)) %>% 
@@ -383,7 +383,7 @@ guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>%
     filter(!is.na(gmax))  
 ```
 
-```{r }
+```{r, eval=F}
 all_data <- bind_rows(
   phd %>% 
     mutate(dataset = "Schmitt et al., (2020)", response = "Gmax_i", response_value = gmax) %>% 
@@ -453,7 +453,7 @@ all_data <- bind_rows(
                         "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))
 ```
 
-```{r }
+```{r, eval=F}
 all_reg <- all_data %>% 
   filter(trait != "gmax") %>% 
   group_by(dataset, response, trait) %>% 
@@ -462,7 +462,7 @@ all_reg <- all_data %>%
   dplyr::select(-term)
 ```
 
-```{r , fig.height=10, fig.width=8}
+```{r, eval=F, fig.height=10, fig.width=8}
 all_reg %>% 
   mutate(p_value = ifelse(p_value == 0, 10^-4, p_value)) %>%
   ggplot(aes(x = trait, y = estimate, alpha = p_value < 0.01, fill  = log10(p_value), label = trait)) +
@@ -477,7 +477,7 @@ all_reg %>%
   scale_alpha_discrete(guide = "none")
 ```
 
-```{r}
+```{r, eval=F}
 t <- all_data %>% 
   filter(dataset == "Vleminckx et al., (2021)") %>% 
   filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
@@ -491,14 +491,14 @@ t <- all_data %>%
   dplyr::rename(gmax = response_value)
 ```
 
-```{r}
+```{r, eval=F}
 lm(gmax ~ ., data = t) %>%
   step(trace = F) %>%
   sjPlot::tab_model(show.icc = F)
 ```
 
 
-```{r}
+```{r, eval=F}
 (lm(gmax ~ ., data = t) %>%
   step(trace = F) %>%
   relaimpo::calc.relimp())@lmg %>% 
@@ -512,7 +512,7 @@ lm(gmax ~ ., data = t) %>%
 ```
 
 
-```{r}
+```{r, eval=F}
 all_data %>%  
   filter(dataset == "Vleminckx et al., (2021)") %>% 
   filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
