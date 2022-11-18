@@ -159,18 +159,106 @@ fit <- growth$sample(
   max_treedepth = 12
 )
 fit$save_output_files(dir = "save/growthguyafor")
-fit_guyafor <- rstan::read_stan_csv(fit$output_files())
-save(fit_guyafor, file = "save/growthguyafor.Rdata") 
+```
+
+
+```{r, eval=F, echo=T}
+fit <- read_cmdstan_csv("save/growthguyafor/growth-202210280057-1-361cf6.csv")
+draws <- drop(fit$post_warmup_draws) %>% 
+  as_data_frame() %>% 
+  mutate(iteration = 1:n()) %>% 
+  gather(parameter, value, -iteration)
+vroom::vroom_write(draws, file = 'save/growthguyafor/chain1.tsv')
+rm(fit, draws)
+gc()
+```
+
+```{r, eval=F, echo=T}
+fit <- read_cmdstan_csv("save/growthguyafor/growth-202210280057-2-361cf6.csv")
+draws <- drop(fit$post_warmup_draws) %>% 
+  as_data_frame() %>% 
+  mutate(iteration = 1:n()) %>% 
+  gather(parameter, value, -iteration)
+vroom::vroom_write(draws, file = 'save/growthguyafor/chain2.tsv')
+rm(fit, draws)
+gc()
+```
+
+```{r, eval=F, echo=T}
+fit <- read_cmdstan_csv("save/growthguyafor/growth-202210280057-3-361cf6.csv")
+draws <- drop(fit$post_warmup_draws) %>% 
+  as_data_frame() %>% 
+  mutate(iteration = 1:n()) %>% 
+  gather(parameter, value, -iteration)
+vroom::vroom_write(draws, file = 'save/growthguyafor/chain3.tsv')
+rm(fit, draws)
+gc()
+```
+
+```{r, eval=F, echo=T}
+fit <- read_cmdstan_csv("save/growthguyafor/growth-202210280057-4-361cf6.csv")
+draws <- drop(fit$post_warmup_draws) %>% 
+  as_data_frame() %>% 
+  mutate(iteration = 1:n()) %>% 
+  gather(parameter, value, -iteration)
+vroom::vroom_write(draws, file = 'save/growthguyafor/chain4.tsv')
+rm(fit, draws)
+gc()
+```
+
+```{bash, eval=F, echo=T}
+grep gmax chain1.tsv > gmax1.tsv
+grep gmax chain2.tsv > gmax2.tsv
+grep gmax chain3.tsv > gmax3.tsv
+grep gmax chain4.tsv > gmax4.tsv
+```
+
+```{r, eval=F, echo=T}
+bind_rows(
+  vroom::vroom('save/growthguyafor/gmax1.tsv', col_names = c("iteration", "parameter", "value")) %>%
+  mutate(chain = 1),
+  vroom::vroom('save/growthguyafor/gmax2.tsv', col_names = c("iteration", "parameter", "value")) %>%
+  mutate(chain = 2),
+  vroom::vroom('save/growthguyafor/gmax3.tsv', col_names = c("iteration", "parameter", "value")) %>%
+  mutate(chain = 3),
+  vroom::vroom('save/growthguyafor/gmax4.tsv', col_names = c("iteration", "parameter", "value")) %>%
+  mutate(chain = 4)
+) %>% 
+  separate(parameter, c("gmax", "ind")) %>% 
+  vroom::vroom_write(file = 'save/growthguyafor/gmax.tsv')
+```
+
+```{r, eval=F, echo=T}
+library(csv2sql)
+gmax <- vroom::vroom(file = 'save/growthguyafor/gmax.tsv')
+write_csv(gmax, file = 'save/growthguyafor/gmax.csv')
+csv_to_sqlite(csv_name = 'save/growthguyafor/gmax.csv', 
+              db_name = 'save/growthguyafor/gmax.sql', 
+              table_name = "gmax")
+unlink('save/growthguyafor/gmax.csv')
 ```
 
 ## Fit
 
-```{r growthguyafortrace, eval=F}
-vroom::vroom('save/growthguyafor/sigma.tsv', col_names = c("iteration", "parameter", "value")) %>% 
-  ggplot(aes(iteration, value)) +
-  geom_line() +
-  facet_wrap(~ parameter, scales = "free_y", nrow = 3)
+```{r}
+
+gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/growthguyafor/gmax.sql")
+ 
+tbl(gmax, "gmax")
+  filter(ind %in% 1:100) %>% 
+  group_by(ind) %>% 
+  summarise(ll = quantile(value, 0.05), l = quantile(value, 0.25), 
+            m = quantile(value, 0.5), 
+            h = quantile(value, 0.75), hh = quantile(value, 0.95))
+
+
+DBI::dbDisconnect(guyafor) ; rm(guyafor)
+
+library(dtplyr)
+gmax <- vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
+  lazy_dt()
 ```
+
 
 ```{r growthguyaforgmax, eval=F}
 vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
@@ -188,20 +276,6 @@ vroom::vroom('save/growthguyafor/gmax.tsv') %>%
   xlab("First 100 individuals") +
   ylab("gmax") +
   scale_y_log10()
-```
-
-```{r growthguyafordoptdmax, eval=F}
-vroom::vroom('save/growthguyafor/dopt.tsv', col_names = c("iteration", "parameter", "value")) %>% 
-  group_by(parameter) %>% 
-  summarise(value = median(value)) %>% 
-  separate(parameter, c("dopt", "s", "sp")) %>% 
-  mutate(sp = as.numeric(sp)) %>% 
-  left_join(vroom::vroom("save/mdataguyafor.tsv") %>% 
-              group_by(sp, Family, Genus, Species) %>% 
-              summarise(dmax = max(DBH))) %>% 
-  ggplot(aes(y = sp, x = value/dmax*100, col = value/dmax>1)) +
-  geom_point() +xlab(expression(frac(Dopt,Dmax))) + ylab("Species") + 
-  scale_color_discrete(expression(frac(Dopt,Dmax)>1))
 ```
 
 ## Evolutionary analyses
