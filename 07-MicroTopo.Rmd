@@ -13,9 +13,9 @@ opts_chunk$set(
 ## Functional traits
 
 ```{r dataan3}
-yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022.tsv") %>% 
-  dplyr::select(idTree, Mean) %>% 
-  dplyr::rename(yhat = Mean)
+yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022_freq.tsv") %>% 
+  dplyr::select(idTree, freq) %>% 
+  dplyr::rename(yhat = freq)
 betatwi <- vroom::vroom("data/microtopo/beta_estimate.tsv") %>% 
   mutate(species = paste(genus, species), betatwi = m) %>% 
   dplyr::select(species, betatwi)
@@ -170,16 +170,16 @@ all_data <- bind_rows(
                         "SRL"	= "specific root length",				
                         "Tissue_density"	= "fine roots tissue density",				
                         "SRTA"	= "specific root tip abundance",				
-                        "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))
+                        "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))  
 ```
 
 ```{r }
 all_reg <- all_data %>% 
   filter(trait != "gmax") %>% 
   group_by(dataset, response, trait) %>% 
-  do(lm(log(response_value) ~ scale(log(abs(trait_value))), data = .) %>% moderndive::get_regression_table()) %>% 
+  do(lm(scale(response_value) ~ scale(log(abs(trait_value))), data = .) %>% moderndive::get_regression_table()) %>% 
   filter(term != "intercept") %>% 
-  dplyr::select(-term)
+  dplyr::select(-term)  
 ```
 
 ```{r , fig.height=10, fig.width=8}
@@ -194,8 +194,7 @@ all_reg %>%
   viridis::scale_fill_viridis(expression(log[10](p[value])), direction = -1) +
   ylab("Standard estimate with confidence interval") +
   theme(strip.text.y = element_text(angle = 0), axis.title.y = element_blank(), legend.position = "bottom") +
-  scale_alpha_discrete(guide = "none")  +
-  ylim(-2, 2)
+  scale_alpha_discrete(guide = "none") 
 ```
 
 ### Interspecific
@@ -213,42 +212,13 @@ t <- all_data %>%
   dplyr::select(-species) %>% 
   mutate_all(log) %>% 
   mutate_all(scale) %>% 
-  dplyr::rename(betatwi = response_value)
+  dplyr::rename(betatwi = response_value) 
 ```
 
 ```{r}
 lm(betatwi ~ ., data = t) %>%
   step(trace = F) %>%
-  sjPlot::tab_model(show.icc = F)
-```
-
-
-```{r}
-(lm(betatwi ~ ., data = t) %>%
-  step(trace = F) %>%
-  relaimpo::calc.relimp())@lmg %>% 
-  data.frame(trait = names(.), lmg = .) %>% 
-  ggplot(aes(reorder(trait, lmg), lmg, label = paste(round(lmg*100), "%"))) +
-  geom_col() +
-  geom_text(nudge_y = .01) +
-  coord_flip() +
-  ylab(expression(R^2)) +
-  theme(axis.title.y = element_blank())
-```
-
-
-```{r}
-all_data %>%  
-  filter(dataset == "Vleminckx et al., (2021)") %>% 
-  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
-  filter(!(trait %in% c("leaf phosphorus content", "fine roots tissue density"))) %>% 
-  ggplot(aes(trait_value, response_value)) +
-  geom_point() +
-  facet_wrap(~ trait, scales = "free") +
-  scale_x_log10() + scale_y_log10() + geom_smooth(method = "lm") + 
-  ylab(expression(Gmax[s]~cm.year^-1)) +
-  theme(axis.title.x = element_blank(), legend.position = "bottom") +
-  scale_color_discrete(guide = "none")
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ### Intraspecific
@@ -266,42 +236,13 @@ t <- all_data %>%
   dplyr::select(-species) %>% 
   mutate_all(log) %>% 
   mutate_all(scale) %>% 
-  dplyr::rename(yhat = response_value)
+  dplyr::rename(yhat = response_value) 
 ```
 
 ```{r}
-lm(yhat ~ ., data = t) %>%
+lm(scale(yhat) ~ ., data = t) %>%
   step(trace = F) %>%
-  sjPlot::tab_model(show.icc = F)
-```
-
-
-```{r}
-(lm(yhat ~ ., data = t) %>%
-  step(trace = F) %>%
-  relaimpo::calc.relimp())@lmg %>% 
-  data.frame(trait = names(.), lmg = .) %>% 
-  ggplot(aes(reorder(trait, lmg), lmg, label = paste(round(lmg*100), "%"))) +
-  geom_col() +
-  geom_text(nudge_y = .01) +
-  coord_flip() +
-  ylab(expression(R^2)) +
-  theme(axis.title.y = element_blank())
-```
-
-
-```{r}
-all_data %>%  
-  filter(dataset == "Schmitt et al., (2020)") %>% 
-  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
-  filter(!(trait %in% c("leaf phosphorus content", "fine roots tissue density"))) %>% 
-  ggplot(aes(trait_value, response_value)) +
-  geom_point() +
-  facet_wrap(~ trait, scales = "free") +
-  scale_x_log10() + scale_y_log10() + geom_smooth(method = "lm") + 
-  ylab(expression(Gmax[s]~cm.year^-1)) +
-  theme(axis.title.x = element_blank(), legend.position = "bottom") +
-  scale_color_discrete(guide = "none")
+  sjPlot::tab_model(show.icc = F) 
 ```
 
 ## Growth
@@ -338,9 +279,9 @@ ggplot(growth, aes(betatwi, gmax)) +
 ### Intraspecific
 
 ```{r}
-yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022.tsv") %>% 
-  dplyr::select(idTree, Mean) %>% 
-  dplyr::rename(yhat = Mean)
+yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022_freq.tsv") %>% 
+  dplyr::select(idTree, freq) %>% 
+  dplyr::rename(yhat = freq)
 growth <- vroom::vroom("save/growthfull.tsv") %>% 
   dplyr::select(species, idTree, gmax) %>% 
   group_by(species) %>% 

@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-11-17" />
+<meta name="date" content="2022-11-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,28 +56,6 @@
 
 
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -197,7 +175,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <h2><span class="header-section-number">7.1</span> Functional traits<a href="microtopo.html#functional-traits" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="all-1" class="section level3 hasAnchor" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> All<a href="microtopo.html#all-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-23-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
 </div>
 <div id="interspecific" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Interspecific<a href="microtopo.html#interspecific" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -230,27 +208,13 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.01
+-0.04
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.24 – 0.22
+-0.28 – 0.20
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.925
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-leaf thickness
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.20
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.43 – 0.04
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.096
+0.747
 </td>
 </tr>
 <tr>
@@ -258,27 +222,13 @@ leaf thickness
 leaf area
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.31
+0.21
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.05 – 0.57
+-0.05 – 0.46
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.019</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-trunk bark thickness
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.26
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.01 – 0.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.039</strong>
+0.111
 </td>
 </tr>
 <tr>
@@ -286,7 +236,7 @@ trunk bark thickness
 Observations
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-67
+68
 </td>
 </tr>
 <tr>
@@ -294,12 +244,10 @@ Observations
 R<sup>2</sup> / R<sup>2</sup> adjusted
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.148 / 0.107
+0.038 / 0.024
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-26-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-27-1.png" width="768" /></p>
 </div>
 <div id="intraspecific" class="section level3 hasAnchor" number="7.1.3">
 <h3><span class="header-section-number">7.1.3</span> Intraspecific<a href="microtopo.html#intraspecific" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -310,7 +258,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
  
 </th>
 <th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-yhat
+scale(yhat)
 </th>
 </tr>
 <tr>
@@ -335,38 +283,10 @@ p
 -0.00
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.63 – 0.63
+-0.58 – 0.58
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.000
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-specific leaf area
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.57
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.26 – 0.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.088
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-leaf area
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.38
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.06 – 0.31
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.240
 </td>
 </tr>
 <tr>
@@ -374,7 +294,7 @@ leaf area
 Observations
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-11
+14
 </td>
 </tr>
 <tr>
@@ -382,12 +302,10 @@ Observations
 R<sup>2</sup> / R<sup>2</sup> adjusted
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.353 / 0.191
+0.000 / 0.000
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-30-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-31-1.png" width="768" /></p>
 </div>
 </div>
 <div id="growth" class="section level2 hasAnchor" number="7.2">
@@ -462,7 +380,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-34-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-10-1.png" width="768" /></p>
 </div>
 <div id="intraspecific-1" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Intraspecific<a href="microtopo.html#intraspecific-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -494,10 +412,10 @@ p
 (Intercept)
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.79
+-0.80
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.83 – -0.74
+-0.85 – -0.75
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 <strong>&lt;0.001</strong>
@@ -508,13 +426,13 @@ p
 yhat
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.86
+-0.71
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--2.20 – 0.47
+-2.05 – 0.62
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.206
+0.295
 </td>
 </tr>
 <tr>
@@ -522,7 +440,7 @@ yhat
 Observations
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-1942
+1923
 </td>
 </tr>
 <tr>
@@ -534,7 +452,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-37-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
 
 </div>
 </div>
@@ -600,20 +518,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
