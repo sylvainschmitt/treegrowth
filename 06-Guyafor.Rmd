@@ -238,36 +238,60 @@ csv_to_sqlite(csv_name = 'save/growthguyafor/gmax.csv',
 unlink('save/growthguyafor/gmax.csv')
 ```
 
+```{r draws, eval=F}
+rm(list = ls()) ; gc()
+library(foreach)
+I <- max(vroom::vroom("save/mdataguyafor.tsv")$ind)
+cl <- parallel::makeCluster(10, outfile = "")
+doSNOW::registerDoSNOW(cl)
+pb <- utils::txtProgressBar(max = I, style = 3)
+progress <- function(n) utils::setTxtProgressBar(pb, n)
+opts <- list(progress = progress)
+gmax <- foreach(i=1:I, .options.snow = opts) %dopar% {
+  suppressMessages(library(dplyr))
+  gmaxdb <- DBI::dbConnect(RSQLite::SQLite(), 
+                           dbname = "save/growthguyafor/gmax.sql")
+  gmax <- tbl(gmaxdb, "gmax") %>% 
+    filter(ind == i) %>% 
+    collect() %>% 
+    summarise(q5 = quantile(value, 0.05), q25 = quantile(value, 0.25), 
+              median= quantile(value, 0.5), 
+              q75 = quantile(value, 0.75), q95 = quantile(value, 0.95))
+  DBI::dbDisconnect(gmaxdb) ; rm(gmaxdb)
+  gmax
+}
+parallel::stopCluster(cl) ; rm(cl)
+save(gmax, file = "gmax.Rdata")
+names(gmax) <- 1:I 
+gmax_df <- bind_rows(gmax, .id = "ind")
+write_tsv(gmax_df, file = "save/growthguyafor/gmax_sum.tsv")
+```
+
 ## Fit
 
-```{r}
-
+```{r growthguyaforgmaxtrace, eval=F}
 gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/growthguyafor/gmax.sql")
- 
-tbl(gmax, "gmax")
+t <- tbl(gmax, "gmax") %>% 
+  filter(ind %in% 1:4) %>% 
+  collect()
+DBI::dbDisconnect(gmax) ; rm(gmax)
+t %>% 
+  ggplot(aes(iteration, value, col = as.factor(chain))) +
+  geom_line() +
+  facet_wrap(~ ind, scales = "free_y")
+```
+
+```{r growthguyaforgmax}
+gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/growthguyafor/gmax.sql")
+t <- tbl(gmax, "gmax") %>% 
   filter(ind %in% 1:100) %>% 
+  collect() %>% 
   group_by(ind) %>% 
   summarise(ll = quantile(value, 0.05), l = quantile(value, 0.25), 
             m = quantile(value, 0.5), 
             h = quantile(value, 0.75), hh = quantile(value, 0.95))
-
-
-DBI::dbDisconnect(guyafor) ; rm(guyafor)
-
-library(dtplyr)
-gmax <- vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
-  lazy_dt()
-```
-
-
-```{r growthguyaforgmax, eval=F}
-vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
-  filter(ind %in% 1:100) %>% 
-  group_by(ind) %>% 
-  summarise(ll = quantile(value, 0.05), l = quantile(value, 0.25), 
-            m = quantile(value, 0.5), 
-            h = quantile(value, 0.75), hh = quantile(value, 0.95)) %>% 
-  ggplot(aes(x = ind, xend = ind)) +
+DBI::dbDisconnect(gmax) ; rm(gmax)
+ggplot(t, aes(x = ind, xend = ind)) +
   geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
   geom_segment(aes(y = ll, yend = hh),
                size = 1, show.legend = F, alpha = 0.5) +
@@ -281,11 +305,7 @@ vroom::vroom('save/growthguyafor/gmax.tsv') %>%
 ## Evolutionary analyses
 
 ```{r parsanc, eval=F}
-draws <- vroom::vroom('save/growthguyafor/gmax.tsv') %>% 
-  group_by(ind) %>% 
-  summarise(q5 = quantile(value, 0.05), q25 = quantile(value, 0.25), 
-            median= quantile(value, 0.5), 
-            q75 = quantile(value, 0.75), q95 = quantile(value, 0.95))
+draws <- vroom::vroom('save/growthguyafor/gmax_sum.tsv')
 inds <- vroom::vroom("save/mdataguyafor.tsv") %>% 
               group_by(Forest, Plot, SubPlot, TreeFieldNum, idTree, Xfield, Yfield, Xutm, Yutm, Lat, Lon, Family, Genus, Species, ind) %>% 
                 summarise(FirstCensus = min(CensusYear), LastCensus = max(CensusYear), NCensuses = n(),
@@ -306,7 +326,7 @@ tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.
 ape::write.tree(tree$scenario.3, "save/growthguyafor/phylogeny_guyafor.tree")
 ```
 
-```{r dataanc, eval=F}
+```{r dataanc}
 growth <- vroom::vroom("save/growthguyafor/growthguyafor.tsv") %>% 
   mutate(species = paste(Genus, Species))
 phylo <- ape::read.tree("save/growthguyafor/phylogeny_guyafor.tree")
@@ -320,7 +340,7 @@ p4d <- phylo4d(phylo,
                  dplyr::select(-species))   
 ```
 
-```{r figvarc, eval=F}
+```{r figvarc}
 nlme::lme(log(median) ~  1, random=~1|Family/Genus/species, growth) %>% 
   ape::varcomp(scale = F, cum = F) %>% 
   as.vector() %>% 
@@ -340,7 +360,7 @@ nlme::lme(log(median) ~  1, random=~1|Family/Genus/species, growth) %>%
   scale_y_reverse()
 ```
 
-```{r gmaxphyloc, eval=F, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
+```{r gmaxphyloc, fig.cap="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny."}
 g <- fortify(phylo) %>% 
    mutate(species = gsub("_", " ", label)) %>%
    mutate(label = species) %>% 
@@ -352,25 +372,13 @@ g <- fortify(phylo) %>%
    scale_size_manual("taxon", values = c(1, 2)) +
    viridis::scale_color_viridis(expression(Median(Gmax[i])~cm.year^-1), trans = "log", labels=scales::comma) +
    theme(legend.position = "bottom")
-ggsave(g, filename = "save/figs/phylogeny.png", dpi = 500, width = 25, height = 25, units = "cm", bg = 'white')
-include_graphics("save/figs/phylogeny.png")
-```
-
-```{r maxphylosignalc}
-phyloSignal(p4d = p4d, method = "all") %>% 
-  lapply(as.data.frame) %>% 
-  lapply(rownames_to_column, "parameter") %>% 
-  bind_rows(.id = "type") %>% 
-  reshape2::melt(c("type", "parameter")) %>% 
-  reshape2::dcast(parameter + variable ~ type) %>% 
-  mutate(value = paste0(round(stat, 4), " (p=", round(pvalue, 4), ")")) %>% 
-  reshape2::dcast(parameter ~ variable) %>% 
-  kable(caption = "Phylogenetic signal of species growth potential (Gmax, cm/yr) with different methods.")    
+ggsave(g, filename = "save/figs/phylogenyguyafor.png", dpi = 500, width = 25, height = 25, units = "cm", bg = 'white')
+include_graphics("save/figs/phylogenyguyafor.png")
 ```
 
 ## Functional analyses
 
-```{r dataan2c, eval=F}
+```{r dataan2c}
 rm(list = ls()) ; invisible(gc())
 growth <- vroom::vroom('save/growthguyafor/growthguyafor.tsv') %>% 
   mutate(species = paste(Genus, Species)) %>% 
@@ -457,7 +465,7 @@ guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>%
     filter(!is.na(gmax))  
 ```
 
-```{r, eval=F}
+```{r }
 all_data <- bind_rows(
   phd %>% 
     mutate(dataset = "Schmitt et al., (2020)", response = "Gmax_i", response_value = gmax) %>% 
@@ -527,7 +535,7 @@ all_data <- bind_rows(
                         "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))
 ```
 
-```{r, eval=F}
+```{r }
 all_reg <- all_data %>% 
   filter(trait != "gmax") %>% 
   group_by(dataset, response, trait) %>% 
@@ -536,7 +544,7 @@ all_reg <- all_data %>%
   dplyr::select(-term)
 ```
 
-```{r, eval=F, fig.height=10, fig.width=8}
+```{r, fig.height=10, fig.width=8}
 all_reg %>% 
   mutate(p_value = ifelse(p_value == 0, 10^-4, p_value)) %>%
   ggplot(aes(x = trait, y = estimate, alpha = p_value < 0.01, fill  = log10(p_value), label = trait)) +
@@ -551,7 +559,7 @@ all_reg %>%
   scale_alpha_discrete(guide = "none")
 ```
 
-```{r, eval=F}
+```{r }
 t <- all_data %>% 
   filter(dataset == "Vleminckx et al., (2021)") %>% 
   filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
@@ -565,15 +573,15 @@ t <- all_data %>%
   dplyr::rename(gmax = response_value)
 ```
 
-```{r, eval=F}
-lm(gmax ~ ., data = t) %>%
+```{r }
+lm(gmax ~ ., data = na.omit(t)) %>%
   step(trace = F) %>%
   sjPlot::tab_model(show.icc = F)
 ```
 
 
-```{r, eval=F}
-(lm(gmax ~ ., data = t) %>%
+```{r }
+(lm(gmax ~ ., data = na.omit(t)) %>%
   step(trace = F) %>%
   relaimpo::calc.relimp())@lmg %>% 
   data.frame(trait = names(.), lmg = .) %>% 
@@ -586,7 +594,7 @@ lm(gmax ~ ., data = t) %>%
 ```
 
 
-```{r, eval=F}
+```{r }
 all_data %>%  
   filter(dataset == "Vleminckx et al., (2021)") %>% 
   filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 

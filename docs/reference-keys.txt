@@ -16,7 +16,7 @@ fig:gmaxcorrelogb
 fig:lipab
 tab:guyafortab
 fig:mdataguyaforfig
-tab:maxphylosignalc
+fig:gmaxphyloc
 model-shape
 data
 michaelis-menten
