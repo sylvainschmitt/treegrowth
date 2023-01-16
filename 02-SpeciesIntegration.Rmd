@@ -62,22 +62,22 @@ trees %>%
   ungroup() %>% 
   mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
   mutate(sp = as.numeric(as.factor(as.character(species)))) %>% 
-  vroom::vroom_write("save/trees_species.tsv")
-vroom::vroom("save/trees_species.tsv") %>% 
+  vroom::vroom_write("save/species/trees_species.tsv")
+vroom::vroom("save/species/trees_species.tsv") %>% 
   group_by(idTree) %>% 
   sample_n(1) %>% 
-  vroom::vroom_write("save/eval_species.tsv")
-vroom::vroom("save/trees_species.tsv") %>% 
-  anti_join(vroom::vroom("save/eval_species.tsv")) %>% 
-  vroom::vroom_write("save/mdata_species.tsv")
+  vroom::vroom_write("save/species/eval_species.tsv")
+vroom::vroom("save/species/trees_species.tsv") %>% 
+  anti_join(vroom::vroom("save/species/eval_species.tsv")) %>% 
+  vroom::vroom_write("save/species/mdata_species.tsv")
 ```
 
 ```{r mmmdataspfig, fig.cap="Tree diameter trajectories in training data. Color represent individuals and the red point the data used for evaluation."}
-ggplot(vroom::vroom("save/mdata_species.tsv"),
+ggplot(vroom::vroom("save/species/mdata_species.tsv"),
        aes(Year, DBH, col = as.factor(ind))) +
   geom_point() +
   geom_smooth(se = F) +
-  geom_point(data = vroom::vroom("save/eval_species.tsv"), col = "red", size = 2) +
+  geom_point(data = vroom::vroom("save/species/eval_species.tsv"), col = "red", size = 2) +
   scale_color_discrete(guide = "none") +
   facet_wrap(~ species)
 ```
@@ -94,8 +94,8 @@ Finally predictions of the diameter trajectories by the model are good and reali
 Nevertheless, some posteriors seems to show bimodality.
 
 ```{r indfixfit, eval=F}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 indfix <- cmdstan_model("model/indfix.stan")
 fit <- indfix$sample(
   data = list(
@@ -118,11 +118,11 @@ fit <- indfix$sample(
   save_warmup = F
 )
 fit_indfix <- rstan::read_stan_csv(fit$output_files())
-save(fit_indfix, file = "save/indfix.Rdata") 
+save(fit_indfix, file = "save/species/indfix.Rdata") 
 ```
 
 ```{r indfixmsampling}
-load("save/indfix.Rdata")  
+load("save/species/indfix.Rdata")  
 ```
 
 ```{r indfixrhat}
@@ -142,8 +142,8 @@ mcmc_intervals(as.array(fit_indfix, pars = "gmax"))
 ```
 
 ```{r indfixpreds}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -179,8 +179,8 @@ $gmax$ posteriors have logical uncertainty but are varying widely among individu
 Finally predictions of the diameter trajectories by the model are good and realistic.
 
 ```{r indrandfit, eval=F}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 indrand <- cmdstan_model("model/indrand.stan")
 fit <- indrand$sample(
   data = list(
@@ -203,11 +203,11 @@ fit <- indrand$sample(
   save_warmup = F
 )
 fit_indrand <- rstan::read_stan_csv(fit$output_files())
-save(fit_indrand, file = "save/indrand.Rdata") 
+save(fit_indrand, file = "save/species/indrand.Rdata") 
 ```
 
 ```{r indrandmsampling}
-load("save/indrand.Rdata")  
+load("save/species/indrand.Rdata")  
 ```
 
 ```{r indrandrhat}
@@ -227,8 +227,8 @@ mcmc_intervals(as.array(fit_indrand, pars = "gmax"))
 ```
 
 ```{r indrandpreds}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -264,8 +264,8 @@ $gmax$ posteriors have logical uncertainty but are varying widely among individu
 Finally predictions of the diameter trajectories by the model are good and realistic.
 
 ```{r spfixfit, eval=F}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 spfix <- cmdstan_model("model/spfix.stan")
 fit <- spfix$sample(
   data = list(
@@ -288,11 +288,11 @@ fit <- spfix$sample(
   save_warmup = F
 )
 fit_spfix <- rstan::read_stan_csv(fit$output_files())
-save(fit_spfix, file = "save/spfix.Rdata") 
+save(fit_spfix, file = "save/species/spfix.Rdata") 
 ```
 
 ```{r spfixmsampling}
-load("save/spfix.Rdata")  
+load("save/species/spfix.Rdata")  
 ```
 
 ```{r spfixrhat}
@@ -312,8 +312,8 @@ mcmc_intervals(as.array(fit_spfix, pars = "gmax"))
 ```
 
 ```{r spfixpreds}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -358,8 +358,8 @@ $gmax$ posteriors have logical uncertainty but are varying widely among individu
 Finally predictions of the diameter trajectories by the model are good and realistic.
 
 ```{r sprandfit, eval=F}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 sprand <- cmdstan_model("model/sprand.stan")
 fit <- sprand$sample(
   data = list(
@@ -382,11 +382,11 @@ fit <- sprand$sample(
   save_warmup = F
 )
 fit_sprand <- rstan::read_stan_csv(fit$output_files())
-save(fit_sprand, file = "save/sprand.Rdata") 
+save(fit_sprand, file = "save/species/sprand.Rdata") 
 ```
 
 ```{r sprandmsampling}
-load("save/sprand.Rdata")  
+load("save/species/sprand.Rdata")  
 ```
 
 ```{r sprandrhat}
@@ -406,8 +406,8 @@ mcmc_intervals(as.array(fit_sprand, pars = "gmax"))
 ```
 
 ```{r sprandpreds}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -453,8 +453,8 @@ $gmax$ posteriors have logical uncertainty but are varying widely among individu
 Finally predictions of the diameter trajectories by the model are good and realistic.
 
 ```{r dmaxfit, eval=F}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dmax <- cmdstan_model("model/dmax.stan")
 fit <- dmax$sample(
   data = list(
@@ -478,11 +478,11 @@ fit <- dmax$sample(
   save_warmup = F
 )
 fit_dmax <- rstan::read_stan_csv(fit$output_files())
-save(fit_dmax, file = "save/dmax.Rdata")
+save(fit_dmax, file = "save/species/dmax.Rdata")
 ```
 
 ```{r dmaxsampling}
-load("save/dmax.Rdata")  
+load("save/species/dmax.Rdata")  
 ```
 
 ```{r dmaxrhat}
@@ -502,8 +502,8 @@ mcmc_intervals(as.array(fit_dmax, pars = "gmax"))
 ```
 
 ```{r dmaxpreds}
-mdata <- vroom::vroom("save/mdata_species.tsv")
-eval <- vroom::vroom("save/eval_species.tsv")
+mdata <- vroom::vroom("save/species/mdata_species.tsv")
+eval <- vroom::vroom("save/species/eval_species.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -619,7 +619,7 @@ lapply(fits, as.data.frame, pars = 'gmax') %>%
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(model + ind ~ parameter) %>% 
-  left_join(dplyr::select(vroom::vroom("save/mdata_species.tsv"),
+  left_join(dplyr::select(vroom::vroom("save/species/mdata_species.tsv"),
                           ind, idTree, Family, Genus, species)) %>% 
   unique() %>% 
   group_by(model) %>% 

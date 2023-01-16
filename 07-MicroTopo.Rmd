@@ -13,9 +13,6 @@ opts_chunk$set(
 ## Functional traits
 
 ```{r dataan3}
-# yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022_freq.tsv") %>% 
-#   dplyr::select(idTree, freq) %>% 
-#   dplyr::rename(yhat = freq)
 yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022_freq.tsv") %>%
   dplyr::mutate(yhat = Mean/freq) %>% 
   dplyr::select(idTree, yhat)
@@ -256,7 +253,7 @@ lm(scale(yhat) ~ ., data = t) %>%
 betatwi <- vroom::vroom("data/microtopo/beta_estimate.tsv") %>% 
   mutate(species = paste(genus, species), betatwi = m) %>% 
   dplyr::select(species, betatwi)
-growth <- vroom::vroom("save/growthfull.tsv") %>% 
+growth <- vroom::vroom("save/ecoevo/growthfull.tsv") %>% 
   dplyr::select(species, gmax) %>% 
   group_by(species) %>% 
   summarise_all(mean, na.rm =T) %>% 
@@ -285,7 +282,7 @@ ggplot(growth, aes(betatwi, gmax)) +
 yhat <- vroom::vroom("data/microtopo/Y_hat_Paracou_microtopo_221022_freq.tsv") %>%
   dplyr::mutate(yhat = Mean/freq) %>% 
   dplyr::select(idTree, yhat)
-growth <- vroom::vroom("save/growthfull.tsv") %>% 
+growth <- vroom::vroom("save/ecoevo/growthfull.tsv") %>% 
   dplyr::select(species, idTree, gmax) %>% 
   group_by(species) %>% 
   left_join(yhat) %>% 

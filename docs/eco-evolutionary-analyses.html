@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-11-28" />
+<meta name="date" content="2023-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,7 +215,6 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
-<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#functional-analyses-1"><i class="fa fa-check"></i><b>6.5</b> Functional analyses</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
 <ul>
@@ -304,7 +303,7 @@ Finally, the neighbourhood (<span class="math inline">\(NCI\)</span>) has a mark
 <th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
  
 </th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
 log(gmax)
 </th>
 </tr>
@@ -316,56 +315,44 @@ Predictors
 Estimates
 </td>
 <td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-p
+CI (95%)
 </td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(Intercept)
+Intercept
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-4.00
+3.88
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-3.48 – 4.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
+3.05 – 4.68
 </td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-NCI [log]
+logNCI
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.53
+-0.51
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.59 – -0.46
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
+-0.61 – -0.42
 </td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-twi + 1 [log]
+logtwiP1
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.04
+-0.03
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.10 – 0.03
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.260
+-0.13 – 0.07
 </td>
 </tr>
 <tr>
-<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">
+<td colspan="3" style="font-weight:bold; text-align:left; padding-top:.8em;">
 Random Effects
 </td>
 </tr>
@@ -373,70 +360,71 @@ Random Effects
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 σ<sup>2</sup>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.45
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
+0.72
 </td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.04
-</td>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-τ<sub>00</sub> <sub>Genus:Family</sub>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.09
-</td>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 τ<sub>00</sub> <sub>Family</sub>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.06
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
+0.03
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Family:Genus</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
+0.12
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Family:Genus:species</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
+0.04
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>species</sub>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
 138
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>Genus</sub>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
 95
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 N <sub>Family</sub>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
 38
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
 Observations
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-7158
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="2">
+7159
 </td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
 Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.031 / 0.318
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2">
+0.019 / 0.347
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="384" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
 <div class="figure"><span style="display:block;" id="fig:gmaxncib"></span>
 <img src="treegrowth_files/figure-html/gmaxncib-1.png" alt="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)." width="768" />
 <p class="caption">
@@ -446,88 +434,16 @@ Figure 4.1: Relation between Neighbourhood crowding index (NCI) and individual g
 </div>
 <div id="phylogenetic" class="section level3 hasAnchor" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> Phylogenetic<a href="eco-evolutionary-analyses.html#phylogenetic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Species growth potential in the phylogeny (Fig. <a href="eco-evolutionary-analyses.html#fig:gmaxphylob">4.3</a>) is significantly structured (Tab. <a href="eco-evolutionary-analyses.html#tab:gmaxphylosignalb">4.1</a>),
-with a short distance significant positive association and a long distant significant negative association (Fig. <a href="eco-evolutionary-analyses.html#fig:gmaxcorrelogb">4.5</a>).
-Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. <a href="eco-evolutionary-analyses.html#fig:lipab">4.6</a>),
+<p>Species growth potential in the phylogeny (Fig. <a href="#fig:gmaxphylob"><strong>??</strong></a>) is significantly structured (Tab. <a href="eco-evolutionary-analyses.html#tab:gmaxphylosignalb">4.1</a>),
+with a short distance significant positive association and a long distant significant negative association (Fig. <a href="#fig:gmaxcorrelogb"><strong>??</strong></a>).
+Local indicator of phylogenetic association highlight the conservation of species growth potential at the genus level (Fig. <a href="#fig:lipab"><strong>??</strong></a>),
 as illustrated for instance with fast growing <em>Cecropia</em> opposed to slow growing <em>Eschweilera</em>.
 However, a few species have different growth potential in the same genus,
 such as slow growing <em>Drypetes variabilis</em> opposed to fast growing <em>Drypetes fanshawei</em>.</p>
-<table style="border-collapse:collapse; border:none;">
-<tr>
-<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
- 
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-cvlog gmaxi
-</th>
-</tr>
-<tr>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
-Predictors
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-p
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(Intercept)
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.88
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.82 – 0.95
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-median gmaxi
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.07
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.13 – -0.01
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.018</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
-Observations
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-138
-</td>
-</tr>
-</table>
-<div class="figure"><span style="display:block;" id="fig:igvgmaxfig"></span>
-<img src="treegrowth_files/figure-html/igvgmaxfig-1.png" alt="Relation between species variance in growth potential (Gmax, cm/yr) and species median growth potential (Gmax, cm/yr)." width="768" />
+<div class="figure"><span style="display:block;" id="fig:gmaxphylo"></span>
+<img src="treegrowth_files/figure-html/gmaxphylo-1.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="768" />
 <p class="caption">
-Figure 4.2: Relation between species variance in growth potential (Gmax, cm/yr) and species median growth potential (Gmax, cm/yr).
-</p>
-</div>
-<div class="figure"><span style="display:block;" id="fig:gmaxphylob"></span>
-<img src="treegrowth_files/figure-html/gmaxphylob-1.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="768" />
-<p class="caption">
-Figure 4.3: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
-</p>
-</div>
-<div class="figure"><span style="display:block;" id="fig:igvphylob"></span>
-<img src="treegrowth_files/figure-html/igvphylob-1.png" alt="Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny." width="768" />
-<p class="caption">
-Figure 4.4: Distribution of intraspecifig growth variability (IGV, cm/yr) in the phylogeny.
+Figure 4.2: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
 </p>
 </div>
 <table>
@@ -535,7 +451,7 @@ Figure 4.4: Distribution of intraspecifig growth variability (IGV, cm/yr) in the
 <colgroup>
 <col width="10%" />
 <col width="17%" />
-<col width="18%" />
+<col width="17%" />
 <col width="17%" />
 <col width="17%" />
 <col width="17%" />
@@ -554,48 +470,31 @@ Figure 4.4: Distribution of intraspecifig growth variability (IGV, cm/yr) in the
 <tr class="odd">
 <td align="left">gmax</td>
 <td align="left">0.4756 (p=0.001)</td>
-<td align="left">0.1371 (p=0.002)</td>
-<td align="left">0.1297 (p=0.025)</td>
-<td align="left">0.1375 (p=0.027)</td>
+<td align="left">0.1371 (p=0.004)</td>
+<td align="left">0.1297 (p=0.027)</td>
+<td align="left">0.1375 (p=0.038)</td>
 <td align="left">0.6875 (p=0.001)</td>
 </tr>
 <tr class="even">
-<td align="left">igv</td>
-<td align="left">0.0308 (p=0.248)</td>
-<td align="left">-0.0204 (p=0.777)</td>
-<td align="left">0.0031 (p=0.672)</td>
-<td align="left">0.0032 (p=0.658)</td>
-<td align="left">1e-04 (p=1)</td>
-</tr>
-<tr class="odd">
 <td align="left">loggmax</td>
 <td align="left">0.4373 (p=0.001)</td>
 <td align="left">0.1456 (p=0.001)</td>
-<td align="left">0.0799 (p=0.074)</td>
-<td align="left">0.0845 (p=0.077)</td>
+<td align="left">0.0799 (p=0.101)</td>
+<td align="left">0.0845 (p=0.064)</td>
 <td align="left">0.7757 (p=0.001)</td>
-</tr>
-<tr class="even">
-<td align="left">logigv</td>
-<td align="left">0.0669 (p=0.104)</td>
-<td align="left">-0.0079 (p=0.499)</td>
-<td align="left">0.0035 (p=0.638)</td>
-<td align="left">0.0037 (p=0.597)</td>
-<td align="left">0.1089 (p=0.315)</td>
 </tr>
 </tbody>
 </table>
-<div class="figure"><span style="display:block;" id="fig:gmaxcorrelogb"></span>
+<div class="figure"><span style="display:block;" id="fig:gmaxcorrelog"></span>
 <img src="save/figs/gmaxcorrelog_full.png" alt="phylogenetic correlogram of species growth potential (Gmax, cm/yr)." width="500" />
 <p class="caption">
-Figure 4.5: phylogenetic correlogram of species growth potential (Gmax, cm/yr).
+Figure 4.3: phylogenetic correlogram of species growth potential (Gmax, cm/yr).
 </p>
 </div>
-<p><img src="save/figs/igvcorrelog_full.png" width="500" /></p>
-<div class="figure"><span style="display:block;" id="fig:lipab"></span>
-<img src="treegrowth_files/figure-html/lipab-1.png" alt="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny." width="768" />
+<div class="figure"><span style="display:block;" id="fig:lipa"></span>
+<img src="treegrowth_files/figure-html/lipa-1.png" alt="Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny." width="768" />
 <p class="caption">
-Figure 4.6: Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny.
+Figure 4.4: Local phylogenetic associations of of species growth potential (Gmax, cm/yr) among taxa in the phylogeny.
 </p>
 </div>
 <p><img src="treegrowth_files/figure-html/figall-1.png" width="960" /></p>
@@ -618,7 +517,7 @@ Ferry, B., Morneau, F., Bontemps, J.D., Blanc, L. &amp; Freycon, V. (2010). <a h
 John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). <span class="nocase">Soil nutrients influence spatial distributions of tropical tree species.</span> <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="https://arxiv.org/abs/2656">https://arxiv.org/abs/2656</a>
 </div>
 <div id="ref-keck_phylosignal:_2016" class="csl-entry">
-Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). <span class="nocase">phylosignal: an <span>{</span><span>{</span><span>}</span>R<span>{</span><span>}</span><span>}</span> package to measure, test, and explore the phylogenetic signal</span>. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a>
+Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). <span class="nocase">phylosignal: an <span>{</span>R<span>}</span> package to measure, test, and explore the phylogenetic signal</span>. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a>
 </div>
 <div id="ref-Nakagawa2013" class="csl-entry">
 Nakagawa, S. &amp; Schielzeth, H. (2013). <a href="https://doi.org/10.1111/j.2041-210x.2012.00261.x"><span class="nocase">A general and simple method for obtaining R2 from generalized linear mixed-effects models</span></a>. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.

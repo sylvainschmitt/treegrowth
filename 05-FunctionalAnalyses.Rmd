@@ -20,7 +20,7 @@ For each dataset, I first used a step procedure to select explanatory variables 
 I then plotted the individual relations between response and explanatory variables.
 
 ```{r dataan2}
-growth <- vroom::vroom("save/growthfull.tsv")
+growth <- vroom::vroom("save/ecoevo/growthfull.tsv")
 phd <- bind_rows(
   vroom::vroom("data/Measures_Symphonia - AllTraits.tsv") %>% 
     mutate(Genus = "Symphonia") %>%
@@ -273,7 +273,7 @@ splist <- t %>%
   mutate(genus = Genus, family = Family) %>% 
   dplyr::select(species, genus, family)
 tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
-ape::write.tree(tree$scenario.3, "save/phylogeny_Vleminckx.tree")
+ape::write.tree(tree$scenario.3, "save/functional/phylogeny_Vleminckx.tree")
 ```
 
 ```{r, eval=F}

@@ -8,12 +8,10 @@ tab:spchoicetab
 tab:datafulltab
 fig:mdatafullfig
 fig:gmaxncib
-fig:igvgmaxfig
-fig:gmaxphylob
-fig:igvphylob
+fig:gmaxphylo
 tab:gmaxphylosignalb
-fig:gmaxcorrelogb
-fig:lipab
+fig:gmaxcorrelog
+fig:lipa
 tab:guyafortab
 fig:mdataguyaforfig
 fig:gmaxphyloc
@@ -55,7 +53,6 @@ data-3
 model-1
 fit-1
 evolutionary-analyses
-functional-analyses-1
 microtopo
 functional-traits
 all-1

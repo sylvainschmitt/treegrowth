@@ -55,12 +55,12 @@ trees <- tbl(guyafor, "inventory") %>%
   group_by(species) %>% 
   filter(length(unique(idTree)) > n_ind_species)
 DBI::dbDisconnect(guyafor) ; rm(guyafor, dist_edge, n_census, n_ind_species)
-vroom::vroom_write(trees, "save/trees_full.tsv")
+vroom::vroom_write(trees, "save/full/trees_full.tsv")
 ```
 
 ```{r datafulltab}
 options(knitr.kable.NA = '')
-vroom::vroom("save/trees_full.tsv") %>% 
+vroom::vroom("save/full/trees_full.tsv") %>% 
   group_by(Family, Genus, species, idTree) %>% 
   summarise(census = n(), year_start = min(CensusYear), year_end = max(CensusYear),
             dbh_start = min(DBH), dbh_end = max(DBH)) %>% 
@@ -69,7 +69,7 @@ vroom::vroom("save/trees_full.tsv") %>%
             n_genera = length(unique(Genus)),
             n_species = length(unique(species)),
             n_individuals = length(unique(idTree)),
-            n_observations = nrow(vroom::vroom("save/trees_full.tsv")),
+            n_observations = nrow(vroom::vroom("save/full/trees_full.tsv")),
             min_census = min(census),
             med_census = median(census),
             max_census = max(census),
@@ -98,23 +98,23 @@ vroom::vroom("save/trees_full.tsv") %>%
 
 
 ```{r mdatafull, eval=F}
-vroom::vroom("save/trees_full.tsv") %>% 
+vroom::vroom("save/full/trees_full.tsv") %>% 
   group_by(idTree) %>% 
   mutate(Year = CensusYear - min(CensusYear)) %>%
   ungroup() %>% 
   mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
   mutate(sp = as.numeric(as.factor(species))) %>% 
-  vroom::vroom_write("save/mdatafull.tsv")
+  vroom::vroom_write("save/full/mdatafull.tsv")
 ```
 
 ```{r mdatafullfig, fig.cap="Tree diameter trajectories in reduced data. Color represent individuals."}
-dplyr::select(vroom::vroom("save/mdatafull.tsv"), sp, ind) %>% 
+dplyr::select(vroom::vroom("save/full/mdatafull.tsv"), sp, ind) %>% 
   unique() %>% 
   filter(sp %in% sample(unique(.$sp), 9)) %>% 
   group_by(sp) %>% 
   sample_n(10, replace = T) %>%
   unique() %>% 
-  left_join(vroom::vroom("save/mdatafull.tsv")) %>% 
+  left_join(vroom::vroom("save/full/mdatafull.tsv")) %>% 
   ggplot(aes(Year, DBH, group = as.factor(ind))) +
   geom_point(col = "grey") +
   geom_smooth(se = F, aes(col = as.factor(ind))) +
@@ -136,7 +136,7 @@ and $Ks_i$ is the kurtosis defining the width of the bell-shaped growth-trajecto
 $Dopt_i$ and $Ks_i$ are random effects centered on species parameters $Dopt_s$ and $Ks_s$ with associated variances $\sigma_D$ and $\sigma_K$.
 
 ```{r growthfit, eval=F}
-mdata <- vroom::vroom("save/mdatafull.tsv")
+mdata <- vroom::vroom("save/full/mdatafull.tsv")
 growth <- cmdstan_model("model/growth.stan")
 fit <- growth$sample(
   data = list(
@@ -157,9 +157,9 @@ fit <- growth$sample(
   save_warmup = F,
   max_treedepth = 12
 )
-fit$save_output_files(dir = "save/growth")
+fit$save_output_files(dir = "save/full/growth")
 fit_full <- rstan::read_stan_csv(fit$output_files())
-save(fit_full, file = "save/growth.Rdata") 
+save(fit_full, file = "save/full/growth.Rdata") 
 ```
 
 ## Fit
@@ -170,15 +170,15 @@ The correlation between $Dopt$ and $Ks$ is acceptable but marked.
 $Gmax_i$ posteriors have logical uncertainty but are varying widely among individuals.
 
 ```{r growthfullsampling, eval=F}
-mdata <- vroom::vroom("save/mdatafull.tsv")
-load("save/growth.Rdata")
+mdata <- vroom::vroom("save/full/mdatafull.tsv")
+load("save/full/growth.Rdata")
 ```
 
 ```{r growthfullrhat}
 # r <- rhat(fit_full)
 # data.frame(parameter = names(r), rhat = r) %>% 
-#   vroom::vroom_write("save/rhatfull.tsv")
-vroom::vroom("save/rhatfull.tsv") %>% 
+#   vroom::vroom_write("save/full/rhatfull.tsv")
+vroom::vroom("save/full/rhatfull.tsv") %>% 
   separate(parameter, c("parameter", "indsp")) %>% 
   filter(parameter == "gmax") %>% 
   # arrange(desc(rhat)) %>% filter(rhat > 1.1)
@@ -188,48 +188,72 @@ vroom::vroom("save/rhatfull.tsv") %>%
   ggtitle("7,961 Gmax_i", "64 with rhat > 1.1 (0.8%)")
 ```
 
-```{r, eval=F}
-vroom::vroom("save/rhatfull.tsv") %>% 
-  separate(parameter, c("parameter", "indsp")) %>% 
-  filter(parameter == "gmax") %>% 
-  arrange(desc(rhat))
-i <- 1508
-vroom::vroom("save/mdatafull.tsv") %>% 
-  filter(ind == i) %>% 
-  ggplot(aes(CensusYear, DBH)) + geom_point()
-```
-
-
 ```{r growthfulltrace}
 # g <- mcmc_trace(as.array(fit_full, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
-# ggsave(plot = g, filename = "save/figs/growthfulltrace.png", bg = "white")
-include_graphics("save/figs/growthfulltrace.png")
+# ggsave(plot = g, filename = "save/full/figs/growthfulltrace.png", bg = "white")
+include_graphics("save/full/figs/growthfulltrace.png")
 ```
 
 ```{r growthfullpairs}
 # g <- mcmc_pairs(as.array(fit_full, pars = c("gmax[1]", "dopt[1]", "ks[1]", "sigma", "sigmaD", "sigmaK")))
-# ggsave(plot = g, filename = "save/figs/growthfullpairs.png", bg = "white")
-include_graphics("save/figs/growthfullpairs.png")
+# ggsave(plot = g, filename = "save/full/figs/growthfullpairs.png", bg = "white")
+include_graphics("save/full/figs/growthfullpairs.png")
 ```
 
 ```{r growthfullgmax}
 # g <- mcmc_intervals(as.array(fit_full, pars = paste0("gmax[", 1:100, "]")))
-# ggsave(plot = g, filename = "save/figs/growthfullgmax.png", bg = "white")
-include_graphics("save/figs/growthfullgmax.png")
+# ggsave(plot = g, filename = "save/full/figs/growthfullgmax.png", bg = "white")
+include_graphics("save/full/figs/growthfullgmax.png")
 ```
 
-```{r growthfulldoptdmax}
-# g <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
-#   separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
-#   left_join(mdata %>%
-#               group_by(sp) %>%
-#               summarise(dmax = max(DBH))) %>%
-#   ggplot(aes(sp, (m*100)/dmax, col = (m*100)/dmax > 1)) +
-#   geom_point() +
-#   coord_flip() +
-#   scale_y_sqrt() +
-#   ylab(expression(frac(Dopt,Dmax))) + xlab("Species") +
-#   scale_color_discrete(expression(frac(Dopt,Dmax)>1))
-# ggsave(plot = g, filename = "save/figs/growthfulldoptdmax.png", bg = "white")
-include_graphics("save/figs/growthfulldoptdmax.png")
+```{r predsfull, eval=F}
+preds <- as.data.frame(fit_full, pars = "mu")
+preds <- preds %>% 
+  reshape2::melt(variable.name = "parameter") %>% 
+  group_by(parameter) %>% 
+  summarise(ll = quantile(value, 0.05), 
+            l = quantile(value, 0.25), 
+            m = median(value), 
+            h = quantile(value, 0.75),
+            hh = quantile(value, 0.95))
+mdata <- vroom::vroom("save/full/mdatafull.tsv")
+allpreds <- filter(mdata, Year > 0) %>% 
+  bind_cols(preds)
+vroom::vroom_write(allpreds, "save/full/predsfull.tsv")
+```
+
+```{r predsfullfig}
+preds <- vroom::vroom("save/full/predsfull.tsv") %>% 
+  filter(m > 10)
+rmse <- sqrt(mean((preds$m - preds$DBH)^2))
+preds %>% 
+  ggplot(aes(DBH, m)) +
+  geom_point(alpha = 0.25) +
+  geom_errorbar(aes(ymin = ll, ymax = hh), alpha = 0.25) +
+  geom_abline(col = "red", linetype = "dashed") +
+  scale_y_log10() + scale_x_log10() +
+  xlab("Observed diameter (Diameter at breast height, cm)") +
+  ylab("Predicted diameter (Diameter at breast height, cm)") +
+  ggtitle(paste("RMSE =", round(rmse, 2), "cm"))
+```
+
+```{r predfullfig}
+dplyr::select(vroom::vroom("save/full/predsfull.tsv"), sp, ind) %>% 
+  unique() %>% 
+  filter(sp %in% sample(unique(.$sp), 9)) %>% 
+  group_by(sp) %>% 
+  sample_n(10, replace = T) %>%
+  unique() %>% 
+  left_join(vroom::vroom("save/full/predsfull.tsv")) %>% 
+  ggplot(aes(x = Year, group = as.factor(ind))) +
+  geom_ribbon(aes(ymin = ll, ymax = hh, fill = as.factor(ind)), 
+              alpha = 0.5, col = NA) +
+  geom_line(aes(y = m, col = as.factor(ind))) +
+  geom_point(aes(y = DBH, col = as.factor(ind))) +
+  xlim(0, NA) +
+  facet_wrap(~ species) +
+  scale_color_discrete(guide = "none") +
+  scale_fill_discrete(guide = "none") +
+  ylab("Diameter at breast height (cm)") +
+  theme(strip.text = element_text(face = "italic"))
 ```

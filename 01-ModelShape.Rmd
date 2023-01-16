@@ -55,22 +55,22 @@ trees %>%
   ungroup() %>% 
   filter(idTree %in% sample(unique(.$idTree), 20)) %>%
   mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
-  vroom::vroom_write("save/trees_reduced.tsv")
-vroom::vroom("save/trees_reduced.tsv") %>% 
+  vroom::vroom_write("save/shape/trees_reduced.tsv")
+vroom::vroom("save/shape/trees_reduced.tsv") %>% 
   group_by(idTree) %>% 
   filter(CensusYear == max(CensusYear)) %>% 
-  vroom::vroom_write("save/eval_reduced.tsv")
-vroom::vroom("save/trees_reduced.tsv") %>% 
+  vroom::vroom_write("save/shape/eval_reduced.tsv")
+vroom::vroom("save/shape/trees_reduced.tsv") %>% 
   group_by(idTree) %>% 
   filter(CensusYear != max(CensusYear)) %>% 
-  vroom::vroom_write("save/mdata_reduced.tsv")
+  vroom::vroom_write("save/shape/mdata_reduced.tsv")
 ```
 
 ```{r mmmdatafig, fig.cap="Tree diameter trajectories in training data. Color represent individuals and the red point the data used for evaluation."}
-ggplot(vroom::vroom("save/mdata_reduced.tsv"),
+ggplot(vroom::vroom("save/shape/mdata_reduced.tsv"),
        aes(Year, DBH, col = as.factor(ind))) +
   geom_point() +
-  geom_point(data = vroom::vroom("save/eval_reduced.tsv"), col = "red", size = 2) +
+  geom_point(data = vroom::vroom("save/shape/eval_reduced.tsv"), col = "red", size = 2) +
   geom_smooth(se = F) +
   scale_color_discrete(guide = "none") +
   xlab("Years since recruitment") + ylab("Diameter at breast hieght (cm)")
@@ -87,8 +87,8 @@ $beta$ posteriors have not too much uncertainty and are varying widely among ind
 Finally predictions of the diameter trajectories by the model are good.
 
 ```{r mmstanfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 mm <- cmdstan_model("model/mm.stan")
 fit <- mm$sample(
                   data = list(
@@ -108,11 +108,11 @@ fit <- mm$sample(
   save_warmup = F
 )
 fit_mm <- rstan::read_stan_csv(fit$output_files())
-save(fit_mm, file = "save/mm.Rdata")
+save(fit_mm, file = "save/shape/mm.Rdata")
 ```
 
 ```{r mmsampling}
-load("save/mm.Rdata")  
+load("save/shape/mm.Rdata")  
 ```
 
 ```{r mmrhat}
@@ -132,8 +132,8 @@ mcmc_intervals(fit_mm, regex_pars = "beta")
 ```
 
 ```{r mmpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_mm, pars = c("alpha", "beta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -166,8 +166,8 @@ $gmax$ posteriors are highly uncertain and does not vary widely among individual
 Finally predictions of the diameter trajectories by the model are overfitting because the model uses the diameter from previous census reporting the measurement error from one year to the other.
 
 ```{r gompertzstanfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 gompertz <- cmdstan_model("model/gompertz.stan")
 fit <- gompertz$sample(
   data = list(
@@ -188,11 +188,11 @@ fit <- gompertz$sample(
   save_warmup = F
 )
 fit_gompertz <- rstan::read_stan_csv(fit$output_files())
-save(fit_gompertz, file = "save/gompertz.Rdata")
+save(fit_gompertz, file = "save/shape/gompertz.Rdata")
 ```
 
 ```{r gompertzsampling}
-load("save/gompertz.Rdata")  
+load("save/shape/gompertz.Rdata")  
 ```
 
 ```{r gompertzrhat}
@@ -212,8 +212,8 @@ mcmc_intervals(fit_gompertz, regex_pars = "gmax")
 ```
 
 ```{r gompertzpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_gompertz, pars = c("gmax", "dopt", "ks")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -240,8 +240,8 @@ $beta$ posteriors have not too much uncertainty and are varying widely among ind
 Finally predictions of the diameter trajectories by the model are a bit far from observations.
 
 ```{r logfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 log <- cmdstan_model("model/lognormal.stan")
 fit <- log$sample(
   data = list(
@@ -261,11 +261,11 @@ fit <- log$sample(
   save_warmup = F
 )
 fit_log <- rstan::read_stan_csv(fit$output_files())
-save(fit_log, file = "save/log.Rdata")
+save(fit_log, file = "save/shape/log.Rdata")
 ```
 
 ```{r logsampling}
-load("save/log.Rdata")  
+load("save/shape/log.Rdata")  
 ```
 
 ```{r logrhat}
@@ -285,8 +285,8 @@ mcmc_intervals(fit_log, regex_pars = "beta")
 ```
 
 ```{r logpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_log, pars = c("beta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -318,8 +318,8 @@ Finally predictions of the diameter trajectories by the model are a bit overfitt
 
 
 ```{r polyfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 poly <- cmdstan_model("model/poly3.stan")
 fit <- poly$sample(
   data = list(
@@ -339,11 +339,11 @@ fit <- poly$sample(
   save_warmup = F
 )
 fit_poly <- rstan::read_stan_csv(fit$output_files())
-save(fit_poly, file = "save/poly.Rdata") 
+save(fit_poly, file = "save/shape/poly.Rdata") 
 ```
 
 ```{r polysampling}
-load("save/poly.Rdata")  
+load("save/shape/poly.Rdata")  
 ```
 
 ```{r polyrhat}
@@ -363,8 +363,8 @@ mcmc_intervals(fit_poly, regex_pars = "gamma")
 ```
 
 ```{r polypreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_poly, pars = c('alpha', "beta", "gamma")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -393,8 +393,8 @@ $beta$ posteriors have not too much uncertainty and are varying widely among ind
 Finally predictions of the diameter trajectories by the model are good.
 
 ```{r weibulfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 weibul <- cmdstan_model("model/weibul.stan")
 fit <- weibul$sample(
   data = list(
@@ -414,11 +414,11 @@ fit <- weibul$sample(
   save_warmup = F
 )
 fit_weibul <- rstan::read_stan_csv(fit$output_files())
-save(fit_weibul, file = "save/weibul.Rdata") 
+save(fit_weibul, file = "save/shape/weibul.Rdata") 
 ```
 
 ```{r weibulsampling}
-load("save/weibul.Rdata")  
+load("save/shape/weibul.Rdata")  
 ```
 
 ```{r weibulrhat}
@@ -438,8 +438,8 @@ mcmc_intervals(as.array(fit_weibul, pars = "beta"))
 ```
 
 ```{r weibulpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_weibul, pars = c('alpha', "beta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -468,8 +468,8 @@ $\theta$ posteriors are highly uncertain and does not vary widely among individu
 Finally predictions of the diameter trajectories by the model are good but the inflection point if only used in the yellow trajectory more probably due to a change of POM than real growth change.
 
 ```{r amanifit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 amani <- cmdstan_model("model/amani.stan")
 fit <- amani$sample(
   data = list(
@@ -489,11 +489,11 @@ fit <- amani$sample(
   save_warmup = F
 )
 fit_amani <- rstan::read_stan_csv(fit$output_files())
-save(fit_amani, file = "save/amani.Rdata") 
+save(fit_amani, file = "save/shape/amani.Rdata") 
 ```
 
 ```{r amanisampling}
-load("save/amani.Rdata")  
+load("save/shape/amani.Rdata")  
 ```
 
 ```{r amanirhat}
@@ -513,8 +513,8 @@ mcmc_intervals(as.array(fit_amani, pars = "theta"))
 ```
 
 ```{r  amanpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 pars <- as.data.frame(fit_amani, pars = c('alpha', "beta", "lambda", "theta")) %>% 
   reshape2::melt(variable.name = "parameter") %>% 
   group_by(parameter) %>% 
@@ -549,8 +549,8 @@ Finally predictions of the diameter trajectories by the model are good and reali
 Moreover, model errors do not show temporal autocorrelation per individual.
 
 ```{r gompertzsumfit, eval=F}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 gompertzsum <- cmdstan_model("model/gompertzsum.stan")
 fit <- gompertzsum$sample(
   data = list(
@@ -570,11 +570,11 @@ fit <- gompertzsum$sample(
   save_warmup = F
 )
 fit_gompertzsum <- rstan::read_stan_csv(fit$output_files())
-save(fit_gompertzsum, file = "save/gompertzsum.Rdata") 
+save(fit_gompertzsum, file = "save/shape/gompertzsum.Rdata") 
 ```
 
 ```{r gompertzsumsampling}
-load("save/gompertzsum.Rdata")  
+load("save/shape/gompertzsum.Rdata")  
 ```
 
 ```{r gompertzsumrhat}
@@ -594,8 +594,8 @@ mcmc_intervals(as.array(fit_gompertzsum, pars = "gmax"))
 ```
 
 ```{r gompertzsumpreds}
-mdata <- vroom::vroom("save/mdata_reduced.tsv")
-eval <- vroom::vroom("save/eval_reduced.tsv")
+mdata <- vroom::vroom("save/shape/mdata_reduced.tsv")
+eval <- vroom::vroom("save/shape/eval_reduced.tsv")
 dbhtoday <- function(t, gmax, dopt, ks){
   dbh <- 10
   for(i in 1:t)
@@ -633,7 +633,7 @@ pars <- as.data.frame(fit_gompertzsum, pars = c('gmax', "dopt", "ks")) %>%
   summarise(value = median(value)) %>% 
   separate(parameter, c("parameter", "ind"), convert = T) %>% 
   reshape2::dcast(ind ~ parameter)
-left_join(vroom::vroom("save/mdata_reduced.tsv"), pars) %>% 
+left_join(vroom::vroom("save/shape/mdata_reduced.tsv"), pars) %>% 
   rowwise() %>% 
   mutate(DBHpred = dbhtoday(Year+1, gmax, dopt, ks)) %>% 
   mutate(Error = DBH - DBHpred) %>% 

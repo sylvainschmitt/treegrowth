@@ -10,7 +10,7 @@ data {
   array[I] int<lower=1, upper=S> indsp ; // species corresponding to individual
 }
 parameters {
-  vector<lower=0.001, upper=5>[I] gmax ;
+  vector<lower=0.001, upper=10>[I] gmax ;
   vector<lower=0.1, upper=1>[I] d ;
   vector<lower=0.001, upper=3>[I] ks ;
   vector<lower=0.1, upper=1>[S] d_s ;
