@@ -107,6 +107,30 @@ guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>%
 
 ### All
 
+```{r, eval=F}
+phylo <- ape::read.tree("save/ecoevo/phylogeny_full.tree")
+p4d <- phylo4d(phylo,
+               data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
+                 left_join(select(fg, species) %>% mutate(Vleminckx = 1)) %>% 
+                 mutate(Vleminckx = ifelse(is.na(Vleminckx), "no", "yes")) %>% 
+                 dplyr::select(-species))
+data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
+                 left_join(select(fg, species) %>% mutate(Vleminckx = 1)) %>% 
+                 mutate(Vleminckx = ifelse(is.na(Vleminckx), "no", "yes")) %>% 
+                 dplyr::select(-species) %>% 
+  group_by(Vleminckx) %>% 
+  summarise(N = n())
+fortify(p4d) %>% 
+  mutate(species = gsub("_", " ", label)) %>%
+  mutate(label = species) %>% 
+  ggtree(aes(color = Vleminckx), layout="circular") + 
+  geom_tiplab2(size = 2) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2)) +
+  theme(legend.position = "bottom") + xlim(NA, 200)
+```
+
 ```{r }
 all_data <- bind_rows(
   phd %>% 

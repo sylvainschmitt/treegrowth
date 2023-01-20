@@ -218,12 +218,13 @@ bayesplot::mcmc_dens(allfits, pars = c("b_logNCI", "b_logtwiP1"))
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(y = variance, label = pct_text), col = "white", 
             position = position_stack(vjust = 0.5), size = 3) +
-  scale_fill_discrete(expression(sigma^2)) +
+  scale_fill_manual(expression(sigma^2), 
+                    values = ggpubfigs::friendly_pal(4, name = "nickel_five")) +
   theme(axis.title = element_blank(), axis.line = element_blank(), axis.text = element_blank(), 
         axis.ticks = element_blank(), legend.position = "bottom")+
   coord_flip() +
   scale_y_reverse() +
-  ggtitle("B."))  
+  ggtitle("B."))   
 ```
 
 ```{r gmaxncib, fig.cap="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)."}
@@ -308,5 +309,5 @@ gridExtra::grid.arrange(
   layout_matrix = rbind(c(2, 1),
                         c(3, 1)),
   heights = c(3, 1), widths = c(1.5, 2)
-)   
+)    
 ```
