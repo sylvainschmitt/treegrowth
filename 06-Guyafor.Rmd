@@ -61,7 +61,7 @@ vroom::vroom_write(trees, "save/trees_guyafor.tsv")
 
 ```{r  guyafortab}
 options(knitr.kable.NA = '')
-vroom::vroom("save/trees_guyafor.tsv") %>% 
+vroom::vroom("save/guyafor/trees_guyafor.tsv") %>% 
   group_by(Family, Genus, species, idTree) %>% 
   summarise(census = n(), year_start = min(CensusYear), year_end = max(CensusYear),
             dbh_start = min(DBH), dbh_end = max(DBH)) %>% 
@@ -70,7 +70,7 @@ vroom::vroom("save/trees_guyafor.tsv") %>%
             n_genera = length(unique(Genus)),
             n_species = length(unique(species)),
             n_individuals = length(unique(idTree)),
-            n_observations = nrow(vroom::vroom("save/trees_guyafor.tsv")),
+            n_observations = nrow(vroom::vroom("save/guyafor/trees_guyafor.tsv")),
             min_census = min(census),
             med_census = median(census),
             max_census = max(census),
@@ -99,23 +99,23 @@ vroom::vroom("save/trees_guyafor.tsv") %>%
 
 
 ```{r mdataguyafor, eval=F}
-vroom::vroom("save/trees_guyafor.tsv") %>% 
+vroom::vroom("save/guyafor/trees_guyafor.tsv") %>% 
   group_by(idTree) %>% 
   mutate(Year = CensusYear - min(CensusYear)) %>%
   ungroup() %>% 
   mutate(ind = as.numeric(as.factor(as.character(idTree)))) %>% 
   mutate(sp = as.numeric(as.factor(species))) %>% 
-  vroom::vroom_write("save/mdataguyafor.tsv")
+  vroom::vroom_write("save/guyafor/mdataguyafor.tsv")
 ```
 
 ```{r mdataguyaforfig, fig.cap="Tree diameter trajectories in reduced data. Color represent individuals."}
-dplyr::select(vroom::vroom("save/mdataguyafor.tsv"), sp, ind) %>% 
+dplyr::select(vroom::vroom("save/guyafor/mdataguyafor.tsv"), sp, ind) %>% 
   unique() %>% 
   filter(sp %in% sample(unique(.$sp), 9)) %>% 
   group_by(sp) %>% 
   sample_n(5, replace = T) %>%
   unique() %>% 
-  left_join(vroom::vroom("save/mdataguyafor.tsv")) %>% 
+  left_join(vroom::vroom("save/guyafor/mdataguyafor.tsv")) %>% 
   ggplot(aes(Year, DBH, group = as.factor(ind))) +
   geom_point(col = "grey") +
   geom_smooth(se = F, aes(col = as.factor(ind))) +
@@ -269,8 +269,11 @@ write_tsv(gmax_df, file = "save/growthguyafor/gmax_sum.tsv")
 
 ## Fit
 
-```{r growthguyaforgmaxtrace, eval=F}
-gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/growthguyafor/gmax.sql")
+**Unfortunately, gmax upper limit was set to 5 instead of 10 (overconstrained).**
+**But the model with more stringent data had a better behavior with gmax limited to 5.**
+
+```{r growthguyaforgmaxtrace}
+gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/guyafor/gmax.sql")
 t <- tbl(gmax, "gmax") %>% 
   filter(ind %in% 1:4) %>% 
   collect()
@@ -278,11 +281,13 @@ DBI::dbDisconnect(gmax) ; rm(gmax)
 t %>% 
   ggplot(aes(iteration, value, col = as.factor(chain))) +
   geom_line() +
-  facet_wrap(~ ind, scales = "free_y")
+  facet_wrap(~ ind, scales = "free_y") + 
+  viridis::scale_color_viridis(discrete = T, guide = "none") +
+  ylab(expression(g[max]))
 ```
 
 ```{r growthguyaforgmax}
-gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/growthguyafor/gmax.sql")
+gmax <- DBI::dbConnect(RSQLite::SQLite(), dbname = "save/guyafor/gmax.sql")
 t <- tbl(gmax, "gmax") %>% 
   filter(ind %in% 1:100) %>% 
   collect() %>% 
@@ -305,14 +310,14 @@ ggplot(t, aes(x = ind, xend = ind)) +
 ## Evolutionary analyses
 
 ```{r parsanc, eval=F}
-draws <- vroom::vroom('save/growthguyafor/gmax_sum.tsv')
-inds <- vroom::vroom("save/mdataguyafor.tsv") %>% 
+draws <- vroom::vroom('save/guyafor/gmax_sum.tsv')
+inds <- vroom::vroom("save/guyafor/mdataguyafor.tsv") %>% 
               group_by(Forest, Plot, SubPlot, TreeFieldNum, idTree, Xfield, Yfield, Xutm, Yutm, Lat, Lon, Family, Genus, Species, ind) %>% 
                 summarise(FirstCensus = min(CensusYear), LastCensus = max(CensusYear), NCensuses = n(),
                           FirstDBH = min(DBH), LastDBH = max(DBH))
 gmax <- left_join(inds, draws) %>% 
   select(-ind)
-vroom::vroom_write(gmax, 'save/growthguyafor/growthguyafor.tsv') 
+vroom::vroom_write(gmax, 'save/guyafor/growthguyafor.tsv') 
 ```
 
 ```{r phyloc, eval=F}
@@ -323,13 +328,13 @@ splist <- vroom::vroom("save/mdataguyafor.tsv") %>%
   mutate(genus = Genus, family = Family) %>% 
   dplyr::select(species, genus, family)
 tree <- phylo.maker(sp.list = splist, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
-ape::write.tree(tree$scenario.3, "save/growthguyafor/phylogeny_guyafor.tree")
+ape::write.tree(tree$scenario.3, "save/guyafor/phylogeny_guyafor.tree")
 ```
 
 ```{r dataanc}
-growth <- vroom::vroom("save/growthguyafor/growthguyafor.tsv") %>% 
+growth <- vroom::vroom("save/guyafor/growthguyafor.tsv") %>% 
   mutate(species = paste(Genus, Species))
-phylo <- ape::read.tree("save/growthguyafor/phylogeny_guyafor.tree")
+phylo <- ape::read.tree("save/guyafor/phylogeny_guyafor.tree")
 p4d <- phylo4d(phylo,
                data.frame(species = gsub("_", " ", phylo$tip.label)) %>% 
                  left_join(
@@ -352,7 +357,19 @@ g <- fortify(phylo) %>%
    scale_size_manual("taxon", values = c(1, 2)) +
    viridis::scale_color_viridis(expression(Median(Gmax[i])~cm.year^-1), trans = "log", labels=scales::comma) +
    theme(legend.position = "bottom")
-ggsave(g, filename = "save/figs/phylogenyguyafor.png", dpi = 500, width = 25, height = 25, units = "cm", bg = 'white')
-include_graphics("save/figs/phylogenyguyafor.png")
+ggsave(g, filename = "save/figs/guyafor/phylogenyguyafor.png", dpi = 500, width = 25, height = 25, units = "cm", bg = 'white')
+include_graphics("save/figs/guyafor/phylogenyguyafor.png")
 ```
 
+## Discussion
+
+* Within-chain parallelization available with [gompertzsumpar](https://github.com/sylvainschmitt/treegrowth/blob/main/model/gompertzsumpar.stan) model.
+* Next steps:
+    * Stop?
+    * Use?
+    * Run again? 
+        * Cluster? 
+        * Who? 
+        * When?
+   * What for? Data paper?
+    

@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2023-01-16" />
+<meta name="date" content="2023-02-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,6 +215,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
 <ul>
@@ -419,16 +420,37 @@ and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width
 </div>
 <div id="fit-1" class="section level2 hasAnchor" number="6.3">
 <h2><span class="header-section-number">6.3</span> Fit<a href="guyafor.html#fit-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Unfortunately, gmax upper limit was set to 5 instead of 10 (overconstrained).</strong>
+<strong>But the model with more stringent data had a better behavior with gmax limited to 5.</strong></p>
+<p><img src="treegrowth_files/figure-html/growthguyaforgmaxtrace-1.png" width="768" /></p>
 <p><img src="treegrowth_files/figure-html/growthguyaforgmax-1.png" width="768" /></p>
 </div>
 <div id="evolutionary-analyses" class="section level2 hasAnchor" number="6.4">
 <h2><span class="header-section-number">6.4</span> Evolutionary analyses<a href="guyafor.html#evolutionary-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="figure"><span style="display:block;" id="fig:gmaxphyloc"></span>
-<img src="save/figs/phylogenyguyafor.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="2460" />
+<img src="save/figs/guyafor/phylogenyguyafor.png" alt="Distribution of species growth potential (Gmax, cm/yr) in the phylogeny." width="2460" />
 <p class="caption">
 Figure 6.2: Distribution of species growth potential (Gmax, cm/yr) in the phylogeny.
 </p>
 </div>
+</div>
+<div id="discussion" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Discussion<a href="guyafor.html#discussion" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Within-chain parallelization available with <a href="https://github.com/sylvainschmitt/treegrowth/blob/main/model/gompertzsumpar.stan">gompertzsumpar</a> model.</li>
+<li>Next steps:
+<ul>
+<li>Stop?</li>
+<li>Use?</li>
+<li>Run again?
+<ul>
+<li>Cluster?</li>
+<li>Who?</li>
+<li>When?</li>
+</ul></li>
+<li>What for? Data paper?</li>
+</ul></li>
+</ul>
 
 </div>
 </div>
