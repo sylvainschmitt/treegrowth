@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 AAP | Tree Growth</title>
+  <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 AAP | Tree Growth" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 AAP | Tree Growth" />
+  
+  <meta name="twitter:description" content="Variation in the growth potential of individual trees at the Paracou research station." />
+  
+
+<meta name="author" content="Sylvain Schmitt" />
+
+
+<meta name="date" content="2023-04-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="microtopo.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script async defer src="https://hypothes.is/embed.js"></script>
+
+
+
+
+<link rel="stylesheet" href="html/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Tree Growth</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="model-shape.html"><a href="model-shape.html"><i class="fa fa-check"></i><b>1</b> Model shape</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="model-shape.html"><a href="model-shape.html#data"><i class="fa fa-check"></i><b>1.1</b> Data</a></li>
+<li class="chapter" data-level="1.2" data-path="model-shape.html"><a href="model-shape.html#michaelis-menten"><i class="fa fa-check"></i><b>1.2</b> Michaelis Menten</a></li>
+<li class="chapter" data-level="1.3" data-path="model-shape.html"><a href="model-shape.html#gompertz"><i class="fa fa-check"></i><b>1.3</b> Gompertz</a></li>
+<li class="chapter" data-level="1.4" data-path="model-shape.html"><a href="model-shape.html#lognormal"><i class="fa fa-check"></i><b>1.4</b> Lognormal</a></li>
+<li class="chapter" data-level="1.5" data-path="model-shape.html"><a href="model-shape.html#polynomial"><i class="fa fa-check"></i><b>1.5</b> Polynomial</a></li>
+<li class="chapter" data-level="1.6" data-path="model-shape.html"><a href="model-shape.html#weibul"><i class="fa fa-check"></i><b>1.6</b> Weibul</a></li>
+<li class="chapter" data-level="1.7" data-path="model-shape.html"><a href="model-shape.html#amani"><i class="fa fa-check"></i><b>1.7</b> Amani</a></li>
+<li class="chapter" data-level="1.8" data-path="model-shape.html"><a href="model-shape.html#gompertz-sum"><i class="fa fa-check"></i><b>1.8</b> Gompertz sum</a></li>
+<li class="chapter" data-level="1.9" data-path="model-shape.html"><a href="model-shape.html#comparisons"><i class="fa fa-check"></i><b>1.9</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="species-integration.html"><a href="species-integration.html"><i class="fa fa-check"></i><b>2</b> Species integration</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="species-integration.html"><a href="species-integration.html#data-1"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="species-integration.html"><a href="species-integration.html#individual-fixed"><i class="fa fa-check"></i><b>2.2</b> Individual fixed</a></li>
+<li class="chapter" data-level="2.3" data-path="species-integration.html"><a href="species-integration.html#individual-random"><i class="fa fa-check"></i><b>2.3</b> Individual random</a></li>
+<li class="chapter" data-level="2.4" data-path="species-integration.html"><a href="species-integration.html#species-fixed"><i class="fa fa-check"></i><b>2.4</b> Species fixed</a></li>
+<li class="chapter" data-level="2.5" data-path="species-integration.html"><a href="species-integration.html#species-random"><i class="fa fa-check"></i><b>2.5</b> Species random</a></li>
+<li class="chapter" data-level="2.6" data-path="species-integration.html"><a href="species-integration.html#dmax"><i class="fa fa-check"></i><b>2.6</b> Dmax</a></li>
+<li class="chapter" data-level="2.7" data-path="species-integration.html"><a href="species-integration.html#comparisons-1"><i class="fa fa-check"></i><b>2.7</b> Comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-fit.html"><a href="model-fit.html"><i class="fa fa-check"></i><b>3</b> Model fit</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-fit.html"><a href="model-fit.html#data-2"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
+<li class="chapter" data-level="3.2" data-path="model-fit.html"><a href="model-fit.html#model"><i class="fa fa-check"></i><b>3.2</b> Model</a></li>
+<li class="chapter" data-level="3.3" data-path="model-fit.html"><a href="model-fit.html#fit"><i class="fa fa-check"></i><b>3.3</b> Fit</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html"><i class="fa fa-check"></i><b>4</b> Eco-evolutionary analyses</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#environmental-descriptors"><i class="fa fa-check"></i><b>4.1.1</b> Environmental descriptors</a></li>
+<li class="chapter" data-level="4.1.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#analyses"><i class="fa fa-check"></i><b>4.1.2</b> Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#general"><i class="fa fa-check"></i><b>4.2.1</b> General</a></li>
+<li class="chapter" data-level="4.2.2" data-path="eco-evolutionary-analyses.html"><a href="eco-evolutionary-analyses.html#phylogenetic"><i class="fa fa-check"></i><b>4.2.2</b> Phylogenetic</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="functional-analyses.html"><a href="functional-analyses.html"><i class="fa fa-check"></i><b>5</b> Functional analyses</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="functional-analyses.html"><a href="functional-analyses.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="guyafor.html"><a href="guyafor.html#data-3"><i class="fa fa-check"></i><b>6.1</b> Data</a></li>
+<li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
+<li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
+<li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
+<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
+<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
+<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="aap.html"><a href="aap.html"><i class="fa fa-check"></i><b>8</b> AAP</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Tree Growth</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class = rmdreview>
+This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
+</div>
+<div id="aap" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> AAP<a href="aap.html#aap" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="figure"><span style="display:block;" id="fig:gmaxnciaap"></span>
+<img src="treegrowth_files/figure-html/gmaxnciaap-1.png" alt="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)." width="768" />
+<p class="caption">
+Figure 8.1: Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr).
+</p>
+</div>
+<p><img src="treegrowth_files/figure-html/predfullfigaap-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/mapfullfigaap-1.png" width="480" /></p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="microtopo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

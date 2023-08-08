@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Eco-evolutionary analyses | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Eco-evolutionary analyses | Tree Growth" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2023-01-20" />
+<meta name="date" content="2023-08-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,9 +52,72 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script async defer src="https://hypothes.is/embed.js"></script>
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
@@ -143,7 +206,11 @@ div.csl-indent {
 <li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
+<li class="chapter" data-level="5.2.2" data-path="functional-analyses.html"><a href="functional-analyses.html#boosted-regression-trees"><i class="fa fa-check"></i><b>5.2.2</b> Boosted regression trees</a></li>
+<li class="chapter" data-level="5.2.3" data-path="functional-analyses.html"><a href="functional-analyses.html#multiple-regressions"><i class="fa fa-check"></i><b>5.2.3</b> Multiple regressions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="functional-analyses.html"><a href="functional-analyses.html#comparisons-2"><i class="fa fa-check"></i><b>5.2.4</b> Comparisons</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="functional-analyses.html"><a href="functional-analyses.html#si-with-phylogeny"><i class="fa fa-check"></i><b>5.3</b> SI: With Phylogeny</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
 <ul>
@@ -151,20 +218,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
-<ul>
-<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
-<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
-<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
-<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
-</ul></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -187,9 +241,6 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div class = rmdreview>
-This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
-</div>
 <div id="eco-evolutionary-analyses" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Eco-evolutionary analyses<a href="eco-evolutionary-analyses.html#eco-evolutionary-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this chapter, I investigated effects of phylogeny and ecological processes on individual growth, using phylogeny, topography and neighbourhood indices.</p>
@@ -197,7 +248,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <h2><span class="header-section-number">4.1</span> Methods<a href="eco-evolutionary-analyses.html#methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="environmental-descriptors" class="section level3 hasAnchor" number="4.1.1">
 <h3><span class="header-section-number">4.1.1</span> Environmental descriptors<a href="eco-evolutionary-analyses.html#environmental-descriptors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>I used the mean neighbourhood crowding index [<span class="math inline">\(NCI\)</span>; <span class="citation">Uriarte <em>et al.</em> (<a href="#ref-Uriarte2004" role="doc-biblioref">2004</a>)</span>] over the last 30 years,
+<p>I used the mean neighbourhood crowding index [<span class="math inline">\(NCI\)</span>; <span class="citation">Uriarte <em>et al.</em> (<a href="#ref-Uriarte2004">2004</a>)</span>] over the last 30 years,
 an indirect measurement of access to light and forest gap dynamics.
 The mean neighbourhood crowding index <span class="math inline">\(NCI_i\)</span> from tree individual <span class="math inline">\(i\)</span> was calculated as follows:</p>
 <p><span class="math display">\[NCI_i=\overline{\sum_{j|\delta_{i,j}&lt;20m}DBH^2_{j,t}.e^{-\frac14\delta_{i,j}}}\]</span></p>
@@ -207,11 +258,11 @@ The power of neighbours <span class="math inline">\(DBH_{j,t}\)</span> effect wa
 The decrease of neighbours’ diameter effect with distance was set to -0.25 to represent trees at 20 meters of the focal trees having 1% of the effect of the same tree at 0 meters.
 <span class="math inline">\(NCI_i\)</span> is computed as the mean of yearly <span class="math inline">\(NCI_{i,t}\)</span> over the last 30 years denoted by the overline.</p>
 <p>I used the topographic wetness index (<span class="math inline">\(TWI\)</span>) as proxies of the distribution of soil water and nutrients in Paracou.
-Waterlogging and topography have been highlighted as crucial for forest dynamics <span class="citation">(<a href="#ref-Ferry2010" role="doc-biblioref">Ferry <em>et al.</em> 2010</a>)</span>,
-species-habitat relationships <span class="citation">(<a href="#ref-Engelbrecht2007" role="doc-biblioref">Engelbrecht <em>et al.</em> 2007</a>)</span>, and phenotypic variation <span class="citation">(<a href="#ref-Schmitt2020" role="doc-biblioref">Schmitt <em>et al.</em> 2020</a>)</span>.
+Waterlogging and topography have been highlighted as crucial for forest dynamics <span class="citation">(<a href="#ref-Ferry2010">Ferry <em>et al.</em> 2010</a>)</span>,
+species-habitat relationships <span class="citation">(<a href="#ref-Engelbrecht2007">Engelbrecht <em>et al.</em> 2007</a>)</span>, and phenotypic variation <span class="citation">(<a href="#ref-Schmitt2020">Schmitt <em>et al.</em> 2020</a>)</span>.
 Topography, through the dissolution of iron oxides, litter- and tree-fall transfers and waterlogging,
-shapes soil nutrient distribution in tropical forests <span class="citation">(<a href="#ref-John2007" role="doc-biblioref">John <em>et al.</em> 2007</a>; <a href="#ref-Ferry2010" role="doc-biblioref">Ferry <em>et al.</em> 2010</a>)</span>.
-TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS <span class="citation">(<a href="#ref-Conrad2015" role="doc-biblioref">Conrad <em>et al.</em> 2015</a>)</span>
+shapes soil nutrient distribution in tropical forests <span class="citation">(<a href="#ref-John2007">John <em>et al.</em> 2007</a>; <a href="#ref-Ferry2010">Ferry <em>et al.</em> 2010</a>)</span>.
+TWI was derived from a 1-m-resolution digital elevation model using SAGA-GIS <span class="citation">(<a href="#ref-Conrad2015">Conrad <em>et al.</em> 2015</a>)</span>
 based on a LiDAR campaign of the whole Paracou field station done in 2015.</p>
 </div>
 <div id="analyses" class="section level3 hasAnchor" number="4.1.2">
@@ -220,9 +271,9 @@ based on a LiDAR campaign of the whole Paracou field station done in 2015.</p>
 we investigated the effects of family, genus, species &amp; topography <span class="math inline">\(TWI\)</span> and neighbourhood <span class="math inline">\(NCI\)</span> indices
 on individual growth potential <span class="math inline">\(Gmax\)</span> with the following linear mixed model:</p>
 <p><span class="math display">\[log(Gmax) ~ \sim \mathcal N (\alpha_{species} + \beta_{NCI} \times log(NCI),\sigma) \\ |~  \alpha_{species} \sim \mathcal N(\alpha_{genus},\sigma_{species})\\ |~  \alpha_{genus} \sim \mathcal N(\alpha_{family},\sigma_{genus})\\ |~  \alpha_{family} \sim \mathcal N(\alpha,\sigma_{family})\]</span></p>
-<p>We reported the corresponding marginal and conditional <span class="math inline">\(R^2\)</span> <span class="citation">(<a href="#ref-Nakagawa2013" role="doc-biblioref">Nakagawa &amp; Schielzeth 2013</a>)</span>.
+<p>We reported the corresponding marginal and conditional <span class="math inline">\(R^2\)</span> <span class="citation">(<a href="#ref-Nakagawa2013">Nakagawa &amp; Schielzeth 2013</a>)</span>.
 We further plotted individual growth potential <span class="math inline">\(Gmax\)</span> along environmental gradients and across the phylogeny.
-We used <code>phylosingal</code> to test for phylogenetic signal <span class="citation">(<a href="#ref-keck_phylosignal:_2016" role="doc-biblioref">Keck <em>et al.</em> 2016</a>)</span>,
+We used <code>phylosingal</code> to test for phylogenetic signal <span class="citation">(<a href="#ref-keck_phylosignal:_2016">Keck <em>et al.</em> 2016</a>)</span>,
 before computing phylogenetic correlogram and local indicator of phylogenetic association.</p>
 <p>We used R version 3.6 for all statistical analyses (&lt;www.r-project.org&gt;).</p>
 </div>
@@ -359,8 +410,166 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
-<p><img src="treegrowth_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+log(gmax)
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+2.64
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+2.13 – 3.15
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+NCI [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.37
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.43 – -0.31
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+twi + 1 [log]
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.06 – 0.06
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.967
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.40
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>species:(Genus:Family)</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.03
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Genus:Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.07
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Quadrat</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.07
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub> <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.05
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+ICC
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.35
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>species</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+138
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Genus</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+95
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Family</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+38
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>Quadrat</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+60
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+7158
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.017 / 0.362
+</td>
+</tr>
+</table>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-5-1.png" width="768" /></p>
+<p><img src="treegrowth_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
 <div class="figure"><span style="display:block;" id="fig:gmaxncib"></span>
 <img src="treegrowth_files/figure-html/gmaxncib-1.png" alt="Relation between Neighbourhood crowding index (NCI) and individual growth potential (Gmax, cm/yr)." width="768" />
 <p class="caption">
@@ -406,17 +615,17 @@ Figure 4.2: Distribution of species growth potential (Gmax, cm/yr) in the phylog
 <tr class="odd">
 <td align="left">gmax</td>
 <td align="left">0.4756 (p=0.001)</td>
-<td align="left">0.1371 (p=0.004)</td>
-<td align="left">0.1297 (p=0.027)</td>
-<td align="left">0.1375 (p=0.038)</td>
+<td align="left">0.1371 (p=0.003)</td>
+<td align="left">0.1297 (p=0.026)</td>
+<td align="left">0.1375 (p=0.03)</td>
 <td align="left">0.6875 (p=0.001)</td>
 </tr>
 <tr class="even">
 <td align="left">loggmax</td>
 <td align="left">0.4373 (p=0.001)</td>
 <td align="left">0.1456 (p=0.001)</td>
-<td align="left">0.0799 (p=0.101)</td>
-<td align="left">0.0845 (p=0.064)</td>
+<td align="left">0.0799 (p=0.084)</td>
+<td align="left">0.0845 (p=0.086)</td>
 <td align="left">0.7757 (p=0.001)</td>
 </tr>
 </tbody>
@@ -441,28 +650,28 @@ Figure 4.4: Local phylogenetic associations of of species growth potential (Gmax
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Conrad2015" class="csl-entry">
-Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). <span class="nocase">System for Automated Geoscientific Analyses (SAGA) v. 2.1.4</span>. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a>
+Conrad, O., Bechtel, B., Bock, M., Dietrich, H., Fischer, E., Gerlitz, L., Wehberg, J., Wichmann, V. &amp; Böhner, J. (2015). System for automated geoscientific analyses (SAGA) v. 2.1.4. <em>Geoscientific Model Development</em>, <strong>8</strong>, 1991–2007. Retrieved from <a href="https://www.geosci-model-dev.net/8/1991/2015/">https://www.geosci-model-dev.net/8/1991/2015/</a>
 </div>
 <div id="ref-Engelbrecht2007" class="csl-entry">
-Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). <a href="https://doi.org/10.1038/nature05747"><span class="nocase">Drought sensitivity shapes species distribution patterns in tropical forests</span></a>. <em>Nature</em>, <strong>447</strong>, 80–82.
+Engelbrecht, B.M.J., Comita, L.S., Condit, R., Kursar, T.A., Tyree, M.T., Turner, B.L. &amp; Hubbell, S.P. (2007). <a href="https://doi.org/10.1038/nature05747">Drought sensitivity shapes species distribution patterns in tropical forests</a>. <em>Nature</em>, <strong>447</strong>, 80–82.
 </div>
 <div id="ref-Ferry2010" class="csl-entry">
-Ferry, B., Morneau, F., Bontemps, J.D., Blanc, L. &amp; Freycon, V. (2010). <a href="https://doi.org/10.1111/j.1365-2745.2009.01604.x"><span class="nocase">Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest</span></a>. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116.
+Ferry, B., Morneau, F., Bontemps, J.-D., Blanc, L. &amp; Freycon, V. (2010). Higher treefall rates on slopes and waterlogged soils result in lower stand biomass and productivity in a tropical rain forest. <em>Journal of Ecology</em>, <strong>98</strong>, 106–116. Retrieved from <a href="http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x">http://doi.wiley.com/10.1111/j.1365-2745.2009.01604.x</a>
 </div>
 <div id="ref-John2007" class="csl-entry">
-John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). <span class="nocase">Soil nutrients influence spatial distributions of tropical tree species.</span> <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9. Retrieved from <a href="https://arxiv.org/abs/2656">https://arxiv.org/abs/2656</a>
+John, R., Dalling, J.W., Harms, K.E., Yavitt, J.B., Stallard, R.F., Mirabello, M., Hubbell, S.P., Valencia, R., Navarrete, H., Vallejo, M. &amp; Foster, R.B. (2007). <a href="https://doi.org/10.1073/pnas.0604666104">Soil nutrients influence spatial distributions of tropical tree species.</a> <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <strong>104</strong>, 864–9.
 </div>
 <div id="ref-keck_phylosignal:_2016" class="csl-entry">
-Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). <span class="nocase">phylosignal: an <span>{</span>R<span>}</span> package to measure, test, and explore the phylogenetic signal</span>. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a>
+Keck, F., Rimet, F., Bouchez, A. &amp; Franc, A. (2016). Phylosignal: An {{}r{}} package to measure, test, and explore the phylogenetic signal. <em>Ecology and Evolution</em>, <strong>6</strong>, 2774–2780. Retrieved from <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4799788/</a>
 </div>
 <div id="ref-Nakagawa2013" class="csl-entry">
-Nakagawa, S. &amp; Schielzeth, H. (2013). <a href="https://doi.org/10.1111/j.2041-210x.2012.00261.x"><span class="nocase">A general and simple method for obtaining R2 from generalized linear mixed-effects models</span></a>. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.
+Nakagawa, S. &amp; Schielzeth, H. (2013). <a href="https://doi.org/10.1111/j.2041-210x.2012.00261.x">A general and simple method for obtaining R2 from generalized linear mixed-effects models</a>. <em>Methods in Ecology and Evolution</em>, <strong>4</strong>, 133–142.
 </div>
 <div id="ref-Schmitt2020" class="csl-entry">
-Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). <span class="nocase">Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest</span>. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a>
+Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a neotropical forest. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a>
 </div>
 <div id="ref-Uriarte2004" class="csl-entry">
-Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). <span class="nocase">A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter?</span> <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a>
+Uriarte, M., Condit, R., Canham, C.D. &amp; Hubbell, S.P. (2004). A spatially explicit model of sapling growth in a tropical forest: Does the identity of neighbours matter? <em>Journal of Ecology</em>, <strong>92</strong>, 348–360. Retrieved from <a href="http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x">http://doi.wiley.com/10.1111/j.0022-0477.2004.00867.x</a>
 </div>
 </div>
             </section>

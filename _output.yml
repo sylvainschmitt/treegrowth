@@ -8,6 +8,3 @@ bookdown::gitbook:
         <li><a href="https://github.com/sylvainschmitt/treegrowth" target="blank">Source</a></li>
       collapse: section
       scroll_highlight: yes
-  includes:
-    in_header: hypothesis.html
-    before_body: open_review_block.html

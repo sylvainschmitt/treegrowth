@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 6 Guyafor | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 6 Guyafor | Tree Growth" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2023-02-16" />
+<meta name="date" content="2023-08-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="functional-analyses.html"/>
-<link rel="next" href="microtopo.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -52,7 +52,6 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script async defer src="https://hypothes.is/embed.js"></script>
 
 
 <style type="text/css">
@@ -207,7 +206,11 @@ div.csl-indent {
 <li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
+<li class="chapter" data-level="5.2.2" data-path="functional-analyses.html"><a href="functional-analyses.html#boosted-regression-trees"><i class="fa fa-check"></i><b>5.2.2</b> Boosted regression trees</a></li>
+<li class="chapter" data-level="5.2.3" data-path="functional-analyses.html"><a href="functional-analyses.html#multiple-regressions"><i class="fa fa-check"></i><b>5.2.3</b> Multiple regressions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="functional-analyses.html"><a href="functional-analyses.html#comparisons-2"><i class="fa fa-check"></i><b>5.2.4</b> Comparisons</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="functional-analyses.html"><a href="functional-analyses.html#si-with-phylogeny"><i class="fa fa-check"></i><b>5.3</b> SI: With Phylogeny</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
 <ul>
@@ -216,20 +219,6 @@ div.csl-indent {
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
 <li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
-<ul>
-<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
-<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
-<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
-<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
-</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -252,9 +241,6 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div class = rmdreview>
-This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
-</div>
 <div id="guyafor" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Guyafor<a href="guyafor.html#guyafor" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this chapter, I repeated the model fit for the whole Guyafor network.</p>
@@ -276,35 +262,35 @@ I used only species with at least 4 trees following previous requirements (Tab. 
 <tbody>
 <tr class="odd">
 <td align="left">families</td>
-<td align="right">50</td>
+<td align="right">49</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="even">
 <td align="left">genera</td>
-<td align="right">164</td>
+<td align="right">155</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="odd">
 <td align="left">species</td>
-<td align="right">327</td>
+<td align="right">297</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="even">
 <td align="left">individuals</td>
-<td align="right">21 911</td>
+<td align="right">21 769</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
 </tr>
 <tr class="odd">
 <td align="left">observations</td>
-<td align="right">269 525</td>
+<td align="right">267 530</td>
 <td align="right"></td>
 <td align="right"></td>
 <td align="right"></td>
@@ -355,68 +341,68 @@ Figure 6.1: Tree diameter trajectories in reduced data. Color represent individu
 </div>
 <div id="model-1" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Model<a href="guyafor.html#model-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>I used a Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
+<p>I used a Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, were the diameter of individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(t\)</span> is the sum of annual growth from <span class="math inline">\(t0\)</span> to <span class="math inline">\(t\)</span>:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + Gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
-<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(<a href="#ref-Gompertz1825" role="doc-biblioref">Gompertz 1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>,
+<p>The annual growth rate for individual <span class="math inline">\(i\)</span> at year <span class="math inline">\(y\)</span> with a diameter of <span class="math inline">\(DBH_{y,i}\)</span> is defined following a Gompertz model <span class="citation">(<a href="#ref-Gompertz1825">Gompertz 1825</a>)</span> already identified as the best model for growth-trajectories in Paracou <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>,
 where <span class="math inline">\(Gmax_i\)</span> is the fixed maximum growth potential of every individual,
 <span class="math inline">\(Dopt_i\)</span> is the optimal diameter at which the individual reaches its maximum growth potential,
-and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in <a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>.
+and <span class="math inline">\(Ks_i\)</span> is the kurtosis defining the width of the bell-shaped growth-trajectory <span class="citation">(see figure 1 in <a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>.
 <span class="math inline">\(Dopt_i\)</span> and <span class="math inline">\(Ks_i\)</span> are random effects centered on species parameters <span class="math inline">\(Dopt_s\)</span> and <span class="math inline">\(Ks_s\)</span> with associated variances <span class="math inline">\(\sigma_D\)</span> and <span class="math inline">\(\sigma_K\)</span>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="guyafor.html#cb1-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-1-361cf6.csv&quot;</span>)</span>
-<span id="cb1-2"><a href="guyafor.html#cb1-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-3"><a href="guyafor.html#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb1-4"><a href="guyafor.html#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-5"><a href="guyafor.html#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
-<span id="cb1-6"><a href="guyafor.html#cb1-6" aria-hidden="true" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain1.tsv&#39;</span>)</span>
-<span id="cb1-7"><a href="guyafor.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
-<span id="cb1-8"><a href="guyafor.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="guyafor.html#cb2-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-2-361cf6.csv&quot;</span>)</span>
-<span id="cb2-2"><a href="guyafor.html#cb2-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-3"><a href="guyafor.html#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb2-4"><a href="guyafor.html#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-5"><a href="guyafor.html#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
-<span id="cb2-6"><a href="guyafor.html#cb2-6" aria-hidden="true" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain2.tsv&#39;</span>)</span>
-<span id="cb2-7"><a href="guyafor.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
-<span id="cb2-8"><a href="guyafor.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="guyafor.html#cb3-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-3-361cf6.csv&quot;</span>)</span>
-<span id="cb3-2"><a href="guyafor.html#cb3-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-3"><a href="guyafor.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb3-4"><a href="guyafor.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-5"><a href="guyafor.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
-<span id="cb3-6"><a href="guyafor.html#cb3-6" aria-hidden="true" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain3.tsv&#39;</span>)</span>
-<span id="cb3-7"><a href="guyafor.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
-<span id="cb3-8"><a href="guyafor.html#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="guyafor.html#cb4-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-4-361cf6.csv&quot;</span>)</span>
-<span id="cb4-2"><a href="guyafor.html#cb4-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="guyafor.html#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="guyafor.html#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="guyafor.html#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
-<span id="cb4-6"><a href="guyafor.html#cb4-6" aria-hidden="true" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain4.tsv&#39;</span>)</span>
-<span id="cb4-7"><a href="guyafor.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
-<span id="cb4-8"><a href="guyafor.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="guyafor.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> gmax chain1.tsv <span class="op">&gt;</span> gmax1.tsv</span>
-<span id="cb5-2"><a href="guyafor.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> gmax chain2.tsv <span class="op">&gt;</span> gmax2.tsv</span>
-<span id="cb5-3"><a href="guyafor.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> gmax chain3.tsv <span class="op">&gt;</span> gmax3.tsv</span>
-<span id="cb5-4"><a href="guyafor.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> gmax chain4.tsv <span class="op">&gt;</span> gmax4.tsv</span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="guyafor.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
-<span id="cb6-2"><a href="guyafor.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax1.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="guyafor.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">1</span>),</span>
-<span id="cb6-4"><a href="guyafor.html#cb6-4" aria-hidden="true" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax2.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-5"><a href="guyafor.html#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">2</span>),</span>
-<span id="cb6-6"><a href="guyafor.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax3.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-7"><a href="guyafor.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">3</span>),</span>
-<span id="cb6-8"><a href="guyafor.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax4.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="guyafor.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">4</span>)</span>
-<span id="cb6-10"><a href="guyafor.html#cb6-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-11"><a href="guyafor.html#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(parameter, <span class="fu">c</span>(<span class="st">&quot;gmax&quot;</span>, <span class="st">&quot;ind&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-12"><a href="guyafor.html#cb6-12" aria-hidden="true" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom_write</span>(<span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.tsv&#39;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="guyafor.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(csv2sql)</span>
-<span id="cb7-2"><a href="guyafor.html#cb7-2" aria-hidden="true" tabindex="-1"></a>gmax <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.tsv&#39;</span>)</span>
-<span id="cb7-3"><a href="guyafor.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(gmax, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>)</span>
-<span id="cb7-4"><a href="guyafor.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">csv_to_sqlite</span>(<span class="at">csv_name =</span> <span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>, </span>
-<span id="cb7-5"><a href="guyafor.html#cb7-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">db_name =</span> <span class="st">&#39;save/growthguyafor/gmax.sql&#39;</span>, </span>
-<span id="cb7-6"><a href="guyafor.html#cb7-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">table_name =</span> <span class="st">&quot;gmax&quot;</span>)</span>
-<span id="cb7-7"><a href="guyafor.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="guyafor.html#cb1-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-1-361cf6.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="guyafor.html#cb1-2" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-3"><a href="guyafor.html#cb1-3" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="guyafor.html#cb1-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="guyafor.html#cb1-5" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
+<span id="cb1-6"><a href="guyafor.html#cb1-6" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain1.tsv&#39;</span>)</span>
+<span id="cb1-7"><a href="guyafor.html#cb1-7" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
+<span id="cb1-8"><a href="guyafor.html#cb1-8" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="guyafor.html#cb2-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-2-361cf6.csv&quot;</span>)</span>
+<span id="cb2-2"><a href="guyafor.html#cb2-2" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="guyafor.html#cb2-3" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="guyafor.html#cb2-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="guyafor.html#cb2-5" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
+<span id="cb2-6"><a href="guyafor.html#cb2-6" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain2.tsv&#39;</span>)</span>
+<span id="cb2-7"><a href="guyafor.html#cb2-7" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
+<span id="cb2-8"><a href="guyafor.html#cb2-8" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="guyafor.html#cb3-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-3-361cf6.csv&quot;</span>)</span>
+<span id="cb3-2"><a href="guyafor.html#cb3-2" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="guyafor.html#cb3-3" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="guyafor.html#cb3-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="guyafor.html#cb3-5" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
+<span id="cb3-6"><a href="guyafor.html#cb3-6" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain3.tsv&#39;</span>)</span>
+<span id="cb3-7"><a href="guyafor.html#cb3-7" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
+<span id="cb3-8"><a href="guyafor.html#cb3-8" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="guyafor.html#cb4-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">read_cmdstan_csv</span>(<span class="st">&quot;save/growthguyafor/growth-202210280057-4-361cf6.csv&quot;</span>)</span>
+<span id="cb4-2"><a href="guyafor.html#cb4-2" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">drop</span>(fit<span class="sc">$</span>post_warmup_draws) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="guyafor.html#cb4-3" tabindex="-1"></a>  <span class="fu">as_data_frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="guyafor.html#cb4-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="guyafor.html#cb4-5" tabindex="-1"></a>  <span class="fu">gather</span>(parameter, value, <span class="sc">-</span>iteration)</span>
+<span id="cb4-6"><a href="guyafor.html#cb4-6" tabindex="-1"></a>vroom<span class="sc">::</span><span class="fu">vroom_write</span>(draws, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/chain4.tsv&#39;</span>)</span>
+<span id="cb4-7"><a href="guyafor.html#cb4-7" tabindex="-1"></a><span class="fu">rm</span>(fit, draws)</span>
+<span id="cb4-8"><a href="guyafor.html#cb4-8" tabindex="-1"></a><span class="fu">gc</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="guyafor.html#cb5-1" tabindex="-1"></a><span class="fu">grep</span> gmax chain1.tsv <span class="op">&gt;</span> gmax1.tsv</span>
+<span id="cb5-2"><a href="guyafor.html#cb5-2" tabindex="-1"></a><span class="fu">grep</span> gmax chain2.tsv <span class="op">&gt;</span> gmax2.tsv</span>
+<span id="cb5-3"><a href="guyafor.html#cb5-3" tabindex="-1"></a><span class="fu">grep</span> gmax chain3.tsv <span class="op">&gt;</span> gmax3.tsv</span>
+<span id="cb5-4"><a href="guyafor.html#cb5-4" tabindex="-1"></a><span class="fu">grep</span> gmax chain4.tsv <span class="op">&gt;</span> gmax4.tsv</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="guyafor.html#cb6-1" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb6-2"><a href="guyafor.html#cb6-2" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax1.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="guyafor.html#cb6-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">1</span>),</span>
+<span id="cb6-4"><a href="guyafor.html#cb6-4" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax2.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="guyafor.html#cb6-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">2</span>),</span>
+<span id="cb6-6"><a href="guyafor.html#cb6-6" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax3.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="guyafor.html#cb6-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">3</span>),</span>
+<span id="cb6-8"><a href="guyafor.html#cb6-8" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">&#39;save/growthguyafor/gmax4.tsv&#39;</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">&quot;iteration&quot;</span>, <span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;value&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="guyafor.html#cb6-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="dv">4</span>)</span>
+<span id="cb6-10"><a href="guyafor.html#cb6-10" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-11"><a href="guyafor.html#cb6-11" tabindex="-1"></a>  <span class="fu">separate</span>(parameter, <span class="fu">c</span>(<span class="st">&quot;gmax&quot;</span>, <span class="st">&quot;ind&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-12"><a href="guyafor.html#cb6-12" tabindex="-1"></a>  vroom<span class="sc">::</span><span class="fu">vroom_write</span>(<span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.tsv&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="guyafor.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(csv2sql)</span>
+<span id="cb7-2"><a href="guyafor.html#cb7-2" tabindex="-1"></a>gmax <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.tsv&#39;</span>)</span>
+<span id="cb7-3"><a href="guyafor.html#cb7-3" tabindex="-1"></a><span class="fu">write_csv</span>(gmax, <span class="at">file =</span> <span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>)</span>
+<span id="cb7-4"><a href="guyafor.html#cb7-4" tabindex="-1"></a><span class="fu">csv_to_sqlite</span>(<span class="at">csv_name =</span> <span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>, </span>
+<span id="cb7-5"><a href="guyafor.html#cb7-5" tabindex="-1"></a>              <span class="at">db_name =</span> <span class="st">&#39;save/growthguyafor/gmax.sql&#39;</span>, </span>
+<span id="cb7-6"><a href="guyafor.html#cb7-6" tabindex="-1"></a>              <span class="at">table_name =</span> <span class="st">&quot;gmax&quot;</span>)</span>
+<span id="cb7-7"><a href="guyafor.html#cb7-7" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">&#39;save/growthguyafor/gmax.csv&#39;</span>)</span></code></pre></div>
 </div>
 <div id="fit-1" class="section level2 hasAnchor" number="6.3">
 <h2><span class="header-section-number">6.3</span> Fit<a href="guyafor.html#fit-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -457,10 +443,7 @@ Figure 6.2: Distribution of species growth potential (Gmax, cm/yr) in the phylog
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Gompertz1825" class="csl-entry">
-Gompertz, B. (1825). <span class="nocase">On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies</span>. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a>
-</div>
-<div id="ref-Herault2011" class="csl-entry">
-Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). <a href="https://doi.org/10.1111/j.1365-2745.2011.01883.x"><span class="nocase">Functional traits shape ontogenetic growth trajectories of rain forest tree species</span></a>. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.
+Gompertz, B. (1825). On the nature of the function expressive of the law of humanmortality, and on a newmode of determining the value of life contingencies. <em>Philosophical Transactions of the Royal Society of London</em>, <strong>115</strong>, 513–583. Retrieved from <a href="https://www.tandfonline.com/doi/full/10.1080/14786445908642737">https://www.tandfonline.com/doi/full/10.1080/14786445908642737</a>
 </div>
 </div>
             </section>
@@ -469,7 +452,7 @@ Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Pain
         </div>
       </div>
 <a href="functional-analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="microtopo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

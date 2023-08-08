@@ -202,8 +202,24 @@ include_graphics("save/full/figs/growthfullpairs.png")
 
 ```{r growthfullgmax}
 # g <- mcmc_intervals(as.array(fit_full, pars = paste0("gmax[", 1:100, "]")))
+# g <- g + xlab(expression(gmax[i])) +
+#   theme(axis.text.y = element_text(size = 5))
 # ggsave(plot = g, filename = "save/full/figs/growthfullgmax.png", bg = "white")
 include_graphics("save/full/figs/growthfullgmax.png")
+```
+
+```{r growthfulldoptdmax, eval=F}
+g <- mcmc_intervals_data(as.array(fit_full, pars = "dopt_s")) %>%
+  separate(parameter, c("parameter", "X1", "sp"), convert = T) %>%
+  left_join(mdata %>%
+              group_by(sp) %>%
+              summarise(dmax = max(DBH))) %>%
+  ggplot(aes(sp, (m*100)/dmax)) +
+  geom_point() +
+  coord_flip() +
+  scale_y_sqrt() +
+  ylab(expression(frac(Dopt,Dmax)*100)) + xlab("Species")
+ggsave(plot = g, filename = "growthfulldoptdmax.png", bg = "white")
 ```
 
 ```{r predsfull, eval=F}
@@ -226,7 +242,7 @@ vroom::vroom_write(allpreds, "save/full/predsfull.tsv")
 preds <- vroom::vroom("save/full/predsfull.tsv") %>% 
   filter(m > 10)
 rmse <- sqrt(mean((preds$m - preds$DBH)^2))
-preds %>% 
+g <- preds %>% 
   ggplot(aes(DBH, m)) +
   geom_point(alpha = 0.25) +
   geom_errorbar(aes(ymin = ll, ymax = hh), alpha = 0.25) +
@@ -235,6 +251,8 @@ preds %>%
   xlab("Observed diameter (Diameter at breast height, cm)") +
   ylab("Predicted diameter (Diameter at breast height, cm)") +
   ggtitle(paste("RMSE =", round(rmse, 2), "cm"))
+ggsave(plot = g, filename = "figs/fig1.png", dpi = 300, bg = "white")
+g
 ```
 
 ```{r predfullfig}

@@ -26,7 +26,7 @@ I used only recruited trees in the censuses with at least 4 measurements of diam
 I used only species with at least 4 trees following previous requirements (Tab. \@ref(tab:guyafortab) & Fig. \@ref(fig:mdataguyaforfig)).
 
 ```{r guyaforlim}
-n_ind_species <- 4
+n_ind_species <- 6
 n_years <- 10
 n_census <- 4
 ```
@@ -56,7 +56,7 @@ trees <- vroom::vroom("data/Selection_Guyafor_Gmax_4_4.csv", locale=locale(decim
   group_by(species) %>% 
   filter(length(unique(idTree)) >= n_ind_species)
 rm(n_census, n_ind_species)
-vroom::vroom_write(trees, "save/trees_guyafor.tsv")
+vroom::vroom_write(trees, "save/guyafor/trees_guyafor.tsv")
 ```
 
 ```{r  guyafortab}

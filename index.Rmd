@@ -5,8 +5,8 @@ author: "Sylvain Schmitt"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-csl: /home/sylvain/Documents/Bibliography/csl/mee.csl
-bibliography: /home/sylvain/Documents/Bibliography/library.bib
+csl: /home/sschmitt/Documents/biblio/csl/mee.csl
+bibliography: /home/sschmitt/Documents/biblio/library.bib
 link-citations: yes
 colorlinks: yes
 description: "Variation in the growth potential of individual trees at the Paracou research station."

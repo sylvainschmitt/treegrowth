@@ -3,6 +3,8 @@ rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(tidyverse)
 library(googlesheets4)
+library(caret)
+library(gbm)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -15,9 +17,8 @@ In this chapter, I quickly  investigated effects of functional traits and weathe
 
 ## Methods
 
-I used linear model for individual growth potential relation to functional traits at the individual or species level.
-For each dataset, I first used a step procedure to select explanatory variables before using linear models with multiple variables.
-I then plotted the individual relations between response and explanatory variables.
+I used model to explore individual growth potential relation to functional traits at the individual or species level.
+I used either: (1) linear model with a step procedure, (2) boosted regression trees (BRT), and multimodel regressions.
 
 ```{r dataan2}
 growth <- vroom::vroom("save/ecoevo/growthfull.tsv")
@@ -107,6 +108,8 @@ guillemot <- read_tsv("data/TAB_FINAL_GUILLEMOTetal.csv") %>%
 
 ### All
 
+*Individual regressions for each trait and each dataset.*
+
 ```{r, eval=F}
 phylo <- ape::read.tree("save/ecoevo/phylogeny_full.tree")
 p4d <- phylo4d(phylo,
@@ -131,7 +134,7 @@ fortify(p4d) %>%
   theme(legend.position = "bottom") + xlim(NA, 200)
 ```
 
-```{r }
+```{r alldata}
 all_data <- bind_rows(
   phd %>% 
     mutate(dataset = "Schmitt et al., (2020)", response = "Gmax_i", response_value = gmax) %>% 
@@ -201,7 +204,7 @@ all_data <- bind_rows(
                         "HSM_PiTLP_Psi88"	= "hydraulic safety margin"))
 ```
 
-```{r }
+```{r allreg}
 all_reg <- all_data %>% 
   filter(trait != "gmax") %>% 
   group_by(dataset, response, trait) %>% 
@@ -210,7 +213,7 @@ all_reg <- all_data %>%
   dplyr::select(-term)
 ```
 
-```{r , fig.height=10, fig.width=8}
+```{r allregfig, fig.height=10, fig.width=8}
 all_reg %>% 
   mutate(p_value = ifelse(p_value == 0, 10^-4, p_value)) %>%
   ggplot(aes(x = trait, y = estimate, alpha = p_value < 0.01, fill  = log10(p_value), label = trait)) +
@@ -225,36 +228,133 @@ all_reg %>%
   scale_alpha_discrete(guide = "none")
 ```
 
-```{r}
-t <- all_data %>% 
+```{r seltraits}
+traits <- all_data %>% 
   filter(dataset == "Vleminckx et al., (2021)") %>% 
-  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
   group_by(species, trait) %>% 
   summarise(response_value = mean(response_value), trait_value = mean(trait_value)) %>% 
   reshape2::dcast(response_value + species ~ trait, value.var = "trait_value") %>% 
   na.omit() %>% 
-  dplyr::select(-species) %>% 
-  mutate_all(log) %>% 
-  mutate_all(scale) %>% 
-  dplyr::rename(gmax = response_value)
+  dplyr::select(-species, -`leaf delta 13C`, -response_value)
 ```
 
-```{r}
-lm(gmax ~ ., data = t) %>%
-  step(trace = F) %>%
-  sjPlot::tab_model(show.icc = F)
+### Boosted regression trees
+
+*Boosted regression trees for Vleminckx et al., (2021) data.*
+
+```{r brt}
+# brt_training <- train(
+# 		gmax ~ .,
+# 		data = traits,
+# 		method = "gbm",
+# 		verbose = FALSE,
+# 		tuneGrid = expand.grid(
+# 			n.trees = c(1000, 5000, 7500, 10000, 20000),
+# 			interaction.depth = 1,
+# 			shrinkage = c(0.0001, 0.0005, 0.001),
+# 			n.minobsinnode = c(5, 10, 15, 20, 25)
+# 			)
+# 	)
+# brt_training$bestTune
+# n.trees: 10000, shrinkage: 0.0005, n.minobsinnode: 5
+traits_brt <- gbm(
+	gmax ~ .,
+	distribution = "gaussian",
+	data = traits,
+	n.trees = 10000, # Change to value from best BRT tune
+	interaction.depth = 1, # Change to value from best BRT tune
+	n.minobsinnode = 5, # Change to value from best BRT tune
+	shrinkage = 0.0005, # Change to value from best BRT tune
+	bag.fraction = 0.5,
+	cv.folds = 10
+)
+brt_tab <- tibble::as_tibble(gbm::summary.gbm(traits_brt, plotit = FALSE)) %>% 
+  mutate(var = gsub("`", "", var)) %>% 
+  rename(trait = var, `relative information` = "rel.inf")
 ```
 
-```{r, eval=F}
-fg %>% 
-  left_join(select(growth, Family, Genus, species) %>% unique()) %>% 
-  lme4::lmer(log(gmax) ~ log(Toughness) + log(N) + log(P) + log(Sapwood_WSG) + log(Diameter) + log(SRL) + (1  | Family/Genus), data = .) %>% 
-  sjPlot::tab_model(show.icc = F)  
+```{r brtfig}
+ggplot(brt_tab, aes(reorder(trait, `relative information`), 
+                    `relative information`, 
+                    label = paste(round(`relative information`), "%"))) +
+  geom_col() +
+  geom_text(nudge_y = 1.5) +
+  coord_flip() +
+  theme(axis.title.y = element_blank())
 ```
 
+```{r brtpartial}
+treezy::gg_partial_plot(traits_brt, 
+                        vars = as_tibble(summary.gbm(traits_brt, 
+                                                     plotit = FALSE))$var[1:6]) +
+  theme_bw() +
+  xlab("") + ylab(expression(Gmax[s]~cm.year^-1))
+```
 
+### Multiple regressions
 
-```{r}
+*Multiple regressions for Vleminckx et al., (2021) data.*
+
+```{r multlm}
+# mult_traits <- glmulti::glmulti(gmax ~ ., report = FALSE,
+#                                 data = rename_all(traits, list(~ gsub(" ", "_", .))) %>% 
+#                                                     mutate_all(log) %>% na.omit(), 
+#                                 fitfunc = lm, level = 1, plotty = FALSE, chunk = 20)
+# save(mult_traits, file = "save/mult_traits.Rdata")
+load("save/mult_traits.Rdata")
+lmmult_tab <- coef(mult_traits) %>% 
+  as.data.frame() %>% 
+  rownames_to_column("trait") %>% 
+  mutate(trait = gsub("_", " ", trait)) %>% 
+  arrange(desc(Importance)) %>% 
+  rename(estimate = Estimate,
+         variance = "Uncond. variance",
+         `variables importance` = Importance,
+         `confidence interval` = "+/- (alpha=0.05)") %>% 
+  select(-`Nb models`)
+```
+
+### Comparisons
+
+```{r multab}
+lmmult_tab %>% 
+  left_join(brt_tab) %>% 
+  kable()
+```
+
+```{r multbest}
+mult_traits@objects[[1]] %>% 
+  sjPlot::tab_model()
+```
+
+```{r multbestrelaimpo}
+relaimpo::calc.relimp(mult_traits@objects[[1]])@lmg %>% 
+  data.frame(trait = names(.), lmg = .) %>% 
+  ggplot(aes(reorder(trait, lmg), lmg, label = paste(round(lmg*100), "%"))) +
+  geom_col() +
+  geom_text(nudge_y = .01) +
+  coord_flip() +
+  ylab(expression(R^2)) +
+  theme(axis.title.y = element_blank())
+```
+
+```{r seltraitsrels}
+sel_traits <- (filter(left_join(lmmult_tab, brt_tab), 
+       `variables importance` > 0.5 | `relative information` > 10) %>% 
+  filter(trait != "(Intercept)"))$trait
+all_data %>%  
+  filter(dataset == "Vleminckx et al., (2021)") %>% 
+  filter(trait %in% sel_traits) %>% 
+  ggplot(aes(trait_value, response_value)) +
+  geom_point() +
+  facet_wrap(~ trait, scales = "free") +
+  scale_x_log10() + scale_y_log10() + geom_smooth(method = "lm") + 
+  ylab(expression(Gmax[s]~cm.year^-1)) +
+  theme(axis.title.x = element_blank(), legend.position = "bottom") +
+  scale_color_discrete(guide = "none")
+```
+
+```{r seltraitsvars}
 all_data %>% 
   filter(dataset == "Vleminckx et al., (2021)") %>% 
   filter(trait %in% c("leaf thoughness", "leaf nitrogen content", "leaf potassium content",
@@ -281,6 +381,18 @@ all_data %>%
   coord_flip() +
   theme(axis.title = element_blank(), axis.line = element_blank(), axis.text.x = element_blank(), axis.ticks = element_blank())
 ```
+
+
+```{r, eval=FALSE}
+lmmult_tab %>% 
+  left_join(brt_tab) %>% 
+  select(estimate, `confidence interval`, `variables importance`, `relative information`) %>% 
+  mutate_all(round, 2) %>% 
+  write_tsv("~/Téléchargements/tab.tsv")
+```
+
+
+## SI: With Phylogeny
 
 ```{r phylov, eval=F}
 library(V.PhyloMaker)
@@ -333,30 +445,7 @@ bind_rows(t, .id = "trait") %>%
   xlab("phylogenetic distance") + ylab("Correlation")
 ```
 
-```{r}
-(lm(gmax ~ ., data = t) %>%
-  step(trace = F) %>%
-  relaimpo::calc.relimp())@lmg %>% 
-  data.frame(trait = names(.), lmg = .) %>% 
-  ggplot(aes(reorder(trait, lmg), lmg, label = paste(round(lmg*100), "%"))) +
-  geom_col() +
-  geom_text(nudge_y = .01) +
-  coord_flip() +
-  ylab(expression(R^2)) +
-  theme(axis.title.y = element_blank())
-```
 
 
-```{r}
-all_data %>%  
-  filter(dataset == "Vleminckx et al., (2021)") %>% 
-  filter(trait %in% filter(all_reg, p_value < 0.01)$trait) %>% 
-  filter(!(trait %in% c("leaf phosphorus content", "fine roots tissue density"))) %>% 
-  ggplot(aes(trait_value, response_value)) +
-  geom_point() +
-  facet_wrap(~ trait, scales = "free") +
-  scale_x_log10() + scale_y_log10() + geom_smooth(method = "lm") + 
-  ylab(expression(Gmax[s]~cm.year^-1)) +
-  theme(axis.title.x = element_blank(), legend.position = "bottom") +
-  scale_color_discrete(guide = "none")
-```
+
+

@@ -197,10 +197,59 @@ Finally, the neighbourhood ($NCI$) has a marked negative significant effect (Fig
 load("save/ecoevo/ecoevo.Rdata")
 ```
 
+```{r, eval=FALSE}
+growth %>% 
+  group_by(Family, species) %>% 
+  summarise(`Median Gmax` = median(gmax), `CV[log] Gmax` = sqrt(exp(sd(log(gmax))^2)-1), 
+            `Median NCI` = median(NCI), `Median TWI` = median(twi, na.rm = TRUE),
+            `N trees`= n()) %>% 
+  left_join(vroom::vroom("save/full/mdatafull.tsv") %>% 
+              mutate(species = paste(Genus, Species)) %>% 
+              group_by(species) %>% 
+              summarise(`Median DBH` = median(DBH), `DBH 0.95` = quantile(DBH, 0.95))) %>% 
+  write_tsv("~/Téléchargements/growth.tsv")
+```
+
+
 ```{r lmm}
 allfits %>%
   sjPlot::tab_model(show.icc = F)
 ```
+
+```{r, eval=F}
+library(tidyverse)
+load("save/ecoevo/ecoevo.Rdata")
+res <- residuals(allfits) %>% 
+  as_tibble() %>% 
+  mutate(ind = 1:n()) %>% 
+  left_join(vroom::vroom("save/full/mdatafull.tsv") %>% 
+              group_by(ind) %>% 
+              summarise(Xutm = mean(Xutm), Yutm = mean(Yutm))) %>% 
+  group_by(Xutm, Yutm) %>% 
+  sample_n(1)
+cor <- ncf::correlog(res$Xutm, res$Yutm, res$Estimate,
+                     resamp = 0, increment = 100,
+                     latlon = TRUE)
+data.frame(N = cor$n, distance = cor$mean.of.class, I = cor$correlation) %>% 
+  ggplot(aes(distance, I)) +
+  geom_point(aes(size = N)) +
+  theme_bw() +
+  geom_smooth(method = "lm") +
+  ylim(-0.02, 0.02) +
+  xlab("Distance (m)") + ylab("Moran's I") +
+  ggtitle("Model 2 residuals", "log(Gmax) ~ log(NCI) + log(TWI+1) + (1  | Family/Genus/Species)")
+```
+
+```{r}
+growth %>% 
+  left_join(vroom::vroom("save/full/mdatafull.tsv") %>% 
+              dplyr::select(idTree, Plot, SubPlot) %>% 
+              unique()) %>% 
+  mutate(Quadrat = paste0(Plot, "-", SubPlot)) %>% 
+  lme4::lmer(log(gmax) ~ log(NCI) + log(twi + 1) + (1 | Family/Genus/species) + (1 | Quadrat), data = .) %>% 
+  sjPlot::tab_model()
+```
+
 
 ```{r}
 # brms::parnames(allfits)
@@ -308,6 +357,6 @@ gridExtra::grid.arrange(
   grobs = list(g.phylo,  g.nci, g.var),
   layout_matrix = rbind(c(2, 1),
                         c(3, 1)),
-  heights = c(3, 1), widths = c(1.5, 2)
-)    
+  heights = c(3, 1), widths = c(1.5, 2))
+# ggsave(plot = g, filename = "figs/fig2.png", dpi = 300, bg = "white", width = 10, height = 7)
 ```

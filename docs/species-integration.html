@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Species integration | Tree Growth</title>
   <meta name="description" content="Variation in the growth potential of individual trees at the Paracou research station." />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Species integration | Tree Growth" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2023-01-16" />
+<meta name="date" content="2023-08-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,7 +52,6 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<script async defer src="https://hypothes.is/embed.js"></script>
 
 
 <style type="text/css">
@@ -207,7 +206,11 @@ div.csl-indent {
 <li class="chapter" data-level="5.2" data-path="functional-analyses.html"><a href="functional-analyses.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="functional-analyses.html"><a href="functional-analyses.html#all"><i class="fa fa-check"></i><b>5.2.1</b> All</a></li>
+<li class="chapter" data-level="5.2.2" data-path="functional-analyses.html"><a href="functional-analyses.html#boosted-regression-trees"><i class="fa fa-check"></i><b>5.2.2</b> Boosted regression trees</a></li>
+<li class="chapter" data-level="5.2.3" data-path="functional-analyses.html"><a href="functional-analyses.html#multiple-regressions"><i class="fa fa-check"></i><b>5.2.3</b> Multiple regressions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="functional-analyses.html"><a href="functional-analyses.html#comparisons-2"><i class="fa fa-check"></i><b>5.2.4</b> Comparisons</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="functional-analyses.html"><a href="functional-analyses.html#si-with-phylogeny"><i class="fa fa-check"></i><b>5.3</b> SI: With Phylogeny</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="guyafor.html"><a href="guyafor.html"><i class="fa fa-check"></i><b>6</b> Guyafor</a>
 <ul>
@@ -215,20 +218,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.2" data-path="guyafor.html"><a href="guyafor.html#model-1"><i class="fa fa-check"></i><b>6.2</b> Model</a></li>
 <li class="chapter" data-level="6.3" data-path="guyafor.html"><a href="guyafor.html#fit-1"><i class="fa fa-check"></i><b>6.3</b> Fit</a></li>
 <li class="chapter" data-level="6.4" data-path="guyafor.html"><a href="guyafor.html#evolutionary-analyses"><i class="fa fa-check"></i><b>6.4</b> Evolutionary analyses</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="microtopo.html"><a href="microtopo.html"><i class="fa fa-check"></i><b>7</b> MicroTopo</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="microtopo.html"><a href="microtopo.html#functional-traits"><i class="fa fa-check"></i><b>7.1</b> Functional traits</a>
-<ul>
-<li class="chapter" data-level="7.1.1" data-path="microtopo.html"><a href="microtopo.html#all-1"><i class="fa fa-check"></i><b>7.1.1</b> All</a></li>
-<li class="chapter" data-level="7.1.2" data-path="microtopo.html"><a href="microtopo.html#interspecific"><i class="fa fa-check"></i><b>7.1.2</b> Interspecific</a></li>
-<li class="chapter" data-level="7.1.3" data-path="microtopo.html"><a href="microtopo.html#intraspecific"><i class="fa fa-check"></i><b>7.1.3</b> Intraspecific</a></li>
-</ul></li>
-<li class="chapter" data-level="7.2" data-path="microtopo.html"><a href="microtopo.html#growth"><i class="fa fa-check"></i><b>7.2</b> Growth</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="microtopo.html"><a href="microtopo.html#interspecific-1"><i class="fa fa-check"></i><b>7.2.1</b> Interspecific</a></li>
-<li class="chapter" data-level="7.2.2" data-path="microtopo.html"><a href="microtopo.html#intraspecific-1"><i class="fa fa-check"></i><b>7.2.2</b> Intraspecific</a></li>
-</ul></li>
+<li class="chapter" data-level="6.5" data-path="guyafor.html"><a href="guyafor.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -251,9 +241,6 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div class = rmdreview>
-This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
-</div>
 <div id="species-integration" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Species integration<a href="species-integration.html#species-integration" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this chapter, I looked for the best model to integrate species information based on quality of fit, cross-validation (LOO), and prediction (RMSEP). The result is summarised in Table <a href="species-integration.html#tab:spchoicetab">2.1</a>.</p>
@@ -274,7 +261,7 @@ Figure 2.1: Tree diameter trajectories in training data. Color represent individ
 </div>
 <div id="individual-fixed" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Individual fixed<a href="species-integration.html#individual-fixed" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, with all parameters as individual fixed effects:</p>
+<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, with all parameters as individual fixed effects:</p>
 <p><span class="math display">\[  DBH_{t,i} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma)\]</span></p>
 <p>The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
 <span class="math inline">\(gmax\)</span> posteriors have logical uncertainty but are varying widely among individuals.
@@ -288,7 +275,7 @@ Nevertheless, some posteriors seems to show bimodality.</p>
 </div>
 <div id="individual-random" class="section level2 hasAnchor" number="2.3">
 <h2><span class="header-section-number">2.3</span> Individual random<a href="species-integration.html#individual-random" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as individual random effects centered on species fixed effects:</p>
+<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as individual random effects centered on species fixed effects:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
 <p>The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
 <span class="math inline">\(gmax\)</span> posteriors have logical uncertainty but are varying widely among individuals.
@@ -301,7 +288,7 @@ Finally predictions of the diameter trajectories by the model are good and reali
 </div>
 <div id="species-fixed" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Species fixed<a href="species-integration.html#species-fixed" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as species fixed effects:</p>
+<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as species fixed effects:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma)\]</span></p>
 <p>The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
 <span class="math inline">\(gmax\)</span> posteriors have logical uncertainty but are varying widely among individuals.
@@ -314,7 +301,7 @@ Finally predictions of the diameter trajectories by the model are good and reali
 </div>
 <div id="species-random" class="section level2 hasAnchor" number="2.5">
 <h2><span class="header-section-number">2.5</span> Species random<a href="species-integration.html#species-random" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as species random effects centered on community fixed effects:</p>
+<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as species random effects centered on community fixed effects:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_s})}{Ks_s}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt,\sigma_K), Ks \sim \mathcal N(Ks,\sigma_D) \]</span></p>
 <p>The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
 <span class="math inline">\(gmax\)</span> posteriors have logical uncertainty but are varying widely among individuals.
@@ -327,7 +314,7 @@ Finally predictions of the diameter trajectories by the model are good and reali
 </div>
 <div id="dmax" class="section level2 hasAnchor" number="2.6">
 <h2><span class="header-section-number">2.6</span> Dmax<a href="species-integration.html#dmax" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011" role="doc-biblioref">Hérault <em>et al.</em> 2011</a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as individual random effects centered on species fixed effects:</p>
+<p>We used the selected model, <em>i.e.</em> Gompertz model <span class="citation">(<a href="#ref-Herault2011"><strong>Herault2011?</strong></a>)</span>, with <span class="math inline">\(gmax\)</span> as individual fixed effects and <span class="math inline">\(Dopt\)</span> and <span class="math inline">\(Ks\)</span> as individual random effects centered on species fixed effects:</p>
 <p><span class="math display">\[  DBH_{t,i,s} \sim \mathcal N  (10 + gmax_i \times \sum _{y=1|DBH_{t=0}} ^{y=t} exp(-\frac12.[\frac{log(\frac{DBH_{t,i}}{100.Dopt_i})}{Ks_i}]^2)), \sigma) \\| Dopt_i \sim \mathcal N(Dopt_s,\sigma_D), Ks_i \sim \mathcal N(Ks_s,\sigma_K) \]</span></p>
 <p>But we constrained <span class="math inline">\(dopt\)</span> fitting <span class="math inline">\(d=\frac{dopt}{DBH_{95}}\)</span> with <span class="math inline">\(d\in[0,1]\)</span>.
 The model correctly converged (<span class="math inline">\(\hat R &lt; 1.05\)</span>) with an acceptable but marked correlation between <span class="math inline">\(dopt\)</span> and <span class="math inline">\(ks\)</span>.
@@ -476,12 +463,6 @@ This is the best model that I’ll use in next steps.</p>
 <p><img src="treegrowth_files/figure-html/gmaxsp-1.png" width="768" /></p>
 <p><img src="treegrowth_files/figure-html/lmmsp-1.png" width="768" /></p>
 
-</div>
-</div>
-<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-Herault2011" class="csl-entry">
-Hérault, B., Bachelot, B., Poorter, L., Rossi, V., Bongers, F., Chave, J., Paine, C.E.T., Wagner, F. &amp; Baraloto, C. (2011). <a href="https://doi.org/10.1111/j.1365-2745.2011.01883.x"><span class="nocase">Functional traits shape ontogenetic growth trajectories of rain forest tree species</span></a>. <em>Journal of Ecology</em>, <strong>99</strong>, 1431–1440.
 </div>
 </div>
             </section>
